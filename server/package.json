@@ -1,0 +1,29 @@
+{
+	"name": "lsp-web-extension-sample-server",
+	"description": "Example implementation of a language server in a web extension.",
+	"version": "1.0.0",
+	"author": "Microsoft Corporation",
+	"license": "MIT",
+	"engines": {
+		"node": "*"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Microsoft/vscode-extension-samples"
+	},
+	"dependencies": {
+		"@accordproject/concerto-core": "^3.1.0",
+		"@accordproject/concerto-cto": "^3.1.0",
+		"browserify-zlib": "^0.2.0",
+		"crypto-browserify": "^3.12.0",
+		"https-browserify": "^1.0.0",
+		"path-browserify": "^1.0.1",
+		"stream-browserify": "^3.0.0",
+		"stream-http": "^3.2.0",
+		"util": "^0.12.5",
+		"vm-browserify": "^1.1.2",
+		"vscode-languageserver": "^7.0.0",
+		"vscode-languageserver-textdocument": "^1.0.1"
+	},
+	"scripts": {}
+}

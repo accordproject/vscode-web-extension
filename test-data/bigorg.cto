@@ -1,0 +1,7 @@
+namespace bigorg@1.0.0
+
+import org.acme.hr@1.0.0.{Company}
+
+concept BigCompany extends Company {
+    o Long numberOfEmployees
+}

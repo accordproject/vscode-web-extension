@@ -1,0 +1,121 @@
+{
+	"name": "cicero-vscode-extension",
+	"displayName": "Accord Project",
+	"description": "Accord Project extension for Visual Studio Code, providing tools for template development.",
+	"author": "Accord Project",
+	"license": "Apache-2.0",
+	"version": "0.26.0",
+	"icon": "icon.png",
+	"browser": "./client/dist/browserClientMain",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/accordproject/cicero-vscode-extension"
+	},
+	"publisher": "accordproject",
+	"categories": [
+		"Programming Languages",
+		"Snippets"
+	],
+	"keywords": [
+		"multi-root ready",
+		"accord project",
+		"legal",
+		"cicero",
+		"templates"
+	],
+	"engines": {
+		"vscode": "^1.43.0"
+	},
+	"capabilities": {
+		"virtualWorkspaces": {
+			"supported": "limited",
+			"description": "In virtual workspaces, resolving and finding references across files is not supported."
+		}
+	},
+	"activationEvents": [
+		"onLanguage:concerto"
+	],
+	"contributes": {
+		"configuration": [
+			{
+				"order": 22,
+				"id": "cicero-vscode-extension",
+				"title": "cicero-vscode-extension",
+				"properties": {
+					"cicero-vscode-extension.trace.server": {
+						"type": "string",
+						"scope": "window",
+						"enum": [
+							"off",
+							"messages",
+							"verbose"
+						],
+						"default": "off",
+						"description": "Traces the communication between VS Code and the cicero-vscode-extension language server."
+					}
+				}
+			}
+		],
+		"languages": [
+			{
+				"id": "concerto",
+				"aliases": [
+					"Concerto model",
+					"concerto"
+				],
+				"extensions": [
+					".cto"
+				],
+				"configuration": "./client/concerto.language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "concerto",
+				"scopeName": "source.concerto",
+				"path": "./client/syntaxes/concerto.tmLanguage.json"
+			}
+		],
+		"snippets": [
+			{
+				"language": "concerto",
+				"path": "./client/snippets/concerto.json"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+		"start": "webpack serve --mode development --open",
+		"chrome": "npm run compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data"
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^5.42.0",
+		"@typescript-eslint/parser": "^5.42.0",
+		"@vscode/test-web": "^0.0.22",
+		"eslint": "^8.26.0",
+		"html-webpack-plugin": "^5.5.0",
+		"node-polyfill-webpack-plugin": "^2.0.1",
+		"path-browserify": "^1.0.1",
+		"ts-loader": "^9.3.0",
+		"typescript": "^4.8.4",
+		"webpack": "^5.44.0",
+		"webpack-cli": "^4.7.2",
+		"webpack-dev-server": "^4.11.1"
+	},
+	"dependencies": {
+		"browserify-zlib": "^0.2.0",
+		"crypto-browserify": "^3.12.0",
+		"https-browserify": "^1.0.0",
+		"os-browserify": "^0.3.0",
+		"stream-browserify": "^3.0.0",
+		"stream-http": "^3.2.0",
+		"tty-browserify": "^0.0.1",
+		"url": "^0.11.0",
+		"vm-browserify": "^1.1.2"
+	}
+}
