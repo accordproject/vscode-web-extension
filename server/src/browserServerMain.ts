@@ -13,7 +13,7 @@
  */
 'use strict';
 import { createConnection, BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver/browser';
-import { DiagnosticSeverity, InitializedParams, InitializeParams, InitializeResult, ServerCapabilities, TextDocuments, TextDocumentSyncKind } from 'vscode-languageserver';
+import { DiagnosticSeverity, InitializedParams, InitializeParams, InitializeResult, ServerCapabilities, TextDocumentChangeEvent, TextDocuments, TextDocumentSyncKind } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { URI } from 'vscode-uri';
 
@@ -30,7 +30,7 @@ const messageWriter = new BrowserMessageWriter(self);
  * Globals maintained by the language server
  */
 const GLOBAL_STATE:LanguageServerState = {
-	modelManager: new ModelManager(),
+	modelManager: new ModelManager({strict: true}),
 	diagnostics: new Diagnostics(),
 	connection: createConnection(messageReader, messageWriter),
 	isLoading: false
@@ -101,10 +101,14 @@ function log(message:string) {
 	}
 	finally {
 		GLOBAL_STATE.isLoading = false;
+		// we are done opening documents - let's process all the documents
+		// to rebuild our global state
+		documents.all().forEach( async document => {
+			const change:TextDocumentChangeEvent<TextDocument> = {document};
+			handleDocumentChange(change);
+		});
 	}
 });
-
-
 
 // Track open, change and close text document events
 const documents = new TextDocuments(TextDocument);
@@ -112,9 +116,10 @@ log('Language Server registered for document changes.');
 documents.listen(GLOBAL_STATE.connection);
 
 /**
- * Called when a document is opened or edited
+ * Handles changes to documents
+ * @param change the document change event
  */
-documents.onDidChangeContent(async (change) => {
+async function handleDocumentChange(change:TextDocumentChangeEvent<TextDocument>) {
 	log(`Document changed: ${change.document.uri}`);
 	const modelText = change.document.getText();
 	try {
@@ -154,7 +159,12 @@ documents.onDidChangeContent(async (change) => {
 	}
 
 	GLOBAL_STATE.diagnostics.send(GLOBAL_STATE.connection);
-});
+}
+
+/**
+ * Register our handler for when a document is opened or edited
+ */
+documents.onDidChangeContent(handleDocumentChange);
 
 log('Language Server listening...');
 GLOBAL_STATE.connection.listen();

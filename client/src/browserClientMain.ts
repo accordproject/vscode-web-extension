@@ -30,7 +30,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	 * all except the code to create the language client in not browser specific
 	 * and could be shared with a regular (Node) extension
 	 */
-	const documentSelector = [{ language: 'concerto' }];
+	const documentSelector = [
+		{ language: 'concerto' }, 
+		{ language: 'ergo' }, 
+		{ language: 'templatemark' }
+	];
 
 	// Options to control the language client
 	const clientOptions: LanguageClientOptions = {

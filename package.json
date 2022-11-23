@@ -4,7 +4,7 @@
 	"description": "Accord Project extension for Visual Studio Code, providing tools for template development.",
 	"author": "Accord Project",
 	"license": "Apache-2.0",
-	"version": "0.26.0",
+	"version": "1.0.0",
 	"icon": "icon.png",
 	"browser": "./client/dist/browserClientMain",
 	"repository": {
@@ -58,6 +58,27 @@
 		],
 		"languages": [
 			{
+				"id": "ergo",
+				"aliases": [
+					"Ergo",
+					"ergo"
+				],
+				"extensions": [
+					".ergo"
+				],
+				"configuration": "./client/ergo.language-configuration.json"
+			},
+			{
+				"id": "templatemark",
+				"aliases": [
+					"TemplateMark"
+				],
+				"extensions": [
+					".tem.md"
+				],
+				"configuration": "./client/templatemark.language-configuration.json"
+			},
+			{
 				"id": "concerto",
 				"aliases": [
 					"Concerto model",
@@ -71,6 +92,16 @@
 		],
 		"grammars": [
 			{
+				"language": "ergo",
+				"scopeName": "source.ergo",
+				"path": "./client/syntaxes/ergo.tmLanguage.json"
+			},
+			{
+				"language": "templatemark",
+				"scopeName": "source.templatemark",
+				"path": "./client/syntaxes/templatemark.tmLanguage.json"
+			},
+			{
 				"language": "concerto",
 				"scopeName": "source.concerto",
 				"path": "./client/syntaxes/concerto.tmLanguage.json"
@@ -80,8 +111,153 @@
 			{
 				"language": "concerto",
 				"path": "./client/snippets/concerto.json"
+			},
+			{
+				"language": "ergo",
+				"path": "./client/snippets/ergo.json"
 			}
-		]
+		],
+		"commands": [
+			{
+				"command": "cicero-vscode-extension.exportArchive",
+				"title": "Export Cicero Archive",
+				"category": "Accord Project"
+			},
+			{
+				"command": "cicero-vscode-extension.downloadModels",
+				"title": "Download External Models",
+				"category": "Accord Project"
+			},
+			{
+				"command": "cicero-vscode-extension.exportClassDiagram",
+				"title": "Export Class Diagram",
+				"category": "Accord Project"
+			},
+			{
+				"command": "cicero-vscode-extension.triggerClause",
+				"title": "Trigger",
+				"category": "Accord Project"
+			},
+			{
+				"command": "cicero-vscode-extension.parseClause",
+				"title": "Parse",
+				"category": "Accord Project"
+			},
+			{
+				"command": "cicero-vscode-extension.verifyTemplateSignature",
+				"title": "Verify Signature",
+				"category": "Accord Project"
+			},
+			{
+				"command": "cicero-vscode-extension.compileToTarget",
+				"title": "Compile Model To Target",
+				"category": "Accord Project"
+			},
+			{
+				"command": "cicero-vscode-extension.draftClause",
+				"title": "Draft Clause",
+				"category": "Accord Project"
+			},
+			{
+				"command": "cicero-vscode-extension.showPreview",
+				"title": "Open Preview",
+				"icon": {
+					"light": "./assets/light/open-preview.svg",
+					"dark": "./assets/dark/open-preview.svg"
+				},
+				"category": "Accord Project"
+			}
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"when": "explorerResourceIsFolder",
+					"command": "cicero-vscode-extension.exportArchive",
+					"group": "AccordProject@1"
+				},
+				{
+					"when": "resourceLangId == concerto",
+					"command": "cicero-vscode-extension.downloadModels",
+					"group": "AccordProject@2"
+				},
+				{
+					"when": "resourceLangId == concerto",
+					"command": "cicero-vscode-extension.exportClassDiagram",
+					"group": "AccordProject@3"
+				},
+				{
+					"when": "explorerResourceIsFolder && !isWeb",
+					"command": "cicero-vscode-extension.triggerClause",
+					"group": "AccordProject@4"
+				},
+				{
+					"when": "resourceLangId == markdown",
+					"command": "cicero-vscode-extension.parseClause",
+					"group": "AccordProject@5"
+				},
+				{
+					"when": "explorerResourceIsFolder && !isWeb",
+					"command": "cicero-vscode-extension.verifyTemplateSignature",
+					"group": "AccordProject@6"
+				},
+				{
+					"when": "resourceLangId == templatemark || resourceLangId == concerto",
+					"command": "cicero-vscode-extension.showPreview",
+					"group": "AccordProject@7"
+				},
+				{
+					"when": "resourceLangId == concerto",
+					"command": "cicero-vscode-extension.compileToTarget",
+					"group": "AccordProject@8"
+				},
+				{
+					"when": "resourceLangId == json",
+					"command": "cicero-vscode-extension.draftClause",
+					"group": "AccordProject@9"
+				}
+			],
+			"editor/title": [
+				{
+					"when": "resourceLangId == templatemark || resourceLangId == concerto",
+					"command": "cicero-vscode-extension.showPreview",
+					"group": "navigation"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "cicero-vscode-extension.exportArchive",
+					"when": "false"
+				},
+				{
+					"command": "cicero-vscode-extension.verifyTemplateSignature",
+					"when": "false"
+				},
+				{
+					"command": "cicero-vscode-extension.downloadModels",
+					"when": "false"
+				},
+				{
+					"command": "cicero-vscode-extension.exportClassDiagram",
+					"when": "false"
+				},
+				{
+					"command": "cicero-vscode-extension.triggerClause",
+					"when": "false"
+				},
+				{
+					"command": "cicero-vscode-extension.parseClause",
+					"when": "false"
+				},
+				{
+					"command": "cicero-vscode-extension.compileToTarget",
+					"when": "false"
+				},
+				{
+					"command": "cicero-vscode-extension.draftClause",
+					"when": "false"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
