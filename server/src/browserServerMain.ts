@@ -18,7 +18,8 @@ import { URI } from 'vscode-uri';
 
 import { FileType, ReadDirectoryRecursiveResponse } from './types';
 import { GLOBAL_STATE, log } from './state';
-import { handleConcertoDocumentChange } from './concerto/concertoHandler';
+import { handleConcertoDocumentChange } from './documents/concertoHandler';
+import { registerCommandHandlers } from './commands/commandHandler';
 
 /**
  * Called when the language server is initialized
@@ -71,6 +72,10 @@ import { handleConcertoDocumentChange } from './concerto/concertoHandler';
 	}
 	finally {
 		GLOBAL_STATE.isLoading = false;
+		// register RPC command handlers, so the client can trigger actions
+		// within the language server process
+		registerCommandHandlers(GLOBAL_STATE);
+
 		// we are done opening documents - let's process all the documents
 		// to rebuild our global state
 		documents.all().forEach( async document => {

@@ -21,15 +21,15 @@ import { initVFS } from './VirtualFileSystem';
 
 import { log } from './output';
 
+import {
+	compileToTarget,
+} from './commands/compileToTarget';
+
 // this method is called when vs code is activated
 export async function activate(context: vscode.ExtensionContext) {
 
 	log('Accord Project Extension activated');
 
-	/* 
-	 * all except the code to create the language client in not browser specific
-	 * and could be shared with a regular (Node) extension
-	 */
 	const documentSelector = [
 		{ language: 'concerto' }, 
 		{ language: 'ergo' }, 
@@ -56,8 +56,12 @@ export async function activate(context: vscode.ExtensionContext) {
 	// initialize client-side handlers that
 	// expose the workspace.fs filesystem to the language
 	// server over RPC - allowing the language server process
-	// to query the workspace from within its process
+	// to query the workspace from its process
 	initVFS(client);
+
+	// register commands
+	context.subscriptions.push(vscode.commands
+		.registerCommand('cicero-vscode-extension.compileToTarget', (file) => compileToTarget(client,file)));
 }
 
 function createWorkerLanguageClient(context: vscode.ExtensionContext, clientOptions: LanguageClientOptions) {

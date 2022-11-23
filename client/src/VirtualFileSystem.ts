@@ -126,8 +126,9 @@ export function initVFS(client: LanguageClient) {
 		);
 	});
 
-	client.onRequest("vfs/writeFile", async (event: unknown) => {
-		if (!isValidWriteEvent(event)) throw new Error("invalid write event");
-		return fs.writeFile(Uri.parse(event.path), Uint8Array.from(event.content));
+	client.onRequest("vfs/writeFile", async (event: any) => {
+		// if (!isValidWriteEvent(event)) throw new Error("invalid write event");
+		const enc = new TextEncoder(); // always utf-8
+		return fs.writeFile(Uri.parse(event.path), enc.encode(event.content));
 	});
 }

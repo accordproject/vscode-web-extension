@@ -1,5 +1,5 @@
 import { ModelManager } from '@accordproject/concerto-core';
-import { Connection } from 'vscode-languageserver';
+import { Command, Connection } from 'vscode-languageserver';
 import { Diagnostics } from './diagnostics';
 
 /**
@@ -37,3 +37,19 @@ export type LanguageServerState = {
 	connection: Connection;
 	isLoading: boolean;
 }
+
+export enum CommandType {
+	CONCERTO_COMPILE,
+}
+
+export type CommandEvent = {
+	command:CommandType;
+}
+
+export type ConcertoCompileEvent = CommandEvent & {
+	payload: {
+		target:string
+	}
+}
+
+export type Commands = ConcertoCompileEvent;
