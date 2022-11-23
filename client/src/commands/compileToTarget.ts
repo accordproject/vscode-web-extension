@@ -22,6 +22,6 @@ export async function compileToTarget(client:LanguageClient, file: vscode.Uri) {
 		const response = await client.sendRequest("concertoCompile", {uri:file, target});
 		vscode.window.showInformationMessage(`${response}.`);
 	} catch (e) {
-		vscode.window.showErrorMessage("Compilation error: " + e);
+		vscode.window.showErrorMessage(`Compilation error: ${e}`);
 	}
 }

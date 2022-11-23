@@ -25,7 +25,11 @@ import {
 	compileToTarget,
 } from './commands/compileToTarget';
 
-// this method is called when vs code is activated
+/**
+ * Called when VS Code extension is activated. The conditions for
+ * activation are specified in package.json (e.g. opening a .cto file)
+ * @param context the extension context
+ */
 export async function activate(context: vscode.ExtensionContext) {
 
 	log('Accord Project Extension activated');
@@ -60,12 +64,13 @@ export async function activate(context: vscode.ExtensionContext) {
 	initVFS(client);
 
 	// register commands
+	// menus etc for commands are defined in package.json
 	context.subscriptions.push(vscode.commands
 		.registerCommand('cicero-vscode-extension.compileToTarget', (file) => compileToTarget(client,file)));
 }
 
 function createWorkerLanguageClient(context: vscode.ExtensionContext, clientOptions: LanguageClientOptions) {
-	// Create a worker. The worker main file implements the language server.
+	// Create a web worker. The worker main file implements the language server.
 	const serverMain = vscode.Uri.joinPath(context.extensionUri, 'server/dist/browserServerMain.js');
 	const worker = new Worker(serverMain.toString(true));
 

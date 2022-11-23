@@ -24,10 +24,12 @@ export async function registerCommandHandlers(state:LanguageServerState) {
 }
 
 export async function saveInMemoryWriter(state:LanguageServerState, path:string, imw:InMemoryWriter) {
+	const enc = new TextEncoder();
 	const keys:string[] = [...imw.getFilesInMemory().keys()];
 	const values:string[] = [...imw.getFilesInMemory().values()];
 	for(let n=0; n < keys.length; n++) {
 		log(`Saving file ${path}/${keys[n]}`);
-		await state.connection.sendRequest("vfs/writeFile", {path: `${path}/${keys[n]}`, content:values[n]});
+		const bytes = Array.from(enc.encode(values[n]));
+		await state.connection.sendRequest("vfs/writeFile", {path: `${path}/${keys[n]}`, content:bytes});
 	}
 }
