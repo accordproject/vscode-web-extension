@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 'use strict';
-import { InitializedParams, InitializeParams, InitializeResult, ServerCapabilities, TextDocumentChangeEvent, TextDocuments, TextDocumentSyncKind } from 'vscode-languageserver';
+import { DidChangeWatchedFilesParams, FileChangeType, InitializedParams, InitializeParams, InitializeResult, ServerCapabilities, TextDocumentChangeEvent, TextDocuments, TextDocumentSyncKind } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { URI } from 'vscode-uri';
 
@@ -20,11 +20,12 @@ import { FileType, ReadDirectoryRecursiveResponse } from './types';
 import { GLOBAL_STATE, log } from './state';
 import { handleConcertoDocumentChange } from './documents/concertoHandler';
 import { registerCommandHandlers } from './commands/commandHandler';
+import { handleWatchedFileChange } from './documents/typeScriptHandler';
 
 /**
  * Called when the language server is initialized
  */
- GLOBAL_STATE.connection.onInitialize((params: InitializeParams): InitializeResult => {
+GLOBAL_STATE.connection.onInitialize((params: InitializeParams): InitializeResult => {
 
 	// Set the process.browser variable so that the Concerto logger 
 	// doesn't try to create log files
@@ -48,23 +49,23 @@ import { registerCommandHandlers } from './commands/commandHandler';
  * The will trigger a call to onDidChangeContent
  * which will populate the model manager.
  */
- GLOBAL_STATE.connection.onInitialized( async (params:InitializedParams) => {
+GLOBAL_STATE.connection.onInitialized(async (params: InitializedParams) => {
 	log('Initialized.');
 	GLOBAL_STATE.isLoading = true;
 	try {
 		const folders = await GLOBAL_STATE.connection.workspace.getWorkspaceFolders();
 		log(`Read workspace folders: ${folders !== null ? folders.length : 'null'}`);
-		if(folders) {
-			for(let n=0; n < folders.length; n++) {
+		if (folders) {
+			for (let n = 0; n < folders.length; n++) {
 				const folder = folders[n];
 				const uri = URI.parse(folder.uri);
-				const readDirectoryResponse:ReadDirectoryRecursiveResponse[] = 
-					await GLOBAL_STATE.connection.sendRequest("vfs/readDirectoryRecursive", 
-						{path: `${uri.scheme}://${uri.authority}/`});
-				for(let i=0; i < readDirectoryResponse.length; i++) {
+				const readDirectoryResponse: ReadDirectoryRecursiveResponse[] =
+					await GLOBAL_STATE.connection.sendRequest("vfs/readDirectoryRecursive",
+						{ path: `${uri.scheme}://${uri.authority}/` });
+				for (let i = 0; i < readDirectoryResponse.length; i++) {
 					const res = readDirectoryResponse[i];
-					if(res.type === FileType.File && res.path.endsWith('.cto')) {
-						await GLOBAL_STATE.connection.sendRequest("vfs/openFile", {path: res.path});
+					if (res.type === FileType.File && res.path.endsWith('.cto')) {
+						await GLOBAL_STATE.connection.sendRequest("vfs/openFile", { path: res.path });
 					}
 				}
 			}
@@ -78,8 +79,8 @@ import { registerCommandHandlers } from './commands/commandHandler';
 
 		// we are done opening documents - let's process all the documents
 		// to rebuild our global state
-		documents.all().forEach( async document => {
-			const change:TextDocumentChangeEvent<TextDocument> = {document};
+		documents.all().forEach(async document => {
+			const change: TextDocumentChangeEvent<TextDocument> = { document };
 			handleDocumentChange(change);
 		});
 	}
@@ -94,15 +95,34 @@ documents.listen(GLOBAL_STATE.connection);
  * Handles changes to documents
  * @param change the document change event
  */
-async function handleDocumentChange(change:TextDocumentChangeEvent<TextDocument>) {
+async function handleDocumentChange(change: TextDocumentChangeEvent<TextDocument>) {
 	log(`Document changed: ${change.document.uri}`);
 	await handleConcertoDocumentChange(GLOBAL_STATE, change);
+}
+
+/**
+ * Handles changes to watched files
+ * @param change the file change event
+ */
+ async function handleWatchedFiles(change: DidChangeWatchedFilesParams) {
+	change.changes.forEach( async fileEvent => {
+		let file:string|undefined = undefined;
+		if( fileEvent.type === FileChangeType.Created || FileChangeType.Changed ) {
+			file = await GLOBAL_STATE.connection.sendRequest('vfs/readFile', {path: fileEvent.uri}); 
+		}
+		await handleWatchedFileChange(GLOBAL_STATE, fileEvent.type, fileEvent.uri, file);
+	});
 }
 
 /**
  * Register our handler for when a document is opened or edited
  */
 documents.onDidChangeContent(handleDocumentChange);
+
+/**
+ * Register to receive notifications when watched files change
+ */
+GLOBAL_STATE.connection.onDidChangeWatchedFiles(handleWatchedFiles);
 
 log('Language Server listening...');
 GLOBAL_STATE.connection.listen();

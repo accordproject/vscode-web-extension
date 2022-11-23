@@ -18,6 +18,7 @@ import { createConnection, BrowserMessageReader, BrowserMessageWriter } from 'vs
 import { ModelManager } from '@accordproject/concerto-core';
 import { Diagnostics } from './diagnostics';
 import { LanguageServerState } from './types';
+import { ScriptManager } from '@accordproject/ergo-compiler';
 
 /* browser specific setup code */
 const messageReader = new BrowserMessageReader(self);
@@ -32,6 +33,8 @@ export const GLOBAL_STATE:LanguageServerState = {
 	connection: createConnection(messageReader, messageWriter),
 	isLoading: false
 };
+
+GLOBAL_STATE.scriptManager = new ScriptManager('es6', GLOBAL_STATE.modelManager);
 
 /**
  * Log a message to the connection, sending it back to the

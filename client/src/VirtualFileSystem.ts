@@ -18,7 +18,7 @@ const { fs } = vscode.workspace;
 import { Uri } from "vscode";
 import { LanguageClient } from 'vscode-languageclient/browser';
 
-import { log } from './output';
+import { log } from './log';
 
 export type ReadDirectoryRecursiveResponse = {
 	path: string;

@@ -1,8 +1,8 @@
-namespace org.accordproject.acceptanceofdelivery
+namespace org.accordproject.acceptanceofdelivery@1.0.0
 
-import org.accordproject.contract.* from https://models.accordproject.org/accordproject/contract.cto
-import org.accordproject.runtime.* from https://models.accordproject.org/accordproject/runtime.cto
-import org.accordproject.organization.Organization from https://models.accordproject.org/organization.cto
+import org.accordproject.contract@0.2.0.{Clause} from https://models.accordproject.org/accordproject/contract@0.2.0.cto
+import org.accordproject.runtime@0.2.0.{Request,Response} from https://models.accordproject.org/accordproject/runtime@0.2.0.cto
+import org.accordproject.organization@0.2.0.Organization from https://models.accordproject.org/organization@0.2.0.cto
 
 /**
  * Sent by the receiver of the goods, indicates when the goods were

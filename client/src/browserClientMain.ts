@@ -17,9 +17,9 @@ import * as vscode from 'vscode';
 import { LanguageClientOptions } from 'vscode-languageclient';
 
 import { LanguageClient } from 'vscode-languageclient/browser';
-import { initVFS } from './VirtualFileSystem';
+import { initVFS } from './virtualFileSystem';
 
-import { log } from './output';
+import { log } from './log';
 
 import {
 	compileToTarget,
@@ -36,7 +36,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const documentSelector = [
 		{ language: 'concerto' }, 
-		{ language: 'ergo' }, 
 		{ language: 'templatemark' }
 	];
 
@@ -44,7 +43,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const clientOptions: LanguageClientOptions = {
 		documentSelector,
 		synchronize: {
-			// fileEvents: vscode.workspace.createFileSystemWatcher('**/*.cto')
+			fileEvents: vscode.workspace.createFileSystemWatcher('**/logic/*.ts')
 		},
 		initializationOptions: {}
 	};
