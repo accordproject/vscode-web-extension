@@ -19,11 +19,11 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 import * as ts from 'typescript';
 import { LanguageServerState } from '../types';
 import { log } from '../state';
-import { typecheck } from '../compiler/typescheck';
+import { compile } from '../compiler/tsCompiler';
 
 function compileTypeScript(filename: string, source: string) {
 	try {
-		typecheck(source);
+		compile(source);
 	}
 	catch(err:any) {
 		log(err.message);

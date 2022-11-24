@@ -41,6 +41,10 @@ const browserClientConfig = {
 	module: {
 		rules: [
 			{
+				test: /\.d\.ts$/,
+				type: 'asset/source'
+			},
+			{
 				test: /\.ts$/,
 				exclude: /node_modules/,
 				use: [
@@ -48,7 +52,7 @@ const browserClientConfig = {
 						loader: 'ts-loader',
 					},
 				],
-			},
+			}
 		],
 	},
 	externals: {
