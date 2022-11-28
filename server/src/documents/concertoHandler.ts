@@ -13,11 +13,42 @@
  */
 'use strict';
 
+import * as path from 'path-browserify';
+import { URI } from 'vscode-uri';
+
 import { Parser } from '@accordproject/concerto-cto';
 import { DiagnosticSeverity, TextDocumentChangeEvent } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { LanguageServerState } from '../types';
 import { log } from '../state';
+import { concertoCompileToTarget } from '../commands/concertoCompile';
+
+/**
+ * Gets the root file path for a template, by walking up the directory hierarchy 
+ * looking for a package.json file that contains the 'accordproject' key. 
+ */
+export async function findTemplateRoot(state:LanguageServerState, uri:URI) : Promise<URI|null> {
+	const paths = path.dirname(uri.path).split('/');
+	for(let n=paths.length; n>=0; n--) {
+		const curPath = paths.slice(0,n).join('/');
+		const rootPath = `${uri.scheme}://${uri.authority}/${curPath}`;
+		const packageJson = `${rootPath}/package.json`;
+		const exists = await state.connection.sendRequest('vfs/exists', {path: packageJson});
+		if(exists) {
+			const fileContents:string = await state.connection.sendRequest('vfs/readFile', {path: packageJson});
+			try {
+				const json = JSON.parse(fileContents);
+				if(json.accordproject) {
+					return URI.parse(rootPath);
+				}
+			}
+			catch(error) {
+				// ignore
+			}
+		}
+	}
+	return null;
+}
 
 /**
  * Handles changes to Concerto documents
@@ -41,6 +72,16 @@ export async function handleConcertoDocumentChange(state:LanguageServerState, ch
 			try {
 				await state.modelManager.updateExternalModels();
 				log(`Models are valid with changes to ${change.document.uri}`);
+				const root = await findTemplateRoot(state,  URI.parse(change.document.uri));
+				if(root) {
+					log(JSON.stringify(root));
+					const tsOutput = root.with({path: `${root.path}/logic`});
+					await concertoCompileToTarget(state, {uri: tsOutput, target: 'typescript'});
+					log('Converted template model to Typescript');
+				}
+				else {
+					log('Did not convert model to Typescript (outside project folder)');
+				}
 			}
 			catch (error: any) {
 				if(!state.isLoading) {

@@ -250,6 +250,7 @@
 		"chrome": "npm run compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data"
 	},
 	"devDependencies": {
+		"@types/path-browserify": "^1.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.42.0",
 		"@typescript-eslint/parser": "^5.42.0",
 		"@vscode/test-web": "^0.0.32",
@@ -270,8 +271,8 @@
 		"stream-browserify": "^3.0.0",
 		"stream-http": "^3.2.0",
 		"tty-browserify": "^0.0.1",
+		"typescript": "^4.9.3",
 		"url": "^0.11.0",
-		"vm-browserify": "^1.1.2",
-		"typescript": "^4.9.3"
+		"vm-browserify": "^1.1.2"
 	}
 }

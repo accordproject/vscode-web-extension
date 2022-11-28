@@ -30,9 +30,9 @@ export async function concertoCompileToTarget(state: LanguageServerState, event:
 				fileWriter: imw
 			} as any;
 			state.modelManager.accept(visitor, parameters);
-			const output = `${event.uri.scheme}://${event.uri.authority}/output/${event.target}`;
+			const output = `${event.uri.scheme}://${event.uri.authority}/${event.uri.path}`;
 			saveInMemoryWriter(state, output, imw);
-			return `Saved model to ${output}`;
+			return `Saved ${event.target} model to ${output}`;
 		}
 		else {
 			log(`Invalid compilation target ${event.target} to compile model`);

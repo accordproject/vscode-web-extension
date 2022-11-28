@@ -12,31 +12,11 @@
  * limitations under the License.
  */
 
-import { InspectionStatus, IInspectDeliverable, IInspectionResponse, IAcceptanceOfDeliveryClause } from '../modelts/org.accordproject.acceptanceofdelivery@1.0.0';
-import { IDuration, TemporalUnit } from '../modelts/org.accordproject.time@0.3.0';
+import { InspectionStatus, IInspectDeliverable, IInspectionResponse, IAcceptanceOfDeliveryClause } from './org.accordproject.acceptanceofdelivery@1.0.0';
+import { TemporalUnit } from './org.accordproject.time@0.3.0';
 
-// from runtime?
-class Contract<T> {
-	contract: T;
-
-	now(): Date {
-		return new Date();
-	}
-}
-
-// from stdlib
-function isBefore(a: Date, b: Date): boolean {
-	return a < b;
-}
-
-function isAfter(a: Date, b: Date): boolean {
-	return a > b;
-}
-
-function addDuration(a: Date, duration: IDuration): Date {
-	// TODO
-	return new Date(a.getMilliseconds() + duration.amount);
-}
+import { Contract} from './contract';
+import { addDuration, isAfter, isBefore } from './stdlib';
 
 class AcceptanceOfDelivery extends Contract<IAcceptanceOfDeliveryClause> {
 

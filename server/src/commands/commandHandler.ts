@@ -13,7 +13,6 @@
  */
 'use strict';
 
-import { URI } from 'vscode-uri';
 import { GLOBAL_STATE, log } from '../state';
 import { LanguageServerState } from '../types';
 import { concertoCompileToTarget } from './concertoCompile';

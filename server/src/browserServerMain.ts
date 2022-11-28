@@ -122,7 +122,7 @@ documents.onDidChangeContent(handleDocumentChange);
 /**
  * Register to receive notifications when watched files change
  */
-GLOBAL_STATE.connection.onDidChangeWatchedFiles(handleWatchedFiles);
+// GLOBAL_STATE.connection.onDidChangeWatchedFiles(handleWatchedFiles);
 
 log('Language Server listening...');
 GLOBAL_STATE.connection.listen();
