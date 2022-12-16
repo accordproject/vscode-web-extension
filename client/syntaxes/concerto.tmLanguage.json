@@ -53,7 +53,7 @@
 		},
 		"concerto-declaration": {
 			"name": "keyword.control.flow.concerto",
-			"match": "\\b(asset|transaction|participant|enum|concept|event)\\b",
+			"match": "\\b(asset|transaction|participant|enum|concept|event|scalar)\\b",
 			"patterns": []
 		},
 		"concerto-abstract-type": {

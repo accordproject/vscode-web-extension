@@ -43,14 +43,19 @@
 	},
 	"Namespace": {
 	  "prefix": "namespace",
-	  "body": ["namespace ${1:org.accordproject.color} "],
+	  "body": ["namespace ${1:org.accordproject.color@1.0.0} "],
 	  "description": "Concerto namespaces group related definitions"
 	},
 	"Import": {
 	  "prefix": "import",
-	  "body": ["import ${1:org.accordproject.color.Color} from ${2:https://models.accordproject.org/color.cto}"],
+	  "body": ["import ${1:org.accordproject.color@1.0.0.Color} from ${2:https://models.accordproject.org/color.cto}"],
 	  "description": "Concerto imports allow types to be used from other namespaces"
 	},
+	"Scalar": {
+		"prefix": "scalar",
+		"body": ["scalar ${1:name} extends String"],
+		"description": "Declaration of a reusable primitive type"
+	},  
 	"String": {
 	  "prefix": "string",
 	  "body": ["o String ${1:name}"],

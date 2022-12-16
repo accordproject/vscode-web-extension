@@ -1,16 +1,16 @@
 <h1 align="center">
-  Accord Project Extension for VS Code
+  Accord Project Concerto Extension for VS Code
 </h1>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=accordproject.cicero-vscode-extension"><img src="https://vsmarketplacebadge.apphb.com/version/accordproject.cicero-vscode-extension.svg" alt="Version number"></a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=accordproject.cicero-vscode-extension"><img src="https://vsmarketplacebadge.apphb.com/installs/accordproject.cicero-vscode-extension.svg" alt="Installation count"></a> <a href="https://github.com/accordproject/cicero-vscode-extension/blob/master/LICENSE"><img src="https://img.shields.io/github/license/accordproject/cicero-vscode-extension" alt="GitHub license"></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=accordproject.concerto-vscode-extension"><img src="https://vsmarketplacebadge.apphb.com/version/accordproject.concerto-vscode-extension.svg" alt="Version number"></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=accordproject.concerto-vscode-extension"><img src="https://vsmarketplacebadge.apphb.com/installs/accordproject.concerto-vscode-extension.svg" alt="Installation count"></a> <a href="https://github.com/accordproject/concerto-vscode-extension/blob/master/LICENSE"><img src="https://img.shields.io/github/license/accordproject/concerto-vscode-extension" alt="GitHub license"></a>
   <a href="https://discord.com/invite/Zm99SKhhtA">
     <img src="https://img.shields.io/badge/Accord%20Project-Join%20Discord-blue" alt="Join the Accord Project Discord" />
   </a>
 </p>
 
-The Accord Project extension helps developers to create, test and debug [Accord Project](https://accordproject.org) templates.
+The Accord Project Concerto extension helps developers to create, test and debug [Accord Project](https://accordproject.org) Concerto files.
 
 For a step-by-step guide on getting started with the extension's features, access our [VS Code Tutorial](https://docs.accordproject.org/docs/next/tutorial-vscode.html). For more comprehensive documentation, [follow this link.](https://docs.accordproject.org)
 
@@ -18,24 +18,20 @@ For a step-by-step guide on getting started with the extension's features, acces
 
 ## Installation
 
-Please visit the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=accordproject.cicero-vscode-extension) for installation and more details.
+Please visit the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=accordproject.concerto-vscode-extension) for installation and more details.
 
 ## Usage on the Web
 
-This is a [Web Extension](https://code.visualstudio.com/api/extension-guides/web-extensions) and can be used by VS Code when running within your web-browser. For example, by visiting the URL: https://github.dev/accordproject/cicero-template-library/tree/master/src/acceptance-of-delivery
+This is a [Web Extension](https://code.visualstudio.com/api/extension-guides/web-extensions) and can be used by VS Code when running within your web-browser. For example, by visiting the URL: https://github.com/accordproject/models/blob/main/src/finance/loan%400.3.0.cto
 
 > Note that other VS Code web hosting options are available.
 
 ## Features
 
-- Create data models for templates using the [Concerto](https://docs.accordproject.org/docs/model-concerto.html) modelling language
-- Develop the logic for templates using the [Ergo](https://docs.accordproject.org/docs/logic-ergo.html) domain specific language
-- Write the natural language text for templates using the [CiceroMark](https://docs.accordproject.org/docs/markup-cicero.html) extended markdown syntax
-- Run unit tests for templates using the [Cucumber](https://cucumber.io) BDD testing framework
-- Trigger templates (send them data and view the results)
+- Create data models using the [Concerto](https://docs.accordproject.org/docs/model-concerto.html) modelling language
+- Compilation of Concerto files to other languages
 - Syntax highlighting for all files
 - Compilation and problem markers
-- HTML preview for template markdown text and Concerto models
 
 ### Commands
 
@@ -43,33 +39,7 @@ This is a [Web Extension](https://code.visualstudio.com/api/extension-guides/web
 
 ![Code Gen GIF](./assets/Code%20Gen.gif)
 
-
-- Draft clause after passing relevent input into the form. 
-
-![Draft Clause GIF](./assets/Draft%20Clause.gif)
-
-
 - Work offline by downloading Concerto model dependencies (context-click on a `*.cto` file)
-- Export PlantUML class diagram (context-click on a `*.cto` file)
-
-![Downdload Models and Export Class Diagrsms GIF](./assets/Downloads%20Models%20and%20Export%20Class%20Diagrsm.gif)
-
-- Parse Clause after entering relevent information into the input form. 
-- Export the template directory as a ``.cta`` archive.
- 
- ![Parse Clause and Export as archive GIF](./assets/Parse%20Clause%20And%20Export%20As%20Archive.gif)
-
-- Trigger a template, parsing data from sample.md and passing in `request.json` and `state.json` (context-click on root folder)
-
-![Trigger Clause GIF](./assets/Trigger%20Clause.gif)
-
-### Views
-- HTML preview for template text (open `grammar.tem.md` and then press the _Open Preview_ icon in the editor or context menu)
-- HTML preview for Concerto models (open `*.cto` and then press the _Open Preview_ icon in the editor or context menu)
-
-### Quick Fixes
-
-- Add a variable to the template model if an undeclared variable is used in `grammar.tem.md`. _Note that the `model.cto` file must be open for the quick fix to be available._
 
 ### Concerto Snippets
 
@@ -82,6 +52,7 @@ The extention adds code snippets for the following elements of the Concerto lang
 | Transaction | transaction |
 | Concept     |   concept   |
 | Enum        |    enum     |
+| Scalar      |    scalar   |
 | Event       |    event    |
 | Namespace   |   namespace |
 | Import      |    import   |
@@ -92,21 +63,8 @@ The extention adds code snippets for the following elements of the Concerto lang
 | DateTime    |    date     |
 | Boolean     |    bool     |
 
-### Ergo Snippets
-
-The extention adds code snippets for the following elements of the Ergo language.
-
-| Element     |   Prefix    |
-| :---------- | :---------: |
-| Clause      |   clause    |
-| Contract    | contract    |
-
 ## Contact Us
-If you have find any problems or want to make suggestions for future features please create [issues and suggestions on Github](https://github.com/accordproject/cicero-vscode-extension/issues). For any questions please [join](https://discord.com/invite/Zm99SKhhtA) the Accord Project Discord community and post questions to the `#technology-cicero` channel.
-
-## Acknowledgments
-
-Thanks to our friends at IBM Blockchain Platform for inspiring us with their [existing plugin](https://github.com/IBM-Blockchain/blockchain-vscode-extension/).
+If you have find any problems or want to make suggestions for future features please create [issues and suggestions on Github](https://github.com/accordproject/concerto-vscode-extension/issues). For any questions please [join](https://discord.com/invite/Zm99SKhhtA) the Accord Project Discord community and post questions to the `#technology-concerto` channel.
 
 ---
 
@@ -165,8 +123,8 @@ Copyright 2018-2019 Clause, Inc. All trademarks are the property of their respec
 [apdoc]: https://docs.accordproject.org/
 [apdiscord]: https://discord.com/invite/Zm99SKhhtA
 
-[contributing]: https://github.com/accordproject/cicero-vscode-extension/blob/master/CONTRIBUTING.md
-[developers]: https://github.com/accordproject/cicero-vscode-extension/blob/master/DEVELOPERS.md
+[contributing]: https://github.com/accordproject/vscode-web-extension/blob/master/CONTRIBUTING.md
+[developers]: https://github.com/accordproject/vscode-web-extension/blob/master/DEVELOPERS.md
 
-[apache]: https://github.com/accordproject/cicero-vscode-extension/blob/master/LICENSE
+[apache]: https://github.com/accordproject/vscode-web-extension/blob/master/LICENSE
 [creativecommons]: http://creativecommons.org/licenses/by/4.0/

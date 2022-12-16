@@ -44,8 +44,10 @@ asset Laptop extends Equipment {
     o LaptopMake make
 }
 
+scalar Email extends String
+
 abstract participant Person identified by email {
-    o String email
+    o Email email
     o String firstName
     o String lastName
     o String middleNames optional

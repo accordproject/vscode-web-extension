@@ -9,7 +9,7 @@
 	"browser": "./client/dist/browserClientMain",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/accordproject/cicero-vscode-extension"
+		"url": "https://github.com/accordproject/vscode-web-extension"
 	},
 	"publisher": "accordproject",
 	"categories": [
