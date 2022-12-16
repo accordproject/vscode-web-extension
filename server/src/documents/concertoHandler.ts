@@ -21,7 +21,7 @@ import { DiagnosticSeverity, TextDocumentChangeEvent } from 'vscode-languageserv
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { LanguageServerState } from '../types';
 import { log } from '../state';
-import { concertoCompileToTarget } from '../commands/concertoCompile';
+// import { concertoCompileToTarget } from '../commands/concertoCompile';
 
 /**
  * Gets the root file path for a template, by walking up the directory hierarchy 
@@ -72,16 +72,16 @@ export async function handleConcertoDocumentChange(state:LanguageServerState, ch
 			try {
 				await state.modelManager.updateExternalModels();
 				log(`Models are valid with changes to ${change.document.uri}`);
-				const root = await findTemplateRoot(state,  URI.parse(change.document.uri));
-				if(root) {
-					log(JSON.stringify(root));
-					const tsOutput = root.with({path: `${root.path}/logic`});
-					await concertoCompileToTarget(state, {uri: tsOutput, target: 'typescript'});
-					log('Converted template model to Typescript');
-				}
-				else {
-					log('Did not convert model to Typescript (outside project folder)');
-				}
+				// const root = await findTemplateRoot(state,  URI.parse(change.document.uri));
+				// if(root) {
+				// 	log(JSON.stringify(root));
+				// 	const tsOutput = root.with({path: `${root.path}/logic`});
+				// 	await concertoCompileToTarget(state, {uri: tsOutput, target: 'typescript'});
+				// 	log('Converted template model to Typescript');
+				// }
+				// else {
+				// 	log('Did not convert model to Typescript (outside project folder)');
+				// }
 			}
 			catch (error: any) {
 				if(!state.isLoading) {

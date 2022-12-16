@@ -1,6 +1,5 @@
 import { ModelManager } from '@accordproject/concerto-core';
-import { ScriptManager } from '@accordproject/ergo-compiler';
-import { Command, Connection } from 'vscode-languageserver';
+import { Connection } from 'vscode-languageserver';
 import { Diagnostics } from './diagnostics';
 
 /**
@@ -37,7 +36,6 @@ export type LanguageServerState = {
 	diagnostics: Diagnostics;
 	connection: Connection;
 	isLoading: boolean;
-	scriptManager?: ScriptManager;
 }
 
 export enum CommandType {

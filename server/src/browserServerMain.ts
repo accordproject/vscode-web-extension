@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 'use strict';
-import { DidChangeWatchedFilesParams, FileChangeType, InitializedParams, InitializeParams, InitializeResult, ServerCapabilities, TextDocumentChangeEvent, TextDocuments, TextDocumentSyncKind } from 'vscode-languageserver';
+import { InitializedParams, InitializeParams, InitializeResult, ServerCapabilities, TextDocumentChangeEvent, TextDocuments, TextDocumentSyncKind } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { URI } from 'vscode-uri';
 
@@ -20,7 +20,6 @@ import { FileType, ReadDirectoryRecursiveResponse } from './types';
 import { GLOBAL_STATE, log } from './state';
 import { handleConcertoDocumentChange } from './documents/concertoHandler';
 import { registerCommandHandlers } from './commands/commandHandler';
-import { handleWatchedFileChange } from './documents/typeScriptHandler';
 
 /**
  * Called when the language server is initialized
@@ -104,15 +103,15 @@ async function handleDocumentChange(change: TextDocumentChangeEvent<TextDocument
  * Handles changes to watched files
  * @param change the file change event
  */
- async function handleWatchedFiles(change: DidChangeWatchedFilesParams) {
-	change.changes.forEach( async fileEvent => {
-		let file:string|undefined = undefined;
-		if( fileEvent.type === FileChangeType.Created || FileChangeType.Changed ) {
-			file = await GLOBAL_STATE.connection.sendRequest('vfs/readFile', {path: fileEvent.uri}); 
-		}
-		await handleWatchedFileChange(GLOBAL_STATE, fileEvent.type, fileEvent.uri, file);
-	});
-}
+//  async function handleWatchedFiles(change: DidChangeWatchedFilesParams) {
+// 	change.changes.forEach( async fileEvent => {
+// 		let file:string|undefined = undefined;
+// 		if( fileEvent.type === FileChangeType.Created || FileChangeType.Changed ) {
+// 			file = await GLOBAL_STATE.connection.sendRequest('vfs/readFile', {path: fileEvent.uri}); 
+// 		}
+// 		await handleWatchedFileChange(GLOBAL_STATE, fileEvent.type, fileEvent.uri, file);
+// 	});
+// }
 
 /**
  * Register our handler for when a document is opened or edited

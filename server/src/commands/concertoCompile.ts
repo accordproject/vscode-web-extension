@@ -30,7 +30,7 @@ export async function concertoCompileToTarget(state: LanguageServerState, event:
 				fileWriter: imw
 			} as any;
 			state.modelManager.accept(visitor, parameters);
-			const output = `${event.uri.scheme}://${event.uri.authority}/${event.uri.path}`;
+			const output = `${event.uri.scheme}://${event.uri.authority}/output/${event.target}`;
 			saveInMemoryWriter(state, output, imw);
 			return `Saved ${event.target} model to ${output}`;
 		}
@@ -40,4 +40,8 @@ export async function concertoCompileToTarget(state: LanguageServerState, event:
 	} catch (e) {
 		log(`Failed to compile models to ${event.target} with error ${e}`);
 	}
+}
+
+export async function concertoCompileTargets() {
+	return Object.keys(CodeGen.formats).sort();
 }

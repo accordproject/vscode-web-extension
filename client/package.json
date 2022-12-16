@@ -1,8 +1,8 @@
 {
-	"name": "lsp-web-extension-sample-client",
-	"description": "VSCode part of a language server in a web extension",
-	"author": "Microsoft Corporation",
-	"license": "MIT",
+	"name": "web-extension-accordproject-client",
+	"description": "Accord Project Web Extension (Client)",
+	"author": "Accord Project",
+	"license": "Apache 2.0",
 	"version": "0.0.1",
 	"publisher": "vscode",
 	"repository": {

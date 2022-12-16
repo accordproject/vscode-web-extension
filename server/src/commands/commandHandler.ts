@@ -15,11 +15,12 @@
 
 import { GLOBAL_STATE, log } from '../state';
 import { LanguageServerState } from '../types';
-import { concertoCompileToTarget } from './concertoCompile';
+import { concertoCompileToTarget, concertoCompileTargets } from './concertoCompile';
 import { InMemoryWriter } from '@accordproject/concerto-util';
 
 export async function registerCommandHandlers(state:LanguageServerState) {
 	state.connection.onRequest('concertoCompile', (event:any) => concertoCompileToTarget(GLOBAL_STATE, event));
+	state.connection.onRequest('concertoCompileTargets', (event:any) => concertoCompileTargets());
 }
 
 export async function saveInMemoryWriter(state:LanguageServerState, path:string, imw:InMemoryWriter) {
