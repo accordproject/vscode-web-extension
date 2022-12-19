@@ -22,6 +22,10 @@
 		"concerto",
 		"modeling"
 	],
+	"pricing": "Free",
+	"sponsor": {
+		"url": "https://crowdfunding.lfx.linuxfoundation.org/projects/accordproject"
+	},
 	"engines": {
 		"vscode": "^1.43.0"
 	},
