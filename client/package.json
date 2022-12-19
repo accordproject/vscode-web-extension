@@ -3,11 +3,11 @@
 	"description": "Accord Project Web Extension (Client)",
 	"author": "Accord Project",
 	"license": "Apache 2.0",
-	"version": "0.0.1",
-	"publisher": "vscode",
+	"version": "1.0.0",
+	"publisher": "Accord Project",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-extension-samples"
+		"url": "https://github.com/accordproject/vscode-web-extension.git"
 	},
 	"engines": {
 		"vscode": "^1.52.0"
