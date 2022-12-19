@@ -110,8 +110,7 @@
 					"group": "AccordProject@8"
 				}
 			],
-			"editor/title": [
-			],
+			"editor/title": [],
 			"commandPalette": [
 				{
 					"command": "cicero-vscode-extension.downloadModels",
@@ -125,6 +124,7 @@
 		}
 	},
 	"scripts": {
+		"package:vsix": "vsce package",
 		"vscode:prepublish": "npm run compile",
 		"compile": "webpack",
 		"watch": "webpack --watch",
@@ -144,6 +144,7 @@
 		"node-polyfill-webpack-plugin": "^2.0.1",
 		"path-browserify": "^1.0.1",
 		"ts-loader": "^9.3.0",
+		"vsce": "^2.15.0",
 		"webpack": "^5.44.0",
 		"webpack-cli": "^4.7.2",
 		"webpack-dev-server": "^4.11.1"
