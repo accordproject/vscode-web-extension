@@ -3,8 +3,6 @@
 </h1>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=accordproject.concerto-vscode-extension"><img src="https://vsmarketplacebadge.apphb.com/version/accordproject.concerto-vscode-extension.svg" alt="Version number"></a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=accordproject.concerto-vscode-extension"><img src="https://vsmarketplacebadge.apphb.com/installs/accordproject.concerto-vscode-extension.svg" alt="Installation count"></a> <a href="https://github.com/accordproject/concerto-vscode-extension/blob/master/LICENSE"><img src="https://img.shields.io/github/license/accordproject/concerto-vscode-extension" alt="GitHub license"></a>
   <a href="https://discord.com/invite/Zm99SKhhtA">
     <img src="https://img.shields.io/badge/Accord%20Project-Join%20Discord-blue" alt="Join the Accord Project Discord" />
   </a>
