@@ -31,8 +31,7 @@
 	},
 	"capabilities": {
 		"virtualWorkspaces": {
-			"supported": "limited",
-			"description": "In virtual workspaces, resolving and finding references across files is not supported."
+			"supported": true
 		}
 	},
 	"activationEvents": [

@@ -10,9 +10,15 @@
 
 The Accord Project Concerto extension helps developers to create, test and debug [Accord Project](https://accordproject.org) Concerto files.
 
-For a step-by-step guide on getting started with the extension's features, access our [VS Code Tutorial](https://docs.accordproject.org/docs/next/tutorial-vscode.html). For more comprehensive documentation, [follow this link.](https://docs.accordproject.org)
+For a step-by-step guide on getting started with the extension's features, access our [VS Code Extension documentation](https://concerto.accordproject.org/docs/vscode). For more comprehensive Concerto documentation, [follow this link.](https://concerto.accordproject.org)
 
 ![Accord Project Extension Homepage](assets/VSCodeImage.png)
+
+## Contributing
+
+We love Open Source contributions; whether they be [fixes to the documentation](https://github.com/accordproject/concerto-docs), or [bug reports, feature requests, or code contrbutions](https://github.com/accordproject/vscode-web-extension) to the extension itself.
+
+Financial contributions are also very welcome and can be made to Accord Project, via the [Linux Foundation Crowdfunding portal](https://crowdfunding.lfx.linuxfoundation.org/projects/accordproject).
 
 ## Installation
 
@@ -26,14 +32,14 @@ This is a [Web Extension](https://code.visualstudio.com/api/extension-guides/web
 
 ## Features
 
-- Create data models using the [Concerto](https://docs.accordproject.org/docs/model-concerto.html) modelling language
+- Create data models using the [Concerto](https://concerto.accordproject.org) modeling language
 - Compilation of Concerto files to other languages
 - Syntax highlighting for all files
 - Compilation and problem markers
 
 ### Commands
 
-- Compile your ``model.cto `` file to a target
+- Compile your ``model.cto `` file to a target language
 
 ![Code Gen GIF](./assets/Code%20Gen.gif)
 
@@ -62,42 +68,12 @@ The extention adds code snippets for the following elements of the Concerto lang
 | Boolean     |    bool     |
 
 ## Contact Us
-If you have find any problems or want to make suggestions for future features please create [issues and suggestions on Github](https://github.com/accordproject/concerto-vscode-extension/issues). For any questions please [join](https://discord.com/invite/Zm99SKhhtA) the Accord Project Discord community and post questions to the `#technology-concerto` channel.
+
+For any questions please [join](https://discord.com/invite/Zm99SKhhtA) the Accord Project Discord community and post questions to the `#technology-concerto` channel.
 
 ---
 
-<p align="center">
-  <a href="https://www.accordproject.org/">
-    <img src="assets/APLogo.png" alt="Accord Project Logo" width="400" />
-  </a>
-</p>
-
-<p align="center">
-  <a href="./LICENSE">
-    <img src="https://img.shields.io/github/license/accordproject/cicero?color=bright-green" alt="GitHub license">
-  </a>
-  <a href="https://accord-project-slack-signup.herokuapp.com/">
-    <img src="https://img.shields.io/badge/Accord%20Project-Join%20Slack-blue" alt="Join the Accord Project Slack"/>
-  </a>
-</p>
-
 Accord Project is an open source, non-profit, initiative working to transform contract management and contract automation by digitizing contracts. Accord Project operates under the umbrella of the [Linux Foundation][linuxfound]. The technical charter for the Accord Project can be found [here][charter].
-
-## Learn More About Accord Project
-
-### [Overview][apmain]
-
-### [Documentation][apdoc]
-
-## Contributing
-
-The Accord Project technology is being developed as open source. All the software packages are being actively maintained on GitHub and we encourage organizations and individuals to contribute requirements, documentation, issues, new templates, and code.
-
-Find out what’s coming on our [blog][apblog].
-
-Join the Accord Project Technology Working Group [Discord channel][apdiscord] to get involved!
-
-For code contributions, read our [CONTRIBUTING guide][contributing] and information for [DEVELOPERS][developers].
 
 ### README Badge
 
