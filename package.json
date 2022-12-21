@@ -4,7 +4,7 @@
 	"description": "Accord Project extension for Visual Studio Code, providing tools for Concerto model development.",
 	"author": "Accord Project",
 	"license": "Apache-2.0",
-	"version": "1.6.0",
+	"version": "1.7.0",
 	"icon": "icon.png",
 	"browser": "./client/dist/browserClientMain",
 	"repository": {
