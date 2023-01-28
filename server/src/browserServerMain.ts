@@ -61,9 +61,11 @@ GLOBAL_STATE.connection.onInitialized(async (params: InitializedParams) => {
 				const readDirectoryResponse: ReadDirectoryRecursiveResponse[] =
 					await GLOBAL_STATE.connection.sendRequest("vfs/readDirectoryRecursive",
 						{ path: `${uri.scheme}://${uri.authority}/` });
+				log(`Got ${readDirectoryResponse.length} files`);
 				for (let i = 0; i < readDirectoryResponse.length; i++) {
 					const res = readDirectoryResponse[i];
 					if (res.type === FileType.File && res.path.endsWith('.cto')) {
+						log(`Requesting client read ${res.path}`);
 						await GLOBAL_STATE.connection.sendRequest("vfs/openFile", { path: res.path });
 					}
 				}
