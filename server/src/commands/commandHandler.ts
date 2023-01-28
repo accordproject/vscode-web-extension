@@ -29,9 +29,10 @@ export async function loadModels() {
 		for (let n = 0; n < folders.length; n++) {
 			const folder = folders[n];
 			const uri = URI.parse(folder.uri);
+			log(`Folder URI: ${JSON.stringify(uri)}`);
 			const readDirectoryResponse: ReadDirectoryRecursiveResponse[] =
 				await GLOBAL_STATE.connection.sendRequest("vfs/readDirectoryRecursive",
-					{ path: `${uri.scheme}://${uri.authority}/` });
+					{ path: `${uri.scheme}://${uri.authority}` });
 			log(`Got ${readDirectoryResponse.length} files`);
 			for (let i = 0; i < readDirectoryResponse.length; i++) {
 				const res = readDirectoryResponse[i];
