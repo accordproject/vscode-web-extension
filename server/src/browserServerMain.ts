@@ -12,14 +12,12 @@
  * limitations under the License.
  */
 'use strict';
-import { InitializedParams, InitializeParams, InitializeResult, ServerCapabilities, TextDocumentChangeEvent, TextDocuments, TextDocumentSyncKind } from 'vscode-languageserver';
+import { InitializedParams, InitializeParams, InitializeResult, ServerCapabilities, TextDocumentChangeEvent, TextDocumentSyncKind } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { URI } from 'vscode-uri';
 
-import { FileType, ReadDirectoryRecursiveResponse } from './types';
 import { GLOBAL_STATE, log } from './state';
 import { handleConcertoDocumentChange } from './documents/concertoHandler';
-import { registerCommandHandlers } from './commands/commandHandler';
+import { loadModels, registerCommandHandlers } from './commands/commandHandler';
 
 /**
  * Called when the language server is initialized
@@ -49,48 +47,24 @@ GLOBAL_STATE.connection.onInitialize((params: InitializeParams): InitializeResul
  * which will populate the model manager.
  */
 GLOBAL_STATE.connection.onInitialized(async (params: InitializedParams) => {
-	log('Initialized.');
+	log('Initializing...');
+	// register RPC command handlers, so the client can trigger actions
+	// within the language server process
+	registerCommandHandlers(GLOBAL_STATE);
+
 	GLOBAL_STATE.isLoading = true;
 	try {
-		const folders = await GLOBAL_STATE.connection.workspace.getWorkspaceFolders();
-		log(`Read workspace folders: ${folders !== null ? folders.length : 'null'}`);
-		if (folders) {
-			for (let n = 0; n < folders.length; n++) {
-				const folder = folders[n];
-				const uri = URI.parse(folder.uri);
-				const readDirectoryResponse: ReadDirectoryRecursiveResponse[] =
-					await GLOBAL_STATE.connection.sendRequest("vfs/readDirectoryRecursive",
-						{ path: `${uri.scheme}://${uri.authority}/` });
-				log(`Got ${readDirectoryResponse.length} files`);
-				for (let i = 0; i < readDirectoryResponse.length; i++) {
-					const res = readDirectoryResponse[i];
-					if (res.type === FileType.File && res.path.endsWith('.cto')) {
-						log(`Requesting client read ${res.path}`);
-						await GLOBAL_STATE.connection.sendRequest("vfs/openFile", { path: res.path });
-					}
-				}
-			}
-		}
+		await loadModels();
 	}
 	finally {
 		GLOBAL_STATE.isLoading = false;
-		// register RPC command handlers, so the client can trigger actions
-		// within the language server process
-		registerCommandHandlers(GLOBAL_STATE);
-
-		// we are done opening documents - let's process all the documents
-		// to rebuild our global state
-		documents.all().forEach(async document => {
-			const change: TextDocumentChangeEvent<TextDocument> = { document };
-			handleDocumentChange(change);
-		});
+		log('Initialized.');
 	}
 });
 
 // Track open, change and close text document events
-const documents = new TextDocuments(TextDocument);
 log('Language Server registered for document changes.');
-documents.listen(GLOBAL_STATE.connection);
+GLOBAL_STATE.documents.listen(GLOBAL_STATE.connection);
 
 /**
  * Handles changes to documents
@@ -118,7 +92,7 @@ async function handleDocumentChange(change: TextDocumentChangeEvent<TextDocument
 /**
  * Register our handler for when a document is opened or edited
  */
-documents.onDidChangeContent(handleDocumentChange);
+GLOBAL_STATE.documents.onDidChangeContent(handleDocumentChange);
 
 /**
  * Register to receive notifications when watched files change

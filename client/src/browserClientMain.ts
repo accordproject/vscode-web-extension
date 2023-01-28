@@ -25,6 +25,10 @@ import {
 	compileToTarget,
 } from './commands/compileToTarget';
 
+import {
+	loadModels,
+} from './commands/loadModels';
+
 /**
  * Called when VS Code extension is activated. The conditions for
  * activation are specified in package.json (e.g. opening a .cto file)
@@ -66,6 +70,9 @@ export async function activate(context: vscode.ExtensionContext) {
 	// menus etc for commands are defined in package.json
 	context.subscriptions.push(vscode.commands
 		.registerCommand('cicero-vscode-extension.compileToTarget', (file) => compileToTarget(client,file)));
+	
+	context.subscriptions.push(vscode.commands
+			.registerCommand('cicero-vscode-extension.loadModels', (file) => loadModels(client,file)));	
 }
 
 function createWorkerLanguageClient(context: vscode.ExtensionContext, clientOptions: LanguageClientOptions) {

@@ -13,7 +13,8 @@
  */
 'use strict';
 
-import { createConnection, BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver/browser';
+import { createConnection, BrowserMessageReader, BrowserMessageWriter, TextDocuments } from 'vscode-languageserver/browser';
+import { TextDocument } from 'vscode-languageserver-textdocument';
 
 import { ModelManager } from '@accordproject/concerto-core';
 import { Diagnostics } from './diagnostics';
@@ -30,7 +31,8 @@ export const GLOBAL_STATE:LanguageServerState = {
 	modelManager: new ModelManager({strict: true}),
 	diagnostics: new Diagnostics(),
 	connection: createConnection(messageReader, messageWriter),
-	isLoading: false
+	isLoading: false,
+	documents: new TextDocuments(TextDocument)
 };
 
 

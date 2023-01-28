@@ -1,5 +1,6 @@
 import { ModelManager } from '@accordproject/concerto-core';
-import { Connection } from 'vscode-languageserver';
+import { Connection, TextDocuments } from 'vscode-languageserver';
+import { TextDocument } from 'vscode-languageserver-textdocument';
 import { Diagnostics } from './diagnostics';
 
 /**
@@ -36,6 +37,7 @@ export type LanguageServerState = {
 	diagnostics: Diagnostics;
 	connection: Connection;
 	isLoading: boolean;
+	documents: TextDocuments<TextDocument>;
 }
 
 export enum CommandType {

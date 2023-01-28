@@ -86,8 +86,8 @@
 		],
 		"commands": [
 			{
-				"command": "cicero-vscode-extension.downloadModels",
-				"title": "Download External Models",
+				"command": "cicero-vscode-extension.loadModels",
+				"title": "Load All Models",
 				"category": "Accord Project"
 			},
 			{
@@ -100,7 +100,7 @@
 			"explorer/context": [
 				{
 					"when": "resourceLangId == concerto",
-					"command": "cicero-vscode-extension.downloadModels",
+					"command": "cicero-vscode-extension.loadModels",
 					"group": "AccordProject@2"
 				},
 				{
@@ -112,7 +112,7 @@
 			"editor/title": [],
 			"commandPalette": [
 				{
-					"command": "cicero-vscode-extension.downloadModels",
+					"command": "cicero-vscode-extension.loadModels",
 					"when": "false"
 				},
 				{
