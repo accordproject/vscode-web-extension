@@ -15,6 +15,7 @@
 
 import { CodeGen } from '@accordproject/concerto-tools';
 import { InMemoryWriter } from '@accordproject/concerto-util';
+import { Utils, URI } from 'vscode-uri';
 
 import { log } from '../state';
 import { LanguageServerState } from '../types';
@@ -30,15 +31,20 @@ export async function concertoCompileToTarget(state: LanguageServerState, event:
 				fileWriter: imw
 			} as any;
 			state.modelManager.accept(visitor, parameters);
-			const output = `${event.uri.scheme}://${event.uri.authority}/output/${event.target}`;
-			saveInMemoryWriter(state, output, imw);
+			const uri = URI.parse(event.uri);
+			log(`Compiling CTO file ${uri.toString()}`);
+			const dir = Utils.dirname(uri);
+			const output = Utils.joinPath(dir, `/output/${event.target}`);
+			await saveInMemoryWriter(state, output.toString(), imw);
 			return `Saved ${event.target} model to ${output}`;
 		}
 		else {
 			log(`Invalid compilation target ${event.target} to compile model`);
 		}
 	} catch (e) {
-		log(`Failed to compile models to ${event.target} with error ${e}`);
+		const ee = (e as Error);
+		const stack = ee.stack ? ee.stack : 'missing';
+		log(`Failed to compile models to ${event.target} with error ${e} at ${stack}`);
 	}
 }
 
