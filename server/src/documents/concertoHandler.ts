@@ -56,6 +56,7 @@ export async function findTemplateRoot(state:LanguageServerState, uri:URI) : Pro
  */
 export async function handleConcertoDocumentChange(state:LanguageServerState, change:TextDocumentChangeEvent<TextDocument>) {
 	if(change.document.uri.endsWith('.cto')) {
+		log(`CTO document changed: ${change.document.uri}`);
 		const modelText = change.document.getText();
 		try {
 			state.diagnostics.clearErrors(change.document.uri, 'model');

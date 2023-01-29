@@ -38,6 +38,8 @@ export async function loadModels() {
 				const res = readDirectoryResponse[i];
 				if (res.type === FileType.File && res.path.endsWith('.cto')) {
 					log(`Requesting client read ${res.path}`);
+					// request that the client open the file
+					// which will cause the handleConcertoDocumentChange handler to fire
 					await GLOBAL_STATE.connection.sendRequest("vfs/openFile", { path: res.path });
 				}
 			}
@@ -46,6 +48,7 @@ export async function loadModels() {
 
 	// we are done opening documents - let's process all the documents
 	// to rebuild our global state
+	log(`Document count: ${GLOBAL_STATE.documents.all().length}`);
 	GLOBAL_STATE.documents.all().forEach(async document => {
 		const change: TextDocumentChangeEvent<TextDocument> = { document };
 		handleConcertoDocumentChange(GLOBAL_STATE, change);

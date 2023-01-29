@@ -46,9 +46,9 @@ export async function activate(context: vscode.ExtensionContext) {
 	// Options to control the language client
 	const clientOptions: LanguageClientOptions = {
 		documentSelector,
-		synchronize: {
-			fileEvents: vscode.workspace.createFileSystemWatcher('**/logic/*.ts')
-		},
+		// synchronize: {
+		// 	fileEvents: vscode.workspace.createFileSystemWatcher('**/logic/*.ts')
+		// },
 		initializationOptions: {}
 	};
 

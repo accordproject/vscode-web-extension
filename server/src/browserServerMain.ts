@@ -48,23 +48,26 @@ GLOBAL_STATE.connection.onInitialize((params: InitializeParams): InitializeResul
  */
 GLOBAL_STATE.connection.onInitialized(async (params: InitializedParams) => {
 	log('Initializing...');
+
+	// Track open, change and close text document events
+	GLOBAL_STATE.documents.listen(GLOBAL_STATE.connection);
+	log('Listening for document changes.');
+
 	// register RPC command handlers, so the client can trigger actions
 	// within the language server process
 	registerCommandHandlers(GLOBAL_STATE);
+	log('Listening for client commands.');
 
 	GLOBAL_STATE.isLoading = true;
 	try {
 		await loadModels();
+		log('Loaded workspace models.');
 	}
 	finally {
 		GLOBAL_STATE.isLoading = false;
 		log('Initialized.');
 	}
 });
-
-// Track open, change and close text document events
-log('Language Server registered for document changes.');
-GLOBAL_STATE.documents.listen(GLOBAL_STATE.connection);
 
 /**
  * Handles changes to documents
@@ -99,5 +102,5 @@ GLOBAL_STATE.documents.onDidChangeContent(handleDocumentChange);
  */
 // GLOBAL_STATE.connection.onDidChangeWatchedFiles(handleWatchedFiles);
 
-log('Language Server listening...');
+log('Language Server listening.');
 GLOBAL_STATE.connection.listen();

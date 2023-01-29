@@ -20,6 +20,12 @@ import { LanguageClient } from 'vscode-languageclient/browser';
 
 import { log } from './log';
 
+const IGNORE_DIRS = [
+	'.git',
+	'.github',
+	'node_modules'
+];
+
 export type ReadDirectoryRecursiveResponse = {
 	path: string;
 	type: vscode.FileType;
@@ -33,24 +39,42 @@ export async function _readDirectoryRecursive(uri:Uri, results:ReadDirectoryRecu
 	const response = await fs.readDirectory(uri);
 	for( let n=0; n < response.length; n++) {
 		const item = response[n];
-		const childUri = Uri.joinPath(uri, item[0]);
-		if(item[1] === vscode.FileType.Directory) {
-			const children = await _readDirectoryRecursive(childUri, results);
-			results = results.concat(children);
+		if(IGNORE_DIRS.indexOf(item[0])===-1) {
+			const childUri = Uri.joinPath(uri, item[0]);
+			if(item[1] === vscode.FileType.Directory) {
+				results.push({
+					path: childUri.toString(),
+					type: item[1]
+				});
+				log(`Found directory '${childUri}' in workspace`);	
+				await _readDirectoryRecursive(childUri, results);
+			}
+			else {
+				results.push({
+					path: childUri.toString(),
+					type: item[1]
+				});
+				log(`Found file '${childUri}' in workspace`);	
+			}	
 		}
-		results.push({
-			path: childUri.toString(),
-			type: item[1]
-		});
-		log(`Found '${childUri}' in workspace`);
+		else {
+			log(`Ignored directory '${item[0]}'`);	
+		}
 	}
 
 	return results;
 }
 
 export async function readDirectoryRecursive(uri:Uri) {
-	const results:ReadDirectoryRecursiveResponse[] = [];
-	return await _readDirectoryRecursive(uri, results);
+	try {
+		const results:ReadDirectoryRecursiveResponse[] = [];
+		await _readDirectoryRecursive(uri, results);
+		return results;
+	}
+	catch(e) {
+		log(`readDirectoryRecursive on ${uri.toString()} failed with error ${e} at ${e.stack}`);
+	}
+	return [];
 }
 
 export function fileArrayToString(bufferArray: Uint8Array) {
