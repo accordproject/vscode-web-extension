@@ -33,7 +33,7 @@ export async function _readDirectoryRecursive(uri:Uri, results:ReadDirectoryRecu
 	const response = await fs.readDirectory(uri);
 	for( let n=0; n < response.length; n++) {
 		const item = response[n];
-		const childUri = Uri.parse(`${uri.scheme}://${uri.authority}${uri.path}/${item[0]}`);
+		const childUri = Uri.joinPath(uri, item[0]);
 		if(item[1] === vscode.FileType.Directory) {
 			const children = await _readDirectoryRecursive(childUri, results);
 			results = results.concat(children);
