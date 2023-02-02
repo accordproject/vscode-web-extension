@@ -28,7 +28,9 @@ export async function concertoCompileToTarget(state: LanguageServerState, event:
 			const visitor = new visitorClass();
 			const imw = new InMemoryWriter();
 			const parameters = {
-				fileWriter: imw
+				fileWriter: imw,
+				showCompositionRelationships: true,
+				hideBaseModel: true,
 			} as any;
 			state.modelManager.accept(visitor, parameters);
 			const uri = URI.parse(event.uri);
