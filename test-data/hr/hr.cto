@@ -10,8 +10,8 @@ enum State {
 }
 
 map Rolodex {
-	o String
-	o String
+  o String
+  o String
 }
 
 concept Address {
@@ -25,7 +25,7 @@ concept Address {
 concept Company {
     o String name
     o Address headquarters
-		o Rolodex rolodex
+    o Rolodex rolodex
 }
 
 enum Department {
