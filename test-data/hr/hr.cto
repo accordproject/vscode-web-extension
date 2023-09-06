@@ -9,6 +9,11 @@ enum State {
     o CA
 }
 
+map Rolodex {
+  o String
+  o String
+}
+
 concept Address {
     o String street
     o String city
@@ -20,6 +25,7 @@ concept Address {
 concept Company {
     o String name
     o Address headquarters
+    o Rolodex rolodex
 }
 
 enum Department {

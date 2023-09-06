@@ -41,6 +41,11 @@
 	  "body": ["enum ${1:enumName} {", "\to ${2:ITEM}$0", "}"],
 	  "description": "Concerto enumerations define lists of static values"
 	},
+	"Map": {
+	  "prefix": "map",
+	  "body": ["map ${1:mapName} {", "\to ${2:ITEM}$0", "}"],
+	  "description": "Concerto maps define a set of key-value pairs"
+	},
 	"Namespace": {
 	  "prefix": "namespace",
 	  "body": ["namespace ${1:org.accordproject.color@1.0.0} "],

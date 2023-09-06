@@ -56,6 +56,7 @@ The extention adds code snippets for the following elements of the Concerto lang
 | Transaction | transaction |
 | Concept     |   concept   |
 | Enum        |    enum     |
+| Map         |    map      |
 | Scalar      |    scalar   |
 | Event       |    event    |
 | Namespace   |   namespace |

@@ -53,7 +53,7 @@
 		},
 		"concerto-declaration": {
 			"name": "keyword.control.flow.concerto",
-			"match": "\\b(asset|transaction|participant|enum|concept|event|scalar)\\b",
+			"match": "\\b(asset|transaction|participant|enum|map|concept|event|scalar)\\b",
 			"patterns": []
 		},
 		"concerto-abstract-type": {
@@ -464,6 +464,9 @@
 					"include": "#enum-declaration"
 				},
 				{
+					"include": "#map-declaration"
+				},
+				{
 					"include": "#namespace-declaration"
 				},
 				{
@@ -504,7 +507,7 @@
 					"name": "entity.name.type.js"
 				}
 			},
-			"end": "(?=[};]|\\bvar\\b|\\blet\\b|\\bconst\\b|\\btype\\b|\\bfunction\\b|\\bclass\\b|\\binterface\\b|\\bnamespace\\b|\\bmodule\\b|\\bimport\\b|\\benum\\b|\\bdeclare\\b|\\bexport\\b|\\babstract\\b|\\basync\\b)",
+			"end": "(?=[};]|\\bvar\\b|\\blet\\b|\\bconst\\b|\\btype\\b|\\bfunction\\b|\\bclass\\b|\\binterface\\b|\\bnamespace\\b|\\bmodule\\b|\\bimport\\b|\\benum\\b|\\bmap\\b|\\bdeclare\\b|\\bexport\\b|\\babstract\\b|\\basync\\b)",
 			"patterns": [{
 					"include": "#comment"
 				},
@@ -566,6 +569,80 @@
 							"beginCaptures": {
 								"0": {
 									"name": "variable.other.enummember.js"
+								}
+							},
+							"end": "(?=,|\\}|$)",
+							"patterns": [{
+									"include": "#comment"
+								},
+								{
+									"include": "#variable-initializer"
+								}
+							]
+						},
+						{
+							"begin": "(?=(?:(?:\\'[^']*\\')|(?:\\\"[^\"]*\\\")))",
+							"end": "(?=,|\\}|$)",
+							"patterns": [{
+									"include": "#string"
+								},
+								{
+									"include": "#comment"
+								},
+								{
+									"include": "#variable-initializer"
+								}
+							]
+						},
+						{
+							"include": "#punctuation-comma"
+						}
+					]
+				}
+			]
+		},
+		"map-declaration": {
+			"name": "meta.map.declaration.js",
+			"begin": "(?<!\\.|\\$)(?:(\\bexport)\\s+)?(?:\\b(const)\\s+)?\\b(map)\\s+([_$[:alpha:]][_$[:alnum:]]*)",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.control.export.js"
+				},
+				"2": {
+					"name": "storage.modifier.js"
+				},
+				"3": {
+					"name": "storage.type.map.js"
+				},
+				"4": {
+					"name": "entity.name.type.map.js"
+				}
+			},
+			"end": "(?<=\\})",
+			"patterns": [{
+					"include": "#comment"
+				},
+				{
+					"begin": "\\{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.block.js"
+						}
+					},
+					"end": "\\}",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.block.js"
+						}
+					},
+					"patterns": [{
+							"include": "#comment"
+						},
+						{
+							"begin": "([_$[:alpha:]][_$[:alnum:]]*)",
+							"beginCaptures": {
+								"0": {
+									"name": "variable.other.maptype.js"
 								}
 							},
 							"end": "(?=,|\\}|$)",
@@ -752,7 +829,7 @@
 							"name": "keyword.control.default.js"
 						}
 					},
-					"end": "(?=;|\\bexport\\b|\\bfunction\\b|\\bclass\\b|\\binterface\\b|\\blet\\b|\\bvar\\b|\\bconst\\b|\\bimport\\b|\\benum\\b|\\bnamespace\\b|\\bmodule\\b|\\btype\\b|\\babstract\\b|\\bdeclare\\b|\\basync\\b|$)",
+					"end": "(?=;|\\bexport\\b|\\bfunction\\b|\\bclass\\b|\\binterface\\b|\\blet\\b|\\bvar\\b|\\bconst\\b|\\bimport\\b|\\benum\\b|\\bmap\\b|\\bnamespace\\b|\\bmodule\\b|\\btype\\b|\\babstract\\b|\\bdeclare\\b|\\basync\\b|$)",
 					"patterns": [{
 						"include": "#expression"
 					}]
@@ -765,7 +842,7 @@
 							"name": "keyword.control.export.js"
 						}
 					},
-					"end": "(?=;|\\bexport\\b|\\bfunction\\b|\\bclass\\b|\\binterface\\b|\\blet\\b|\\bvar\\b|\\bconst\\b|\\bimport\\b|\\benum\\b|\\bnamespace\\b|\\bmodule\\b|\\btype\\b|\\babstract\\b|\\bdeclare\\b|\\basync\\b|$)",
+					"end": "(?=;|\\bexport\\b|\\bfunction\\b|\\bclass\\b|\\binterface\\b|\\blet\\b|\\bvar\\b|\\bconst\\b|\\bimport\\b|\\benum\\b|\\bmap\\b|\\bnamespace\\b|\\bmodule\\b|\\btype\\b|\\babstract\\b|\\bdeclare\\b|\\basync\\b|$)",
 					"patterns": [{
 						"include": "#import-export-declaration"
 					}]
