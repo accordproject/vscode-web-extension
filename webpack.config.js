@@ -127,7 +127,7 @@ const browserServerConfig = {
 			Buffer: ['buffer', 'Buffer'],
 		}),
 		new webpack.ProvidePlugin({
-			process: 'process/browser', // provide a shim for the global `process` variable
+			process: require.resolve('process/browser'), // provide a shim for the global `process` variable
 		}),
 		new NodePolyfillPlugin(),
 		new HtmlWebpackPlugin({
