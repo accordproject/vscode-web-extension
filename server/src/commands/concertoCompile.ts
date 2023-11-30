@@ -13,7 +13,7 @@
  */
 'use strict';
 
-import { CodeGen } from '@accordproject/concerto-tools';
+import { CodeGen } from '@accordproject/concerto-codegen';
 import { InMemoryWriter } from '@accordproject/concerto-util';
 import { Utils, URI } from 'vscode-uri';
 
