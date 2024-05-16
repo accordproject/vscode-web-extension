@@ -29,6 +29,12 @@ import {
 	loadModels,
 } from './commands/loadModels';
 
+import { inlineSuggestionProvider } from './copilot/inlineSuggestionProvider';
+import { promptProvider } from './copilot/promptProvider';
+import { createSettingsWebview } from './copilot/configSetting';
+import { createStatusBarItem } from './copilot/statusBarItemProvider';
+import { GENERAL, STATUS_BAR } from './constants';
+
 /**
  * Called when VS Code extension is activated. The conditions for
  * activation are specified in package.json (e.g. opening a .cto file)
@@ -73,6 +79,34 @@ export async function activate(context: vscode.ExtensionContext) {
 	
 	context.subscriptions.push(vscode.commands
 			.registerCommand('cicero-vscode-extension.loadModels', (file) => loadModels(client,file)));	
+	
+	// Register the inline suggestion provider
+	context.subscriptions.push(vscode.languages.registerInlineCompletionItemProvider(
+		{ pattern: '**/*' }, // Apply to all file types
+		inlineSuggestionProvider
+	));
+
+	// Register the prompt provider command, startPromptProviderUI
+	context.subscriptions.push(vscode.commands
+		.registerCommand('cicero-vscode-extension.startPromptProviderUI', () => promptProvider.showPromptInputBox(client)));
+
+	// Register the settings webview command, configureSettings	
+	context.subscriptions.push(vscode.commands
+		.registerCommand('cicero-vscode-extension.configureSettings', () => createSettingsWebview(context)));
+
+    // Register the quick pick command
+    context.subscriptions.push(vscode.commands.registerCommand('cicero-vscode-extension.showQuickPick', async () => {
+        const options = [GENERAL.QUICK_PICK_OPTION_SETTINGS, GENERAL.QUICK_PICK_OPTION_SUGGESTIONS];
+        const selection = await vscode.window.showQuickPick(options, { placeHolder: GENERAL.QUICK_PICK_PLACEHOLDER });
+        if (selection === GENERAL.QUICK_PICK_OPTION_SETTINGS) {
+            vscode.commands.executeCommand('cicero-vscode-extension.configureSettings');
+        } else if (selection === GENERAL.QUICK_PICK_OPTION_SUGGESTIONS) {
+            vscode.commands.executeCommand('cicero-vscode-extension.startPromptProviderUI');
+        }
+    }));
+
+    // Create and show the status bar item, statusBarItem
+    createStatusBarItem(context);		
 }
 
 function createWorkerLanguageClient(context: vscode.ExtensionContext, clientOptions: LanguageClientOptions) {

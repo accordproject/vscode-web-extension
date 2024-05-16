@@ -35,7 +35,8 @@
 		}
 	},
 	"activationEvents": [
-		"onLanguage:concerto"
+		"onLanguage:concerto",
+		"onCommand:cicero-vscode-extension.showQuickPick"
 	],
 	"contributes": {
 		"configuration": [
@@ -54,7 +55,37 @@
 						],
 						"default": "off",
 						"description": "Traces the communication between VS Code and the cicero-vscode-extension language server."
-					}
+					},
+					"cicero-vscode-extension.apiKey": {
+                        "type": "string",
+                        "default": "",
+                        "description": "API Key for the LLM service"
+                    },
+                    "cicero-vscode-extension.apiUrl": {
+                        "type": "string",
+                        "default": "",
+                        "description": "API URL for the LLM service"
+                    },
+                    "cicero-vscode-extension.modelName": {
+                        "type": "string",
+                        "default": "gpt-4",
+                        "description": "Model name for the LLM service"
+                    },
+                    "cicero-vscode-extension.maxTokens": {
+                        "type": "number",
+                        "default": 100,
+                        "description": "Maximum number of tokens to generate"
+                    },
+                    "cicero-vscode-extension.temperature": {
+                        "type": "number",
+                        "default": 0.7,
+                        "description": "Temperature setting for the LLM"
+                    },
+                    "cicero-vscode-extension.additionalParams": {
+                        "type": "object",
+                        "default": {},
+                        "description": "Additional parameters for the LLM service"
+                    }
 				}
 			}
 		],
@@ -94,6 +125,18 @@
 				"command": "cicero-vscode-extension.compileToTarget",
 				"title": "Compile Model To Target",
 				"category": "Accord Project"
+			},
+			{
+				"command": "cicero-vscode-extension.startPromptProviderUI",
+				"title": "Accord Copilot (Start on Editor)"
+			},
+			{
+                "command": "cicero-vscode-extension.configureSettings",
+                "title": "Accord Copilot Settings"
+            },
+            {
+				"command": "cicero-vscode-extension.showQuickPick", 
+				"title": "Show Quick Pick"
 			}
 		],
 		"menus": {
@@ -107,7 +150,11 @@
 					"when": "resourceLangId == concerto",
 					"command": "cicero-vscode-extension.compileToTarget",
 					"group": "AccordProject@8"
-				}
+				},
+				{
+                    "command": "cicero-vscode-extension.configureSettings",
+                    "group": "AccordProject@10"
+                }
 			],
 			"editor/title": [],
 			"commandPalette": [
@@ -118,7 +165,21 @@
 				{
 					"command": "cicero-vscode-extension.compileToTarget",
 					"when": "false"
-				}
+				},
+                {
+                    "command": "cicero-vscode-extension.configureSettings",
+                    "when": "false"
+                }
+			],
+			"editor/context": [
+				{
+				  "command": "cicero-vscode-extension.startPromptProviderUI",
+				  "group": "navigation"
+				},
+                {
+                    "command": "cicero-vscode-extension.configureSettings",
+                    "group": "navigation"
+                }
 			]
 		}
 	},
