@@ -5,8 +5,10 @@
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"sourceMap": true,
-		"strict": true
+		"strict": true,
+		"types": ["node", "mocha", "chai"],
 	},
-	"include": ["src"],
+	"include": ["src", "test"],
 	"exclude": ["node_modules", ".vscode-test-web"]
 }
+  
