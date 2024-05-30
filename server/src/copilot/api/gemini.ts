@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { integer } from 'vscode-languageserver';
-
+import {log} from '../../state';
+import { stringify } from 'querystring';
 /*
 	API request to generate content using the Gemini model: 
 	Sample Endpoint: https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent
@@ -70,11 +71,16 @@ export async function generateContent(config: any, prompt: string): Promise<stri
 			let text = generatedContent?.parts[0]?.text;
 			return text;
 		} else {
+			log('Error generating content:');
+			log(stringify(response.data));
+			log(response.data);
 			console.error('Error: Invalid status code or no candidates returned');
 			console.error('Response Status:', response.status, 'Response Data:', response.data);
 			throw new Error('Failed to generate content');
 		}
 	} catch (error: any) {
+		log('Error generating content:');
+		log(error?.message);
 		console.error('Error generating content:', error?.message, 'for the request:', request);
 		throw new Error('Failed to generate content due to an error');
 	}

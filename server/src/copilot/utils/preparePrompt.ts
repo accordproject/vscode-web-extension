@@ -10,7 +10,7 @@ interface PromptConfig {
 	language?: string;
 }
 
-let defaultInstruction = '// Analyze the following code in ${language} and complete the current line of code';
+let defaultInstruction = '// Analyze the following code in ${language} and complete the code based on the context. ';
 
 function preparePrompt(documentDetails: DocumentDetails, promptConfig: PromptConfig): string {
     const { content, cursorPosition } = documentDetails;
@@ -20,7 +20,7 @@ function preparePrompt(documentDetails: DocumentDetails, promptConfig: PromptCon
         const beforeCursor = content.slice(0, cursorPosition);
         const afterCursor = content.slice(cursorPosition);
 		defaultInstruction = defaultInstruction.replace('${language}', promptConfig.language || '');
-		const finalInstruction = instruction ? instruction : defaultInstruction;
+		const finalInstruction = instruction ? defaultInstruction + instruction : defaultInstruction;
         return `${beforeCursor} ${finalInstruction} ${afterCursor}`;
     } else {
         return content;

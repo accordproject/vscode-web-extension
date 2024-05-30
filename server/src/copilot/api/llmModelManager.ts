@@ -3,10 +3,10 @@ import { generateContent as generateGeminiContent } from './gemini';
 import { generateContent as generateOpenAIContent } from './openai';
 import { generateContent as  generateAnthropicContent } from './anthropic';
 import { generateContent as generateHuggingfaceContent } from './huggingface';
-import { filterInlineSuggestion } from '../utils/provider';
+import { cleanSuggestion } from '../utils/provider';
 import { getPromptFromCache, setPromptToCache } from '../utils/promptCache';
 import { Lock } from '../utils/lock';
-
+import {log} from '../../state';
 const lock = new Lock();
 
 export async function generateContent(config: any, documentDetails: DocumentDetails, promptConfig: PromptConfig): Promise<string> {
@@ -17,7 +17,7 @@ export async function generateContent(config: any, documentDetails: DocumentDeta
 		const { modelName } = config;
 
     	let generatedContent: any;
-
+		console.log('Generating content for model:', modelName);
         const prompt = preparePrompt(documentDetails, promptConfig);
 
 		// Check if prompt is already in cache
@@ -43,8 +43,8 @@ export async function generateContent(config: any, documentDetails: DocumentDeta
 			}
 
 			if (promptConfig.requestType === 'inline') {
-				const filteredResponse = filterInlineSuggestion(generatedContent);
-				generatedContent = filteredResponse.content;
+				const filteredResponse = cleanSuggestion(documentDetails.content, documentDetails.cursorPosition, generatedContent);
+				generatedContent = filteredResponse;
 			}
 
 			// Store the response in cache
@@ -57,6 +57,8 @@ export async function generateContent(config: any, documentDetails: DocumentDeta
         return generatedContent;
 
     } catch (error) {
+		log('Error generating content:');
+		
         console.error('Error generating content:', error);
         throw error;
     } finally {

@@ -1,35 +1,61 @@
 import * as vscode from 'vscode';
-import { getDummySuggestion } from './promptParser';
-import { getSurroundingLines } from '../utils';
+import { LanguageClient } from 'vscode-languageclient/browser';
+import { getSuggestion } from './promptParser';
+import { log } from '../log';
+import { DocumentDetails, PromptConfig } from './types';
 
 const debounceDelay = 2000; // 2 seconds
-let debouncePromise: Promise<vscode.InlineCompletionItem[] | null> | null = null;
+let debounceTimer: NodeJS.Timeout | null = null;
+let currentResolve: ((value: vscode.InlineCompletionItem[] | null) => void) | null = null;
 
-export const inlineSuggestionProvider: vscode.InlineCompletionItemProvider = {
-  provideInlineCompletionItems: async (document, position, context, token) => {
-    // Cancel any existing debounce promise
-    if (debouncePromise) {
-      debouncePromise = null;
+export const inlineSuggestionProvider = (client: LanguageClient): vscode.InlineCompletionItemProvider => {
+  return {
+    provideInlineCompletionItems: async (document, position) => {
+
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+        debounceTimer = null;
+      }
+
+      if (currentResolve) {
+        currentResolve(null);
+        currentResolve = null;
+      }
+      
+      return new Promise<vscode.InlineCompletionItem[] | null>((resolve) => {
+
+        currentResolve = resolve;
+
+        debounceTimer = setTimeout(async () => {
+          log('Providing Inline Completion and suggestions');
+          
+          const documentDetails: DocumentDetails = {
+            content: document.getText(),
+            cursorPosition: document.offsetAt(position)
+          };
+
+          const promptConfig: PromptConfig = {
+            requestType: 'inline',
+            language: document.languageId
+          };
+
+          try {
+            const suggestion = await getSuggestion(client, documentDetails, promptConfig);
+            const items: vscode.InlineCompletionItem[] = [
+              new vscode.InlineCompletionItem(
+                suggestion,
+                new vscode.Range(position, position.translate(0, 10))
+              )
+            ];
+            resolve(items);
+          } catch (error) {
+            log('Error generating content: ' + error);
+            resolve(null);
+          } finally {
+            currentResolve = null;
+          }
+        }, debounceDelay);
+      });
     }
-
-    // Set a new debounce promise
-    debouncePromise = new Promise<vscode.InlineCompletionItem[] | null>((resolve) => {
-      setTimeout(async () => {
-        const lineText = document.lineAt(position.line).text;
-        const surroundingLines = await getSurroundingLines(document, position);
-        const prompt = `${surroundingLines}\n${lineText}`;
-        const suggestion = await getDummySuggestion(prompt);
-        const items: vscode.InlineCompletionItem[] = [
-          new vscode.InlineCompletionItem(
-            suggestion,
-            new vscode.Range(position, position.translate(0, 10))
-          )
-        ];
-        resolve(items);
-      }, debounceDelay);
-    });
-
-    // Wait for the debounce promise to resolve
-    return debouncePromise || null;
-  } 
+  };
 };

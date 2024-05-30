@@ -21,6 +21,7 @@ import { InMemoryWriter } from '@accordproject/concerto-util';
 import { URI } from 'vscode-uri';
 import { handleConcertoDocumentChange } from '../documents/concertoHandler';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import { generateContent } from '../copilot/api/llmModelManager';
 
 export async function loadModels() {
 	const folders = await GLOBAL_STATE.connection.workspace.getWorkspaceFolders();
@@ -59,6 +60,13 @@ export async function registerCommandHandlers(state:LanguageServerState) {
 	state.connection.onRequest('concertoCompile', (event:any) => concertoCompileToTarget(GLOBAL_STATE, event));
 	state.connection.onRequest('concertoCompileTargets', (event:any) => concertoCompileTargets());
 	state.connection.onRequest('loadModels', (event:any) => loadModels());
+	// Register a new command handler for generateContent
+	state.connection.onRequest('generateContent', async (params: any) => {
+		log('generateContent handler called with params:');
+		log(JSON.stringify(params));
+		const { modelConfig, documentDetails, promptConfig } = params;
+		return generateContent(modelConfig, documentDetails, promptConfig);
+	  });
 }
 
 export async function saveInMemoryWriter(state:LanguageServerState, path:string, imw:InMemoryWriter) {

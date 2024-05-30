@@ -33,7 +33,10 @@ import { inlineSuggestionProvider } from './copilot/inlineSuggestionProvider';
 import { promptProvider } from './copilot/promptProvider';
 import { createSettingsWebview } from './copilot/configSetting';
 import { createStatusBarItem } from './copilot/statusBarItemProvider';
-import { GENERAL, STATUS_BAR } from './constants';
+import { codeActionProvider } from './copilot/codeActionProvider';
+import { registerToggleSettingsCommands } from './copilot/toggleSettings';
+import { registerQuickPickCommand } from './copilot/quickPick';
+
 
 /**
  * Called when VS Code extension is activated. The conditions for
@@ -72,6 +75,10 @@ export async function activate(context: vscode.ExtensionContext) {
 	// to query the workspace from its process
 	initVFS(client);
 
+	const config = vscode.workspace.getConfiguration('cicero-vscode-extension');
+	const enableInlineSuggestions = config.get('enableInlineSuggestions', true);
+  	const enableCodeActions = config.get('enableCodeActions', true);
+
 	// register commands
 	// menus etc for commands are defined in package.json
 	context.subscriptions.push(vscode.commands
@@ -81,32 +88,35 @@ export async function activate(context: vscode.ExtensionContext) {
 			.registerCommand('cicero-vscode-extension.loadModels', (file) => loadModels(client,file)));	
 	
 	// Register the inline suggestion provider
-	context.subscriptions.push(vscode.languages.registerInlineCompletionItemProvider(
-		{ pattern: '**/*' }, // Apply to all file types
-		inlineSuggestionProvider
-	));
-
+	if (enableInlineSuggestions) 
+		context.subscriptions.push(vscode.languages.registerInlineCompletionItemProvider(
+			{ pattern: '**/*' }, // Apply to all file types
+			inlineSuggestionProvider(client)
+		));
+	
 	// Register the prompt provider command, startPromptProviderUI
 	context.subscriptions.push(vscode.commands
 		.registerCommand('cicero-vscode-extension.startPromptProviderUI', () => promptProvider.showPromptInputBox(client)));
 
 	// Register the settings webview command, configureSettings	
 	context.subscriptions.push(vscode.commands
-		.registerCommand('cicero-vscode-extension.configureSettings', () => createSettingsWebview(context)));
+		.registerCommand('cicero-vscode-extension.configureSettings', () => createSettingsWebview(context, client)));
 
     // Register the quick pick command
-    context.subscriptions.push(vscode.commands.registerCommand('cicero-vscode-extension.showQuickPick', async () => {
-        const options = [GENERAL.QUICK_PICK_OPTION_SETTINGS, GENERAL.QUICK_PICK_OPTION_SUGGESTIONS];
-        const selection = await vscode.window.showQuickPick(options, { placeHolder: GENERAL.QUICK_PICK_PLACEHOLDER });
-        if (selection === GENERAL.QUICK_PICK_OPTION_SETTINGS) {
-            vscode.commands.executeCommand('cicero-vscode-extension.configureSettings');
-        } else if (selection === GENERAL.QUICK_PICK_OPTION_SUGGESTIONS) {
-            vscode.commands.executeCommand('cicero-vscode-extension.startPromptProviderUI');
-        }
-    }));
+    registerQuickPickCommand(context, client);
 
     // Create and show the status bar item, statusBarItem
-    createStatusBarItem(context);		
+    createStatusBarItem(context);
+	
+	// Register quick fix suggestions
+	if (enableCodeActions)
+		context.subscriptions.push(vscode.languages.registerCodeActionsProvider(
+			{ scheme: 'file'}, { provideCodeActions: codeActionProvider.provideCodeActions }
+		)
+	)
+
+	// Register the toggle settings commands	
+	registerToggleSettingsCommands(context, client);
 }
 
 function createWorkerLanguageClient(context: vscode.ExtensionContext, clientOptions: LanguageClientOptions) {
