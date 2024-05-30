@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { getDummySuggestion } from './promptParser';
-import { getSurroundingLines } from '../utils';
+import { getSuggestion } from './promptParser';
 import { ERROR_MESSAGES, PROMPTS } from '../constants';
+import { DocumentDetails, PromptConfig } from './types';
 
 export const promptProvider = {
   async showPromptInputBox(client: any) {
@@ -21,10 +21,19 @@ export const promptProvider = {
 
     const document = editor.document;
     const position = editor.selection.active;
-    const surroundingLines = await getSurroundingLines(document, position);
-    const prompt = `${surroundingLines}\n${input}`;
-    
-    const suggestion = await getDummySuggestion(prompt);
+
+    const documentDetails: DocumentDetails = {
+      content: document.getText(),
+      cursorPosition: document.offsetAt(position)
+    };
+
+    const promptConfig: PromptConfig = {
+      requestType: 'inline',
+      language: document.languageId,
+      instruction: input
+    };
+
+    const suggestion = await getSuggestion(client, documentDetails, promptConfig);
     const edit = new vscode.WorkspaceEdit();
     edit.insert(document.uri, position, suggestion);
     await vscode.workspace.applyEdit(edit);

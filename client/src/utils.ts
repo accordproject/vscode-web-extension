@@ -20,3 +20,4 @@ export function getLineRange(
   const endPos = new vscode.Position(endLine, document.lineAt(endLine).text.length);
   return new vscode.Range(startPos, endPos);
 }
+

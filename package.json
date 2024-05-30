@@ -36,7 +36,8 @@
 	},
 	"activationEvents": [
 		"onLanguage:concerto",
-		"onCommand:cicero-vscode-extension.showQuickPick"
+		"onCommand:cicero-vscode-extension.showQuickPick",
+		"onCommand:cicero-vscode-extension.openChatPanel"
 	],
 	"contributes": {
 		"configuration": [
@@ -85,7 +86,17 @@
                         "type": "object",
                         "default": {},
                         "description": "Additional parameters for the LLM service"
-                    }
+                    },
+					"cicero-vscode-extension.enableInlineSuggestions": {
+						"type": "boolean",
+						"default": true,
+						"description": "Enable inline suggestions"
+					},
+					"cicero-vscode-extension.enableCodeActions": {
+						"type": "boolean",
+						"default": true,
+						"description": "Enable code actions"
+					}
 				}
 			}
 		],
@@ -137,8 +148,37 @@
             {
 				"command": "cicero-vscode-extension.showQuickPick", 
 				"title": "Show Quick Pick"
-			}
+			},
+			{
+                "command": "cicero-vscode-extension.toggleInlineSuggestions",
+                "title": "Toggle Inline Suggestions"
+            },
+            {
+                "command": "cicero-vscode-extension.toggleCodeActions",
+                "title": "Toggle Code Actions"
+            },
+			{
+                "command": "cicero-vscode-extension.openChat",
+                "title": "Open Chat Agent"
+            }
 		],
+		"viewsContainers": {
+			"activitybar": [
+			  {
+				"id": "chat",
+				"title": "Chat",
+				"icon": "comments-view-icon"
+			  }
+			]
+		},
+		"views": {
+		"chat": [
+			{
+			"id": "chatPanel",
+			"name": "Chat Agent"
+			}
+		]
+		},
 		"menus": {
 			"explorer/context": [
 				{

@@ -13,9 +13,17 @@ export const ERROR_MESSAGES = {
 export const GENERAL = {
     ACTIVATION_MESSAGE: 'Accord Project Extension activated',
     CLIENT_READY_MESSAGE: 'Accord Project client is ready',
+    QUICK_PICK_STATUS_OK: '$(copilot)  Status:  Ready',
+    QUICK_PICK_STATUS_ERROR: '$(copilot)  Status:  Configuration Error',
     QUICK_PICK_PLACEHOLDER: 'Choose an action',
+    QUICK_PICK_OPTION_CHAT_AGENT: 'Open Chat Agent',
     QUICK_PICK_OPTION_SETTINGS: '$(gear)  Open Copilot Settings',
     QUICK_PICK_OPTION_SUGGESTIONS: '$(copilot)  Get Inline Suggestions',
+    QUICK_PICK_OPTION_ENABLE_INLINE_SUGGESTIONS: 'Enable Inline Suggestions',
+    QUICK_PICK_OPTION_DISABLE_INLINE_SUGGESTIONS: 'Disable Inline Suggestions',
+    QUICK_PICK_OPTION_ENABLE_CODE_ACTIONS: 'Enable Code Actions',
+    QUICK_PICK_OPTION_DISABLE_CODE_ACTIONS: 'Disable Code Actions',
+    QUICK_PICK_SEPARATOR: '<hr/>',
     PATTERN_ALL_FILES: '**/*'
 };
 
@@ -49,12 +57,18 @@ export const CONFIG_DEFAULTS = {
     apiKey: '',
     apiUrl: '',
     modelName: 'gpt-4',
-    maxTokens: 100,
-    temperature: 0.7,
+    maxTokens: 3000,
+    temperature: 1.0,
     additionalParams: {}
 };
 
-
+// Constants for chatPanel.ts
+export const CHAT_PANEL = {
+    TITLE: 'Chat Agent',
+    NEW_MESSAGE_ICON: '<span class="codicon codicon-person"></span>&nbsp;',
+    THINKING_MESSAGE: '<span class="codicon codicon-copilot"></span>&nbsp; Thinking...',
+    ERROR_MESSAGE: '<span class="codicon codicon-copilot"></span>&nbsp; Unable to generate a response at this time.'
+};
 
 
   
