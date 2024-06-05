@@ -1,14 +1,4 @@
-interface DocumentDetails {
-    content: string;
-    cursorPosition: number;
-	fileExtension?: string;
-}
-
-interface PromptConfig {
-    requestType: 'inline' | 'general';
-    instruction?: string;
-	language?: string;
-}
+import { DocumentDetails, PromptConfig } from './types';
 
 let defaultInstruction = '// Analyze the following code in ${language} and complete the code based on the context. ';
 

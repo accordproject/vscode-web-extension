@@ -63,7 +63,6 @@ export async function registerCommandHandlers(state:LanguageServerState) {
 	// Register a new command handler for generateContent
 	state.connection.onRequest('generateContent', async (params: any) => {
 		log('generateContent handler called with params:');
-		log(JSON.stringify(params));
 		const { modelConfig, documentDetails, promptConfig } = params;
 		return generateContent(modelConfig, documentDetails, promptConfig);
 	  });

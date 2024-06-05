@@ -12,11 +12,18 @@ export const scriptTemplate = `
             vscode.postMessage({ type: 'sendMessage', text: message });
             messageInput.value = '';
             sendButton.disabled = true;
+            adjustTextareaHeight();
         }
+    };
+
+    const adjustTextareaHeight = () => {
+        messageInput.style.height = 'auto';
+        messageInput.style.height = Math.min(messageInput.scrollHeight, 200) + 'px';
     };
 
     messageInput.addEventListener('input', () => {
         sendButton.disabled = !messageInput.value.trim();
+        adjustTextareaHeight();
     });
 
     sendButton.addEventListener('click', sendMessage);

@@ -22,9 +22,8 @@ export async function checkCopilotHealth(client: LanguageClient): Promise<void> 
     const response = await getSuggestion(client, documentDetails, promptConfig);
     
     if (response) {
-		log(response)
         copilotHealthStatus = true;
-        log('Copilot is healthy.');
+        log(response + 'Copilot is healthy.');
     } else {
         copilotHealthStatus = false;
         log('Copilot failed health check.');

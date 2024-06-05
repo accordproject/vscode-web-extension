@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { log } from '../../state';
 
 /*
 	API call to generate content using the OpenAI model
@@ -7,9 +8,14 @@ import axios from 'axios';
 	based on the API documentation, these interfaces are used to generate content using the OpenAI models
 */
 
+interface Message {
+    role: string;
+    content: string;
+}
+
 interface GenerateContentRequest {
     model: string;
-    prompt: string;
+    messages: Message[];
     max_tokens?: number;
     temperature?: number;
     top_p?: number;
@@ -17,12 +23,12 @@ interface GenerateContentRequest {
     presence_penalty?: number;
 }
 
-function createGenerateContentRequest(prompt: string, config: any): GenerateContentRequest {
-    const { model, maxTokens, temperature, topP, frequencyPenalty, presencePenalty } = config;
+function createGenerateContentRequest(promptArray: Message[], config: any): GenerateContentRequest {
+    const { llmModel, maxTokens, temperature, topP, frequencyPenalty, presencePenalty } = config;
 
 	const request: GenerateContentRequest = {
-        model: model || 'gpt-3.5-turbo-instruct',
-        prompt: prompt,
+        model: llmModel,
+        messages: promptArray,
     };
 
     if (maxTokens !== undefined) request.max_tokens = maxTokens;
@@ -34,9 +40,10 @@ function createGenerateContentRequest(prompt: string, config: any): GenerateCont
     return request;
 }
 
-export async function generateContent(config: any, prompt: string): Promise<any> {
+export async function generateContent(config: any, promptArray: { content: string; role: string }[]): Promise<any> {
     const { apiUrl, accessToken } = config;
-    const request: GenerateContentRequest = createGenerateContentRequest(prompt, config);
+    // fix prompt as we need to send multiple prompts to the API
+    const request: GenerateContentRequest = createGenerateContentRequest(promptArray, config);
 
     try {
         const response = await axios.post<any>(
@@ -52,28 +59,27 @@ export async function generateContent(config: any, prompt: string): Promise<any>
 
         if (response.status === 200 && response.data.choices && response.data.choices.length > 0) {
 			let generatedContent = response.data;
-			let text = generatedContent?.choices[0]?.text;
+			let text = generatedContent?.choices[0]?.message?.content;
             return text;
         } else {
-            console.error('Error: Invalid status code or no choices returned', response.status, response.data);
+            log('Error: Invalid status code or no choices returned' + response.status + response.data);
             throw new Error('Failed to generate content. Invalid response from server.');
         }
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
-                console.error('Error generating content:', error.response.status, error.response.statusText);
-                console.error('Response data:', error.response.data);
+                log('Error generating content: '+ error.response.status + error.response.statusText);
+                log('Response data:' + JSON.stringify(error.response.data));
                 throw new Error(`Failed to generate content due to an error (${error.response.status} ${error.response.statusText}).`);
             } else if (error.request) {
-                console.error('Error generating content: Request failed');
-                console.error('Request data:', error.config);
+                log('Error generating content: Request failed' + ', Request data: ' + error.config);
                 throw new Error('Failed to send request to the server.');
             } else {
-                console.error('Error generating content:', error.message);
+                log('Error generating content:' + error.message);
                 throw new Error('An error occurred while processing the request.');
             }
 		} else {
-			console.error('Error generating content:', error);
+			log('Error generating content:' + error);
             throw new Error('An unexpected error occurred while generating content.');
 		}		
     }
