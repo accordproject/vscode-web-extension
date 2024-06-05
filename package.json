@@ -67,19 +67,24 @@
                         "default": "",
                         "description": "API URL for the LLM service"
                     },
-                    "cicero-vscode-extension.modelName": {
-                        "type": "string",
-                        "default": "gpt-4",
-                        "description": "Model name for the LLM service"
-                    },
+                    "cicero-vscode-extension.provider": {
+						"type": "string",
+						"default": "openai",
+						"description": "AI Provider for the LLM service"
+					},
+					"cicero-vscode-extension.llmModel": {
+						"type": "string",
+						"default": "",
+						"description": "LLM Model for the LLM service"
+					},
                     "cicero-vscode-extension.maxTokens": {
                         "type": "number",
-                        "default": 100,
+                        "default": 0,
                         "description": "Maximum number of tokens to generate"
                     },
                     "cicero-vscode-extension.temperature": {
                         "type": "number",
-                        "default": 0.7,
+                        "default": 0,
                         "description": "Temperature setting for the LLM"
                     },
                     "cicero-vscode-extension.additionalParams": {

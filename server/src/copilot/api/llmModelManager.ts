@@ -1,41 +1,50 @@
 import { preparePrompt, DocumentDetails, PromptConfig } from '../utils/preparePrompt';
 import { generateContent as generateGeminiContent } from './gemini';
 import { generateContent as generateOpenAIContent } from './openai';
-import { generateContent as  generateAnthropicContent } from './anthropic';
+import { generateContent as generateAnthropicContent } from './anthropic';
 import { generateContent as generateHuggingfaceContent } from './huggingface';
-import { cleanSuggestion } from '../utils/provider';
 import { getPromptFromCache, setPromptToCache } from '../utils/promptCache';
+import { commentRegex } from '../agent/promptTemplates/inlineTemplate';
+import { generateCacheKey } from '../utils/cacheKeyGenerator';
+import { cleanSuggestion } from '../utils/provider';
+import { agentPlanner } from '../agent/agentPlanner';
+import { ModelConfig } from '../utils/types';
 import { Lock } from '../utils/lock';
-import {log} from '../../state';
+import { log } from '../../state';
+
+
 const lock = new Lock();
 
-export async function generateContent(config: any, documentDetails: DocumentDetails, promptConfig: PromptConfig): Promise<string> {
+export async function generateContent(config: ModelConfig, documentDetails: DocumentDetails, promptConfig: PromptConfig): Promise<string> {
 
 	await lock.acquire();
 
-    try {
-		const { modelName } = config;
+	try {
+		const { provider } = config;
 
-    	let generatedContent: any;
-		console.log('Generating content for model:', modelName);
-        const prompt = preparePrompt(documentDetails, promptConfig);
+		let generatedContent: any;
+		log('Generating content for model:' + provider);
+
+		const promptArray = await agentPlanner({ documentDetails, promptConfig });
+
+		const cacheKey = generateCacheKey(documentDetails, promptConfig);
 
 		// Check if prompt is already in cache
-		const cachedResponse = getPromptFromCache(prompt);
-		
+		const cachedResponse = getPromptFromCache(cacheKey);
+
 		if (!cachedResponse) {
-			switch (modelName) {
+			switch (provider) {
 				case 'gemini':
-					generatedContent = await generateGeminiContent(config, prompt);
+					generatedContent = await generateGeminiContent(config, promptArray);
 					break;
 				case 'openai':
-					generatedContent = await generateOpenAIContent(config, prompt);
+					generatedContent = await generateOpenAIContent(config, promptArray);
 					break;
 				case 'anthropic':
-					generatedContent = await generateAnthropicContent(config, prompt);
+					generatedContent = await generateAnthropicContent(config, promptArray);
 					break;
 				case 'huggingface':
-					generatedContent = await generateHuggingfaceContent(config, prompt);
+					generatedContent = await generateHuggingfaceContent(config, promptArray);
 					break;
 
 				default:
@@ -43,26 +52,26 @@ export async function generateContent(config: any, documentDetails: DocumentDeta
 			}
 
 			if (promptConfig.requestType === 'inline') {
-				const filteredResponse = cleanSuggestion(documentDetails.content, documentDetails.cursorPosition, generatedContent);
+				const filteredResponse = cleanSuggestion(documentDetails.content, documentDetails.cursorPosition, generatedContent.replace(commentRegex, ''));
 				generatedContent = filteredResponse;
 			}
 
 			// Store the response in cache
-			setPromptToCache(prompt, generatedContent);
-		}	
+			setPromptToCache(cacheKey, generatedContent);
+		}
 		else {
 			generatedContent = cachedResponse;
 		}
 
-        return generatedContent;
+		return generatedContent;
 
-    } catch (error) {
+	} catch (error) {
 		log('Error generating content:');
-		
-        console.error('Error generating content:', error);
-        throw error;
-    } finally {
-        lock.release(); // Release the lock after the operation is complete
-    }
+
+		console.error('Error generating content:', error);
+		throw error;
+	} finally {
+		lock.release(); // Release the lock after the operation is complete
+	}
 
 }

@@ -35,7 +35,7 @@ export type ReadDirectoryRecursiveResponse = {
 export type LanguageServerState = {
 	modelManager: ModelManager;
 	diagnostics: Diagnostics;
-	connection: Connection;
+	connection: Connection | null;
 	isLoading: boolean;
 	documents: TextDocuments<TextDocument>;
 }

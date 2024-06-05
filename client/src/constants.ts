@@ -56,8 +56,9 @@ export const LINE_RANGE = {
 export const CONFIG_DEFAULTS = {
     apiKey: '',
     apiUrl: '',
-    modelName: 'gpt-4',
-    maxTokens: 3000,
+    provider: '',
+    llmModel: '',
+    maxTokens: 4096,
     temperature: 1.0,
     additionalParams: {}
 };
@@ -70,6 +71,11 @@ export const CHAT_PANEL = {
     ERROR_MESSAGE: '<span class="codicon codicon-copilot"></span>&nbsp; Unable to generate a response at this time.'
 };
 
-
+// Default LLM models for providers
+export const DEFAULT_LLM_MODELS = {
+    GEMINI: 'gemini-pro',
+    OPENAI: 'gpt-3.5-turbo',
+    ANTHROPIC: 'claude-1.5'
+};
   
   

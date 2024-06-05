@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { log } from '../../state';
 
 /*
 	API request to generate content using the Anthropic model
@@ -6,6 +7,11 @@ import axios from 'axios';
 	Sample Endpoint: https://api.anthropic.com/v1/complete
 	based on the API documentation, these interfaces are used to generate content using the Anthropic models
 */
+
+interface Message {
+    role: string;
+    content: string;
+}
 
 interface GenerateContentRequest {
     model: string;
@@ -19,9 +25,9 @@ interface GenerateContentRequest {
     stream?: boolean;
 }
 
-function createGenerateContentRequest(prompt: string, config: any): GenerateContentRequest {
+function createGenerateContentRequest(promptArray: Message[], config: any): GenerateContentRequest {
     const {
-        model,
+        llmModel: model,
         maxTokens,
         temperature,
         stopSequences,
@@ -32,7 +38,14 @@ function createGenerateContentRequest(prompt: string, config: any): GenerateCont
     } = config;
 
 	// Based on the API documentation, the prompt should be formatted as follows
-    const formattedPrompt = `\n\nHuman: ${prompt} \n\nAssistant:`;
+    const formattedPrompt = `\n\nHuman: ` + promptArray.map(message => {
+        if (message.role === 'user') {
+            return `\n\nHuman: ${message.content}`;
+        } else if (message.role === 'system') {
+            return `\n\nAssistant: ${message.content}`;
+        }
+        return '';
+    }).join(' ') + '\n\nAssistant:';
 
     const request: GenerateContentRequest = {
         model,
@@ -50,9 +63,9 @@ function createGenerateContentRequest(prompt: string, config: any): GenerateCont
     return request;
 }
 
-export async function generateContent(config: any, prompt: string): Promise<any> {
+export async function generateContent(config: any, promptArray: { content: string; role: string }[]): Promise<string> {
     const { apiUrl, accessToken } = config;
-    const request: GenerateContentRequest = createGenerateContentRequest(prompt, config);
+    const request: GenerateContentRequest = createGenerateContentRequest(promptArray, config);
 
     try {
         const response = await axios.post<any>(
@@ -71,24 +84,18 @@ export async function generateContent(config: any, prompt: string): Promise<any>
 			let generatedContent = response.data.completion;
             return generatedContent;
         } else {
-            console.error('Error: Invalid status code or no completion returned', {
-                status: response.status,
-                statusText: response.statusText,
-                data: response.data?.error || response.data
-            });
+            log('Error: Invalid status code or no completion returned ' + response.status + ', Response Status: ' + response.statusText)
+            log('Response Data: ' + JSON.stringify(response.data?.error || response.data) );
             throw new Error('Failed to generate content');
         }
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
-                console.error('Error generating content:', {
-                    status: error.response.status,
-                    statusText: error.response.statusText,
-                    data: error.response.data?.error || error.response.data
-                });
+                log('Error generating content: ' + error.response.status + error.response.statusText);
+                log('Response data: ' + JSON.stringify(error.response.data?.error || error.response.data));
             } 
         } else {
-            console.error('Unexpected error generating content:', error);
+            log('Unexpected error generating content:' + error);
         }
         throw new Error('Failed to generate content due to an error');
     }

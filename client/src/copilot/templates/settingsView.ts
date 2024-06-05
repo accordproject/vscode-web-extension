@@ -29,18 +29,24 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
                 <span class="error-message" id="apiUrlError"></span>
             </div>
             <div class="form-group">
-                <label for="modelName">Model Name <span class="required-asterisk">*</span></label>
-                <p>The name of the Copilot model.</p>
+                <label for="provider">Provider <span class="required-asterisk">*</span></label>
+                <p>Select the AI provider.</p>
                 <div class="select-container">
-                    <select id="modelName" style="width: 100%;">
-                        <option value="gemini" ${configValues.modelName === 'gemini' ? 'selected' : ''}>Gemini</option>
-                        <option value="openai" ${configValues.modelName === 'openai' ? 'selected' : ''}>OpenAI</option>
-                        <option value="anthropic" ${configValues.modelName === 'anthropic' ? 'selected' : ''}>Anthropic</option>
-                        <option value="huggingface" ${configValues.modelName === 'huggingface' ? 'selected' : ''}>Hugging Face</option>
+                    <select id="provider" style="width: 100%;">
+                        <option value="gemini" ${configValues.provider === 'gemini' ? 'selected' : ''}>Gemini</option>
+                        <option value="openai" ${configValues.provider === 'openai' ? 'selected' : ''}>OpenAI</option>
+                        <option value="anthropic" ${configValues.provider === 'anthropic' ? 'selected' : ''}>Anthropic</option>
+                        <option value="huggingface" ${configValues.provider === 'huggingface' ? 'selected' : ''}>Hugging Face</option>
                     </select>
                     <i class="codicon codicon-chevron-down"></i>
                 </div> 
-                <span class="error-message" id="modelNameError"></span>         
+                <span class="error-message" id="providerError"></span>         
+            </div>
+            <div class="form-group">
+                <label for="llmModel">LLM Model</label>
+                <p>The specific language model (default: Gemini - gemini-pro, OpenAI - gpt-3.5-turbo, Anthropic - claude-1.5).</p>
+                <input type="text" id="llmModel" value="${configValues.llmModel}">
+                <span class="error-message" id="llmModelError"></span>
             </div>
             <div class="form-group">
                 <label for="maxTokens">Max Tokens</label>
@@ -56,6 +62,17 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
                 <label for="additionalParams">Additional Parameters</label>
                 <p>Additional parameters for the model.</p>
                 <textarea id="additionalParams">${configValues.additionalParams}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="scope">Settings Scope</label>
+                <p>Select whether to save the settings globally (for all projects) or for the current workspace only.</p>
+                <div class="select-container">
+                    <select id="scope" style="width: 100%;">
+                        <option value="workspace" selected>Workspace</option>
+                        <option value="global">Global</option>
+                    </select>
+                    <i class="codicon codicon-chevron-down"></i>
+                </div>
             </div>
             <button class="button" onclick="saveSettings()">Save Settings</button>
         </div>

@@ -1,12 +1,18 @@
 export interface DocumentDetails {
     content: string;
     cursorPosition: number;
+	fileExtension?: string;
 }
 
 export interface PromptConfig {
-    requestType: string;
-    language: any;
-	instruction?: string;
+    requestType: 'inline' | 'general';
+    instruction?: string;
+	language?: string;
+}
+
+export interface AgentPlannerParams {
+    documentDetails: DocumentDetails;
+    promptConfig: PromptConfig;
 }
 
 export interface ModelConfig {
@@ -18,4 +24,3 @@ export interface ModelConfig {
     topP?: number;
     accessToken: string;
 }
-

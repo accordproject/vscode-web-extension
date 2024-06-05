@@ -1,9 +1,11 @@
 export const scriptTemplate = `
     const vscode = acquireVsCodeApi();
     function saveSettings() {
+        const scope = document.getElementById('scope').value;
         const apiKey = document.getElementById('apiKey').value;
         const apiUrl = document.getElementById('apiUrl').value;
-        const modelName = document.getElementById('modelName').value;
+        const provider = document.getElementById('provider').value;
+        const llmModel = document.getElementById('llmModel').value;
         const maxTokens = document.getElementById('maxTokens').value;
         const temperature = document.getElementById('temperature').value;
         const additionalParams = document.getElementById('additionalParams').value;
@@ -27,12 +29,12 @@ export const scriptTemplate = `
             document.getElementById('apiUrlError').style.display = "none";
         }
 
-        if (!modelName) {
-            document.getElementById('modelNameError').innerText = "Model Name is required";
-            document.getElementById('modelNameError').style.display = "block";
+        if (!provider) {
+            document.getElementById('providerError').innerText = "Provider is required";
+            document.getElementById('providerError').style.display = "block";
             isValid = false;
         } else {
-            document.getElementById('modelNameError').style.display = "none";
+            document.getElementById('providerError').style.display = "none";
         }
         
         const maxTokensValue = maxTokens!=0 ? Number(maxTokens) : null;
@@ -41,10 +43,12 @@ export const scriptTemplate = `
         if (!isValid) return; // Prevent saving if validation fails
 
         vscode.postMessage({
+            scope: scope,
             command: 'saveSettings',
             apiKey,
             apiUrl,
-            modelName,
+            provider,
+            llmModel,
             maxTokens,
             temperature,
             additionalParams

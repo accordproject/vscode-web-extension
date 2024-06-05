@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { integer } from 'vscode-languageserver';
 import {log} from '../../state';
-import { stringify } from 'querystring';
+
 /*
 	API request to generate content using the Gemini model: 
 	Sample Endpoint: https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent
@@ -21,7 +21,7 @@ interface GenerateContentRequest {
 	};
 }
 
-function createGenerateContentRequest(prompt: string, config: any): GenerateContentRequest {
+function createGenerateContentRequest(promptArray: { content: string; role: string }[], config: any): GenerateContentRequest {
 	const { maxTokens, topP, topK, temperature } = config;
 
 	const generationConfig: { 
@@ -36,27 +36,34 @@ function createGenerateContentRequest(prompt: string, config: any): GenerateCont
 	if (topP !== undefined) generationConfig.topP = topP;
 	if (topK !== undefined) generationConfig.topK = topK;
 
+	const contents = promptArray.map(item => ({
+        parts: [{ text: item.content }],
+        role: item.role === 'user' ? 'user' : 'model'
+    }));
+
 	const request: GenerateContentRequest = {
-		contents: [
-			{
-			parts: [{ text: prompt }]
-			}
-		],
+		contents: contents,
 		generationConfig: generationConfig
 	};
 
 	return request;
 }
 
-// API call to generate content using the Gemini model
-export async function generateContent(config: any, prompt: string): Promise<string> {
+function replaceModelInApiUrl(apiUrl: string, llmModel: string): string {
+	const regex = /\/models\/[^:]+/;
+	return apiUrl.replace(regex, `/models/${llmModel}`);
+}
 
-	const { apiUrl, accessToken } = config;
-	const request: GenerateContentRequest = createGenerateContentRequest(prompt, config);
+// API call to generate content using the Gemini model
+export async function generateContent(config: any, promptArray: { content: string; role: string }[] ): Promise<string> {
+
+	const { apiUrl, accessToken, llmModel } = config;
+	const updatedApiUrl = replaceModelInApiUrl(apiUrl, llmModel);
+	const request: GenerateContentRequest = createGenerateContentRequest(promptArray, config);
 
 	try {
 		const response = await axios.post<any>(
-		`${apiUrl}?key=${accessToken}`,
+		`${updatedApiUrl}?key=${accessToken}`,
 		request,
 		{
 			headers: {
@@ -71,17 +78,13 @@ export async function generateContent(config: any, prompt: string): Promise<stri
 			let text = generatedContent?.parts[0]?.text;
 			return text;
 		} else {
-			log('Error generating content:');
-			log(stringify(response.data));
-			log(response.data);
-			console.error('Error: Invalid status code or no candidates returned');
-			console.error('Response Status:', response.status, 'Response Data:', response.data);
+			log('Error: Invalid status code or no candidates returned');
+			log('Response Status: ' + response.status + ', Response Data: '+ response.data);
 			throw new Error('Failed to generate content');
 		}
 	} catch (error: any) {
-		log('Error generating content:');
-		log(error?.message);
-		console.error('Error generating content:', error?.message, 'for the request:', request);
+		log('Error generating content: ' + error?.message + ', for the request:' + request);
+		log('Response Data: ' + JSON.stringify(error?.response?.data));
 		throw new Error('Failed to generate content due to an error');
 	}
 }
