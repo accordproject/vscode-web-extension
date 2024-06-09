@@ -1,4 +1,4 @@
-import { DocumentDetails, PromptConfig } from '../src/copilot/utils/preparePrompt';
+import { DocumentDetails, PromptConfig } from '../src/copilot/utils/types';
 
 export interface TestCase {
     description: string;

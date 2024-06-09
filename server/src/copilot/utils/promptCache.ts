@@ -1,8 +1,9 @@
 import { LRUCache } from 'lru-cache';
+import { DEFAULTS } from './constants';
 
 // Initialize LRU cache with a max size of 100 items
 const cache = new LRUCache<string, any>({
-  max: 100,
+  max: DEFAULTS.MAX_CACHE_ITEMS,
   // Optional: specify additional options as needed
   // ttl: 3600 * 1000, // Time to live in milliseconds (1 hour)
 });

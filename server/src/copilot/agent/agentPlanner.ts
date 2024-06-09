@@ -13,9 +13,9 @@ export async function agentPlanner(params: AgentPlannerParams): Promise<{ conten
     
     let prompt;
     if (requestType === 'inline' && language === 'concerto') {
-        prompt = getConcertoInlineTemplate(beforeCursor, afterCursor, instruction || '');
+        prompt = getConcertoInlineTemplate(beforeCursor, afterCursor, promptConfig);
     } else if (requestType === 'inline' && language !== 'concerto') {
-        prompt = getInlineTemplate(beforeCursor, afterCursor, language?.toLowerCase() || '', instruction || '');
+        prompt = getInlineTemplate(beforeCursor, afterCursor, promptConfig);
     } else if (requestType === 'general') {
         prompt = getGeneralTemplate(content);
     } else {

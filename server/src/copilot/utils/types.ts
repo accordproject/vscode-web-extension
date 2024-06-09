@@ -8,6 +8,8 @@ export interface PromptConfig {
     requestType: 'inline' | 'general';
     instruction?: string;
 	language?: string;
+    previousContent?: string;
+    previousError?: any;
 }
 
 export interface AgentPlannerParams {

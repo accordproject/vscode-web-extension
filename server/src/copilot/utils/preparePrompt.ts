@@ -17,5 +17,8 @@ function preparePrompt(documentDetails: DocumentDetails, promptConfig: PromptCon
     }
 }
 
+function incorporateSuggestion(originalContent: string, cursorPosition: number, suggestion: string): string {
+    return originalContent.slice(0, cursorPosition) + suggestion + originalContent.slice(cursorPosition);
+}
 
-export { preparePrompt, DocumentDetails, PromptConfig };
+export { preparePrompt, incorporateSuggestion};

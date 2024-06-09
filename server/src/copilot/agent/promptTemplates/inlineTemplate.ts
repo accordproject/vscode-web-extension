@@ -1,7 +1,11 @@
-export function getInlineTemplate(beforeCursor: string, afterCursor: string, language: string, instruction: string): Array<{ content: string, role: string }> {
-    return [
+import { ROLE_DESCRIPTION } from '../../utils/constants';
+
+export function getInlineTemplate(beforeCursor: string, afterCursor: string, promptConfig: any): Array<{ content: string, role: string }> {
+    const { instruction, previousContent, language, previousError } = promptConfig;
+
+    let messageArray: Array<{ content: string, role: string }> = [
         {
-            content: "You are a copilot assistant. Your task is to convert a natural language description of a domain model or incomplete code of a domain model into a complete Accord Project Concerto model.",
+            content: ROLE_DESCRIPTION.COPILOT,
             role: "system"
         },
         {
@@ -9,6 +13,21 @@ export function getInlineTemplate(beforeCursor: string, afterCursor: string, lan
             role: "user"
         }
     ];
-}
 
-export const commentRegex = /\/\* Analyze the following code in .*? and complete the code based on the context. .*? Remove this commented instruction in complete code. \*\//g;
+    if (previousContent) {
+        messageArray.push({
+            content: previousContent,
+            role: "system"
+        });
+    }
+
+    if (previousError) {
+        let userMessage = `Fix the following errors: ${previousError.map((e: any) => e.message).join('. ')}. Don't put comments in the code.`;
+        messageArray.push({
+            content: userMessage,
+            role: "user"
+        });
+    }
+
+    return messageArray;
+}
