@@ -21,10 +21,10 @@ export const promptProvider = {
 
     const document = editor.document;
     const position = editor.selection.active;
-
     const documentDetails: DocumentDetails = {
       content: document.getText(),
-      cursorPosition: document.offsetAt(position)
+      cursorPosition: document.offsetAt(position),
+      fileExtension: document.fileName.split('.').pop()
     };
 
     const promptConfig: PromptConfig = {

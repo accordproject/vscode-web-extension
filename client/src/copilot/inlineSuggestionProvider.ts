@@ -31,7 +31,8 @@ export const inlineSuggestionProvider = (client: LanguageClient): vscode.InlineC
           
           const documentDetails: DocumentDetails = {
             content: document.getText(),
-            cursorPosition: document.offsetAt(position)
+            cursorPosition: document.offsetAt(position),
+            fileExtension: document.fileName.split('.').pop()
           };
 
           const promptConfig: PromptConfig = {

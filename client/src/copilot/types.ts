@@ -1,6 +1,7 @@
 export interface DocumentDetails {
     content: string;
     cursorPosition: number;
+    fileExtension?: string;
 }
 
 export interface PromptConfig {

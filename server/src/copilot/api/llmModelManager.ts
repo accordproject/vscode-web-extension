@@ -1,77 +1,108 @@
-import { preparePrompt, DocumentDetails, PromptConfig } from '../utils/preparePrompt';
 import { generateContent as generateGeminiContent } from './gemini';
 import { generateContent as generateOpenAIContent } from './openai';
 import { generateContent as generateAnthropicContent } from './anthropic';
 import { generateContent as generateHuggingfaceContent } from './huggingface';
 import { getPromptFromCache, setPromptToCache } from '../utils/promptCache';
-import { commentRegex } from '../agent/promptTemplates/inlineTemplate';
+import { incorporateSuggestion } from '../utils/preparePrompt';
+import { REGEX, PROVIDERS, DEFAULTS } from '../utils/constants';
 import { generateCacheKey } from '../utils/cacheKeyGenerator';
 import { cleanSuggestion } from '../utils/provider';
 import { agentPlanner } from '../agent/agentPlanner';
-import { ModelConfig } from '../utils/types';
+import { ModelConfig, DocumentDetails, PromptConfig } from '../utils/types';
+import { TextDocument } from 'vscode-languageserver-textdocument';
+import { GLOBAL_STATE } from '../../state';
 import { Lock } from '../utils/lock';
 import { log } from '../../state';
-
+import { handleConcertoDocumentChange } from '../../documents/concertoHandler';
 
 const lock = new Lock();
+
+async function generateContentByProvider(provider: string, config: ModelConfig, promptArray: Array<{ content: string, role: string }>): Promise<string> {
+    switch (provider) {
+        case PROVIDERS.GEMINI:
+            return await generateGeminiContent(config, promptArray);
+        case PROVIDERS.OPENAI:
+            return await generateOpenAIContent(config, promptArray);
+        case PROVIDERS.ANTHROPIC:
+            return await generateAnthropicContent(config, promptArray);
+        case PROVIDERS.HUGGINGFACE:
+            return await generateHuggingfaceContent(config, promptArray);
+        default:
+            throw new Error('Invalid model name specified in config');
+    }
+}
+
+async function handleErrors(updatedContent: string, promptConfig: PromptConfig, documentDetails: DocumentDetails, iteration: number): Promise<any[]> {
+    const tempDocumentName = DEFAULTS.TEMP_DOCUMENT_EXTENSION + documentDetails.fileExtension;
+    const tempDocument = TextDocument.create(tempDocumentName, promptConfig.language || '', iteration + 1, updatedContent);
+    const changeEvent = { document: tempDocument };
+
+    await handleConcertoDocumentChange(GLOBAL_STATE, changeEvent);
+    const errors = [...GLOBAL_STATE.diagnostics.diagnosticMap[tempDocumentName] || []];
+
+    if (errors.length !== 0) {
+        log(`Errors found in the generated suggestion: ${errors.map(e => e.message).join(', ')}`);
+        promptConfig.previousContent = updatedContent;
+        promptConfig.previousError = errors;
+    }
+
+    return errors;
+}
 
 export async function generateContent(config: ModelConfig, documentDetails: DocumentDetails, promptConfig: PromptConfig): Promise<string> {
 
 	await lock.acquire();
 
+	let generatedContent: string = '';
+	let shouldCache = false;
+	let errors: any[] = [];
+	let iteration = 0;
+
+	const cacheKey = generateCacheKey(documentDetails, promptConfig);
+	const maxRetries = DEFAULTS.MAX_RETRIES;
+
 	try {
 		const { provider } = config;
 
-		let generatedContent: any;
-		log('Generating content for model:' + provider);
+		do {		
+			if (iteration === 0) 
+				log('Generating content from model:' + provider);
+			else
+				log('Fixing errors in generated content from model:' + provider + ' Attempt: ' + iteration);	
+			
+			const promptArray = await agentPlanner({ documentDetails, promptConfig });
+			const cachedResponse = getPromptFromCache(cacheKey);
 
-		const promptArray = await agentPlanner({ documentDetails, promptConfig });
+			if (!cachedResponse) {
+				generatedContent = await generateContentByProvider(provider, config, promptArray);
 
-		const cacheKey = generateCacheKey(documentDetails, promptConfig);
+				if (promptConfig.requestType === 'inline') {
+					const filteredResponse = cleanSuggestion(documentDetails.content, documentDetails.cursorPosition, generatedContent.replace(REGEX.COMMENT, ''));
+					generatedContent = filteredResponse;
+					iteration++;
+				}
 
-		// Check if prompt is already in cache
-		const cachedResponse = getPromptFromCache(cacheKey);
-
-		if (!cachedResponse) {
-			switch (provider) {
-				case 'gemini':
-					generatedContent = await generateGeminiContent(config, promptArray);
-					break;
-				case 'openai':
-					generatedContent = await generateOpenAIContent(config, promptArray);
-					break;
-				case 'anthropic':
-					generatedContent = await generateAnthropicContent(config, promptArray);
-					break;
-				case 'huggingface':
-					generatedContent = await generateHuggingfaceContent(config, promptArray);
-					break;
-
-				default:
-					throw new Error('Invalid model name specified in config');
+				shouldCache = true;
+			}
+			else {
+				generatedContent = cachedResponse;
 			}
 
-			if (promptConfig.requestType === 'inline') {
-				const filteredResponse = cleanSuggestion(documentDetails.content, documentDetails.cursorPosition, generatedContent.replace(commentRegex, ''));
-				generatedContent = filteredResponse;
-			}
+            const updatedContent = incorporateSuggestion(documentDetails.content, documentDetails.cursorPosition, generatedContent);
+			errors = await handleErrors(updatedContent, promptConfig, documentDetails, iteration);
 
-			// Store the response in cache
-			setPromptToCache(cacheKey, generatedContent);
-		}
-		else {
-			generatedContent = cachedResponse;
-		}
+		} while (errors.length > 0 && iteration < maxRetries);
 
 		return generatedContent;
 
 	} catch (error) {
-		log('Error generating content:');
-
-		console.error('Error generating content:', error);
+		log('Error generating content: ' + error);
 		throw error;
 	} finally {
-		lock.release(); // Release the lock after the operation is complete
+		if (shouldCache && generatedContent) 
+            setPromptToCache(cacheKey, generatedContent); 
+        
+		lock.release();
 	}
 
 }

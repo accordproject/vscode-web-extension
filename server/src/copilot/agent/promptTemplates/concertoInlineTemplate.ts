@@ -1,11 +1,15 @@
-export function getConcertoInlineTemplate(beforeCursor: string, afterCursor: string, instruction: string): Array<{ content: string, role: string }> {
-    return [
+import { ROLE_DESCRIPTION, EXAMPLES } from '../../utils/constants';
+
+export function getConcertoInlineTemplate(beforeCursor: string, afterCursor: string, promptConfig: any): Array<{ content: string, role: string }> {
+    const { instruction, previousContent, previousError } = promptConfig;
+
+    let messageArray: Array<{ content: string, role: string }> = [
         {
-            content: "You are a copilot assistant. Your task is to convert a natural language description of a domain model or incomplete code of a domain model into a complete Accord Project Concerto model.",
+            content: ROLE_DESCRIPTION.CONCERTO_COPILOT,
             role: "system"
         },
         {
-            content: `Here is an annotated example Concerto model:\n\n\`\`\`\nnamespace <name of the namespace>@<version number> // the namespace and semantic version for the model. Semantic versions must be <major>.<minor>.<patch>. E.g. 'org.acme@1.0.0'.\n// All types must be defined in a single namespace. Do not use imports.\n\n[abstract] concept <concept name> identified by <identifying field name> { // defines a new concept, with a name. A concept may be declared as abstract. A concept may have an identifying property.\n  o <propery type>[] <property name> [optional] // add a property to a concept. For example, 'o String firstName optional' defines a property called 'firstName' of type 'String' that is optional. Add '[]' to the end of the type name to make the property an array. \n  // Primitive property types are: DateTime, String, Long, Double, Integer, Boolean\n  --> <relationship type> <relationship name> // adds a relationship to a concept. Concepts used in a relationship must have an identifying property.\n}\n\nscalar <name of scalar> extends <primitive type> // defines a scalar, a reusable primitive property\n\nenum <name of enum> { // defines an enumeration of values\n  o <value 1> // defines an enumerated value. enum values must only contain the letter A-Za-z0-9. They must not start with a number. They may not contain quotes or spaces.\n  o <value 2>\n}\n\n[abstract] concept <concept name> extends <super class> { // defines a concept that extends another concept\n}\n\`\`\`\n\nConcept and enumeration names within a model must be unique.\n`,
+            content: EXAMPLES.CONCERTO_MODEL,
             role: "user"
         },
         {
@@ -13,4 +17,21 @@ export function getConcertoInlineTemplate(beforeCursor: string, afterCursor: str
             role: "user"
         }
     ];
+
+    if (previousContent) {
+        messageArray.push({
+            content: previousContent,
+            role: "system"
+        });
+    }
+
+    if (previousError) {
+        let userMessage = `Fix the following errors in previously outputed code: ${previousError.map((e: any) => e.message).join('. ')}. Don't put comments in the code.`;
+        messageArray.push({
+            content: userMessage,
+            role: "user"
+        });
+    }
+
+    return messageArray;
 }
