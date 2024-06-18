@@ -37,7 +37,8 @@
 	"activationEvents": [
 		"onLanguage:concerto",
 		"onCommand:cicero-vscode-extension.showQuickPick",
-		"onCommand:cicero-vscode-extension.openChatPanel"
+		"onCommand:cicero-vscode-extension.openChatPanel",
+		"onCommand:cicero-vscode-extension.chatPanelWithErrorMessage"
 	],
 	"contributes": {
 		"configuration": [
@@ -58,16 +59,11 @@
 						"description": "Traces the communication between VS Code and the cicero-vscode-extension language server."
 					},
 					"cicero-vscode-extension.apiKey": {
-                        "type": "string",
-                        "default": "",
-                        "description": "API Key for the LLM service"
-                    },
-                    "cicero-vscode-extension.apiUrl": {
-                        "type": "string",
-                        "default": "",
-                        "description": "API URL for the LLM service"
-                    },
-                    "cicero-vscode-extension.provider": {
+						"type": "string",
+						"default": "",
+						"description": "API Key for the LLM service"
+					},
+					"cicero-vscode-extension.provider": {
 						"type": "string",
 						"default": "openai",
 						"description": "AI Provider for the LLM service"
@@ -77,21 +73,11 @@
 						"default": "",
 						"description": "LLM Model for the LLM service"
 					},
-                    "cicero-vscode-extension.maxTokens": {
-                        "type": "number",
-                        "default": 0,
-                        "description": "Maximum number of tokens to generate"
-                    },
-                    "cicero-vscode-extension.temperature": {
-                        "type": "number",
-                        "default": 0,
-                        "description": "Temperature setting for the LLM"
-                    },
-                    "cicero-vscode-extension.additionalParams": {
-                        "type": "object",
-                        "default": {},
-                        "description": "Additional parameters for the LLM service"
-                    },
+					"cicero-vscode-extension.additionalParams": {
+						"type": "object",
+						"default": {},
+						"description": "Additional parameters for the LLM service"
+					},
 					"cicero-vscode-extension.enableInlineSuggestions": {
 						"type": "boolean",
 						"default": true,
@@ -144,46 +130,56 @@
 			},
 			{
 				"command": "cicero-vscode-extension.startPromptProviderUI",
-				"title": "Accord Copilot (Start on Editor)"
+				"title": "Start in Editor"
 			},
 			{
-                "command": "cicero-vscode-extension.configureSettings",
-                "title": "Accord Copilot Settings"
-            },
-            {
-				"command": "cicero-vscode-extension.showQuickPick", 
+				"command": "cicero-vscode-extension.configureSettings",
+				"title": "Configure Settings"
+			},
+			{
+				"command": "cicero-vscode-extension.showQuickPick",
 				"title": "Show Quick Pick"
 			},
 			{
-                "command": "cicero-vscode-extension.toggleInlineSuggestions",
-                "title": "Toggle Inline Suggestions"
-            },
-            {
-                "command": "cicero-vscode-extension.toggleCodeActions",
-                "title": "Toggle Code Actions"
-            },
+				"command": "cicero-vscode-extension.toggleInlineSuggestions",
+				"title": "Toggle Inline Suggestions"
+			},
 			{
-                "command": "cicero-vscode-extension.openChat",
-                "title": "Open Chat Agent"
-            }
+				"command": "cicero-vscode-extension.toggleCodeActions",
+				"title": "Toggle Code Actions"
+			},
+			{
+				"command": "cicero-vscode-extension.openChat",
+				"title": "Open Chat Agent"
+			},
+			{
+				"command": "cicero-vscode-extension.chatPanelWithErrorMessage",
+				"title": "Fix error with Accord Copilot"
+			}
 		],
 		"viewsContainers": {
 			"activitybar": [
-			  {
-				"id": "chat",
-				"title": "Chat",
-				"icon": "comments-view-icon"
-			  }
+				{
+					"id": "chat",
+					"title": "Chat",
+					"icon": "comments-view-icon"
+				}
 			]
 		},
 		"views": {
-		"chat": [
-			{
-			"id": "chatPanel",
-			"name": "Chat Agent"
-			}
-		]
+			"chat": [
+				{
+					"id": "chatPanel",
+					"name": "Accord Assistant"
+				}
+			]
 		},
+		"submenus": [
+			{
+				"id": "accordProjectSubmenu",
+				"label": "Accord Project"
+			}
+		],
 		"menus": {
 			"explorer/context": [
 				{
@@ -197,9 +193,9 @@
 					"group": "AccordProject@8"
 				},
 				{
-                    "command": "cicero-vscode-extension.configureSettings",
-                    "group": "AccordProject@10"
-                }
+					"command": "cicero-vscode-extension.configureSettings",
+					"group": "AccordProject@10"
+				}
 			],
 			"editor/title": [],
 			"commandPalette": [
@@ -211,20 +207,24 @@
 					"command": "cicero-vscode-extension.compileToTarget",
 					"when": "false"
 				},
-                {
-                    "command": "cicero-vscode-extension.configureSettings",
-                    "when": "false"
-                }
+				{
+					"command": "cicero-vscode-extension.configureSettings",
+					"when": "false"
+				}
 			],
 			"editor/context": [
 				{
-				  "command": "cicero-vscode-extension.startPromptProviderUI",
-				  "group": "navigation"
+					"submenu": "accordProjectSubmenu",
+					"group": "navigation"
+				}
+			],
+			"accordProjectSubmenu": [
+				{
+					"command": "cicero-vscode-extension.startPromptProviderUI"
 				},
-                {
-                    "command": "cicero-vscode-extension.configureSettings",
-                    "group": "navigation"
-                }
+				{
+					"command": "cicero-vscode-extension.configureSettings"
+				}
 			]
 		}
 	},
@@ -244,13 +244,13 @@
 		"@types/path-browserify": "^1.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.42.0",
 		"@typescript-eslint/parser": "^5.42.0",
-		"@vscode/test-web": "^0.0.32",
+		"@vscode/test-web": "^0.0.54",
 		"eslint": "^8.26.0",
 		"html-webpack-plugin": "^5.5.0",
 		"node-polyfill-webpack-plugin": "^2.0.1",
 		"path-browserify": "^1.0.1",
 		"ts-loader": "^9.3.0",
-		"vsce": "^2.15.0",
+		"vsce": "^1.97.0",
 		"webpack": "^5.76.0",
 		"webpack-cli": "^4.7.2",
 		"webpack-dev-server": "^4.11.1"

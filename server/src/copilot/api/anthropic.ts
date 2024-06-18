@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { log } from '../../state';
+import { LLM_ENDPOINTS } from '../utils/constants';
+import { ModelConfig } from '../utils/types';
 
 /*
 	API request to generate content using the Anthropic model
@@ -25,17 +27,9 @@ interface GenerateContentRequest {
     stream?: boolean;
 }
 
-function createGenerateContentRequest(promptArray: Message[], config: any): GenerateContentRequest {
-    const {
-        llmModel: model,
-        maxTokens,
-        temperature,
-        stopSequences,
-        topP,
-        topK,
-        metadata,
-        stream
-    } = config;
+function createGenerateContentRequest(promptArray: Message[], config: ModelConfig): GenerateContentRequest {
+
+    const { llmModel: model, additionalParams } = config;
 
 	// Based on the API documentation, the prompt should be formatted as follows
     const formattedPrompt = `\n\nHuman: ` + promptArray.map(message => {
@@ -52,19 +46,23 @@ function createGenerateContentRequest(promptArray: Message[], config: any): Gene
         prompt: formattedPrompt
     };
 
-	if (maxTokens !== undefined) request.max_tokens_to_sample = maxTokens;
-    if (temperature !== undefined) request.temperature = temperature;
-    if (stopSequences !== undefined) request.stop_sequences = stopSequences;
-    if (topP !== undefined) request.top_p = topP;
-    if (topK !== undefined) request.top_k = topK;
-    if (metadata !== undefined) request.metadata = metadata;
-    if (stream !== undefined) request.stream = stream;
+    if (additionalParams?.temperature !== undefined) request.temperature = additionalParams.temperature;
+    if (additionalParams?.maxTokens !== undefined) request.max_tokens_to_sample = additionalParams.maxTokens;
+    if (additionalParams?.topP !== undefined) request.top_p = additionalParams.topP;
+    if (additionalParams?.topK !== undefined) request.top_k = additionalParams.topK;
+    if (additionalParams?.metadata !== undefined) request.metadata = additionalParams.metadata;
+    if (additionalParams?.stream !== undefined) request.stream = additionalParams.stream;
+    if (additionalParams?.stopSequences !== undefined) request.stop_sequences = additionalParams.stopSequences;
 
     return request;
 }
 
 export async function generateContent(config: any, promptArray: { content: string; role: string }[]): Promise<string> {
-    const { apiUrl, accessToken } = config;
+    let { apiUrl, accessToken } = config;
+
+    if(!apiUrl)
+        apiUrl = LLM_ENDPOINTS.ANTHROPIC;
+
     const request: GenerateContentRequest = createGenerateContentRequest(promptArray, config);
 
     try {

@@ -75,10 +75,11 @@ export async function generateContent(config: ModelConfig, documentDetails: Docu
 
 			if (!cachedResponse) {
 				generatedContent = await generateContentByProvider(provider, config, promptArray);
-
 				if (promptConfig.requestType === 'inline') {
 					const filteredResponse = cleanSuggestion(documentDetails.content, documentDetails.cursorPosition, generatedContent.replace(REGEX.COMMENT, ''));
 					generatedContent = filteredResponse;
+					const updatedContent = incorporateSuggestion(documentDetails.content, documentDetails.cursorPosition, generatedContent);
+					errors = await handleErrors(updatedContent, promptConfig, documentDetails, iteration);
 					iteration++;
 				}
 
@@ -87,9 +88,6 @@ export async function generateContent(config: ModelConfig, documentDetails: Docu
 			else {
 				generatedContent = cachedResponse;
 			}
-
-            const updatedContent = incorporateSuggestion(documentDetails.content, documentDetails.cursorPosition, generatedContent);
-			errors = await handleErrors(updatedContent, promptConfig, documentDetails, iteration);
 
 		} while (errors.length > 0 && iteration < maxRetries);
 

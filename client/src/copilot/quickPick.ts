@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import { GENERAL } from '../constants';
 import { copilotHealthStatus } from './healthCheck';
-import { createOrShowChatPanel } from './chatPanel';
+import { createOrShowChatPanel } from './chatPanel/chatPanel';
 import { LanguageClient } from 'vscode-languageclient/browser';
 
 export function registerQuickPickCommand(context: vscode.ExtensionContext, client: LanguageClient): void {
@@ -28,7 +28,7 @@ export function registerQuickPickCommand(context: vscode.ExtensionContext, clien
             vscode.commands.executeCommand('cicero-vscode-extension.configureSettings');
         } else if (selection?.label === GENERAL.QUICK_PICK_OPTION_SUGGESTIONS) {
             vscode.commands.executeCommand('cicero-vscode-extension.startPromptProviderUI');
-        } else if (selection?.label === 'Open Chat Agent') { // Add this condition
+        } else if (selection?.label === 'Open Chat Agent') {
             createOrShowChatPanel(client, context);
         } else if (selection?.label === GENERAL.QUICK_PICK_OPTION_ENABLE_INLINE_SUGGESTIONS || selection?.label === GENERAL.QUICK_PICK_OPTION_DISABLE_INLINE_SUGGESTIONS) {
             vscode.commands.executeCommand('cicero-vscode-extension.toggleInlineSuggestions');

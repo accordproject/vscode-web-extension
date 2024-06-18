@@ -5,7 +5,7 @@ export interface DocumentDetails {
 }
 
 export interface PromptConfig {
-    requestType: 'inline' | 'general';
+    requestType: 'inline' | 'general' | 'fix';
     instruction?: string;
 	language?: string;
     previousContent?: string;
@@ -20,9 +20,24 @@ export interface AgentPlannerParams {
 export interface ModelConfig {
     provider: string;
     llmModel: string;
-    apiUrl: string;
-    maxTokens?: number;
-    temperature?: number;
-    topP?: number;
+    apiUrl?: string;
     accessToken: string;
+    additionalParams?: AdditionalParams;
+}
+
+export interface AdditionalParams {
+    [key: string]: any;
+}
+
+export enum RequestType {
+    Inline = 'inline',
+    General = 'general',
+    Fix = 'fix'
+}
+
+export enum Language {
+    Concerto = 'Concerto',
+    TypeScript = 'TypeScript',
+    JavaScript = 'JavaScript',
+    Ergo = 'Ergo'
 }

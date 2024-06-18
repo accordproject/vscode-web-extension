@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { log } from '../../state';
+import { LLM_ENDPOINTS } from '../utils/constants';
+import { ModelConfig } from '../utils/types';
 
 /*
 	API call to generate content using the OpenAI model
@@ -23,26 +25,30 @@ interface GenerateContentRequest {
     presence_penalty?: number;
 }
 
-function createGenerateContentRequest(promptArray: Message[], config: any): GenerateContentRequest {
-    const { llmModel, maxTokens, temperature, topP, frequencyPenalty, presencePenalty } = config;
+function createGenerateContentRequest(promptArray: Message[], config: ModelConfig): GenerateContentRequest {
+    const { llmModel, additionalParams } = config;
 
 	const request: GenerateContentRequest = {
         model: llmModel,
         messages: promptArray,
     };
 
-    if (maxTokens !== undefined) request.max_tokens = maxTokens;
-    if (temperature !== undefined) request.temperature = temperature;
-    if (topP !== undefined) request.top_p = topP;
-    if (frequencyPenalty !== undefined) request.frequency_penalty = frequencyPenalty;
-    if (presencePenalty !== undefined) request.presence_penalty = presencePenalty;
+    if (additionalParams?.temperature !== undefined) request.temperature = additionalParams.temperature;
+    if (additionalParams?.maxTokens !== undefined) request.max_tokens = additionalParams.maxTokens;
+    if (additionalParams?.topP !== undefined) request.top_p = additionalParams.topP;
+    if (additionalParams?.frequencyPenalty !== undefined) request.frequency_penalty = additionalParams.frequencyPenalty;
+    if (additionalParams?.presencePenalty !== undefined) request.presence_penalty = additionalParams.presencePenalty;
     
     return request;
 }
 
 export async function generateContent(config: any, promptArray: { content: string; role: string }[]): Promise<any> {
-    const { apiUrl, accessToken } = config;
-    // fix prompt as we need to send multiple prompts to the API
+
+    let { apiUrl, accessToken } = config;
+
+    if (!apiUrl) 
+        apiUrl = LLM_ENDPOINTS.OPENAI;
+
     const request: GenerateContentRequest = createGenerateContentRequest(promptArray, config);
 
     try {

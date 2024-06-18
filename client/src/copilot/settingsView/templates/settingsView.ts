@@ -23,12 +23,6 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
                 <span class="error-message" id="apiKeyError"></span>
             </div>
             <div class="form-group">
-                <label for="apiUrl">API Endpoint <span class="required-asterisk">*</span></label>
-                <p>The URL of the API endpoint.</p>
-                <input type="text" id="apiUrl" value="${configValues.apiUrl}">
-                <span class="error-message" id="apiUrlError"></span>
-            </div>
-            <div class="form-group">
                 <label for="provider">Provider <span class="required-asterisk">*</span></label>
                 <p>Select the AI provider.</p>
                 <div class="select-container">
@@ -49,18 +43,8 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
                 <span class="error-message" id="llmModelError"></span>
             </div>
             <div class="form-group">
-                <label for="maxTokens">Max Tokens</label>
-                <p>The maximum number of tokens generated in each completion.</p>
-                <input type="number" id="maxTokens" value="${configValues.maxTokens ? `value="${configValues.maxTokens}"` : ''}">
-            </div>
-            <div class="form-group">
-                <label for="temperature">Temperature</label>
-                <p>The temperature for sampling from the model.</p>
-                <input type="number" step="0.1" id="temperature" value="${configValues.temperature ? `value="${configValues.temperature}"` : ''}">
-            </div>
-            <div class="form-group">
                 <label for="additionalParams">Additional Parameters</label>
-                <p>Additional parameters for the model.</p>
+                <p>Additional parameters for the model in JSON format. Examples of keys include maxTokens, temperature, topP.</p>
                 <textarea id="additionalParams">${configValues.additionalParams}</textarea>
             </div>
             <div class="form-group">

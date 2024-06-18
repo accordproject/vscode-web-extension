@@ -31,11 +31,12 @@ import {
 
 import { inlineSuggestionProvider } from './copilot/inlineSuggestionProvider';
 import { promptProvider } from './copilot/promptProvider';
-import { createSettingsWebview } from './copilot/configSetting';
+import { createSettingsWebview } from './copilot/settingsView/configSetting';
 import { createStatusBarItem } from './copilot/statusBarItemProvider';
 import { codeActionProvider } from './copilot/codeActionProvider';
 import { registerToggleSettingsCommands } from './copilot/toggleSettings';
 import { registerQuickPickCommand } from './copilot/quickPick';
+import { createOrShowChatPanel } from './copilot/chatPanel/chatPanel';
 
 
 /**
@@ -117,6 +118,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	// Register the toggle settings commands	
 	registerToggleSettingsCommands(context, client);
+
+	context.subscriptions.push(vscode.commands
+		.registerCommand('cicero-vscode-extension.chatPanelWithErrorMessage', (errorMessage) => createOrShowChatPanel(client, context, errorMessage)));
 }
 
 function createWorkerLanguageClient(context: vscode.ExtensionContext, clientOptions: LanguageClientOptions) {

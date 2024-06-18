@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/browser';
-import { getSuggestion } from './promptParser';
+import { getSuggestion } from './generators/suggestionProvider';
 import { DocumentDetails, PromptConfig } from './types';
 import { log } from '../log';
 

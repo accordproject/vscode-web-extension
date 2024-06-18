@@ -3,11 +3,8 @@ export const scriptTemplate = `
     function saveSettings() {
         const scope = document.getElementById('scope').value;
         const apiKey = document.getElementById('apiKey').value;
-        const apiUrl = document.getElementById('apiUrl').value;
         const provider = document.getElementById('provider').value;
         const llmModel = document.getElementById('llmModel').value;
-        const maxTokens = document.getElementById('maxTokens').value;
-        const temperature = document.getElementById('temperature').value;
         const additionalParams = document.getElementById('additionalParams').value;
 
         // Validation
@@ -21,14 +18,6 @@ export const scriptTemplate = `
             document.getElementById('apiKeyError').style.display = "none";
         }
 
-        if (!apiUrl) {
-            document.getElementById('apiUrlError').innerText = "API Endpoint is required";
-            document.getElementById('apiUrlError').style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById('apiUrlError').style.display = "none";
-        }
-
         if (!provider) {
             document.getElementById('providerError').innerText = "Provider is required";
             document.getElementById('providerError').style.display = "block";
@@ -37,20 +26,14 @@ export const scriptTemplate = `
             document.getElementById('providerError').style.display = "none";
         }
         
-        const maxTokensValue = maxTokens!=0 ? Number(maxTokens) : null;
-        const temperatureValue = temperature!=0 ? Number(temperature) : null;
-
         if (!isValid) return; // Prevent saving if validation fails
 
         vscode.postMessage({
             scope: scope,
             command: 'saveSettings',
             apiKey,
-            apiUrl,
             provider,
             llmModel,
-            maxTokens,
-            temperature,
             additionalParams
         });
     }
