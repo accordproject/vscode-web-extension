@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { log } from '../../state';
+import { LLM_ENDPOINTS } from '../utils/constants';
 
 /*
     API call to generate content using the Huggingface model
@@ -56,7 +57,11 @@ function createGenerateContentRequest(promptArray: Message[], config: any): Gene
 }
 
 export async function generateContent(config: any, promptArray: { content: string; role: string }[]): Promise<string> {
-    const { apiUrl, accessToken } = config;
+    let { apiUrl, accessToken } = config;
+
+    if (!apiUrl) 
+        apiUrl = LLM_ENDPOINTS.HUGGINGFACE;
+    
     const request: GenerateContentRequest = createGenerateContentRequest(promptArray, config);
 
     try {

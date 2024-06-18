@@ -5,18 +5,20 @@ export interface DocumentDetails {
 }
 
 export interface PromptConfig {
-    requestType: string;
-    language: any;
+    requestType: string; // 'inline' | 'general' | 'fix' 
+    language?: any;
 	instruction?: string;
 }
 
 export interface ModelConfig {
     provider: string;
     llmModel: string;
-    apiUrl: string;
-    maxTokens?: number;
-    temperature?: number;
-    topP?: number;
     accessToken: string;
+    apiUrl?: string;
+    additionalParams?: AdditionalParams;
+}
+
+export interface AdditionalParams {
+    [key: string]: any;
 }
 

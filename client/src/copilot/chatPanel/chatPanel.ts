@@ -1,19 +1,22 @@
 import * as vscode from 'vscode';
-import { htmlTemplate } from './templates/chatView';
-import { cssTemplate } from './templates/chatStyle';
-import { scriptTemplate } from './templates/chatScript';
-import { getSuggestion } from './promptParser';
-import { DocumentDetails, PromptConfig } from './types';
-import { CHAT_PANEL } from '../constants';
+import { getSuggestion } from '../generators/suggestionProvider';
+import { DocumentDetails, PromptConfig } from '../types';
+import { CHAT_PANEL } from '../../constants';
 import { LanguageClient } from 'vscode-languageclient/browser';
+import { parseMarkdown, updateWebview } from './chatUtils';
+import { log } from '../../log';
 
 let currentPanel: vscode.WebviewPanel | undefined;
 
-export function createOrShowChatPanel(client: LanguageClient, context: any) {
+export function createOrShowChatPanel(client: LanguageClient, context: any, errorMessage?: string) {
     const column = vscode.ViewColumn.Beside;
+    const editor = vscode.window.activeTextEditor;
 
     if (currentPanel) {
         currentPanel.reveal(column);
+        if (errorMessage) {
+            currentPanel.webview.postMessage({ command: 'setValue', text: errorMessage });
+        }
         return;
     }
 
@@ -37,6 +40,12 @@ export function createOrShowChatPanel(client: LanguageClient, context: any) {
                 case 'sendMessage':
                     await handleSendMessage(message.text, client);
                     break;
+                case 'webviewLoaded':
+                    if (errorMessage) {                        
+                        const document = editor.document;
+                        const content = document.getText();
+                        await handleSendMessage(errorMessage, client, content);
+                    }
             }
         }
     );
@@ -44,18 +53,7 @@ export function createOrShowChatPanel(client: LanguageClient, context: any) {
     updateWebview(currentPanel, context.extensionUri);
 }
 
-function updateWebview(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
-    const webview = panel.webview;
-
-    panel.title = CHAT_PANEL.TITLE;
-    webview.html = getHtmlForWebview(webview, extensionUri);
-}
-
-function getHtmlForWebview(webview: vscode.Webview, extensionUri: vscode.Uri) {
-    return htmlTemplate(cssTemplate, scriptTemplate);
-}
-
-async function handleSendMessage(message: string, client: any) {
+async function handleSendMessage(message: string, client: any, content?: string) {
     if (!currentPanel) {
         return;
     }
@@ -64,13 +62,13 @@ async function handleSendMessage(message: string, client: any) {
     addMessageToChat({ text: CHAT_PANEL.THINKING_MESSAGE, type: 'thinking' });
     
     const promptConfig: PromptConfig = {
-        requestType: 'general',
+        requestType: (content)? 'fix' : 'general',
         language: 'plaintext',
         instruction: message
     };
 
     const documentDetails: DocumentDetails = {
-        content: message,
+        content: (content)? content : '',
         cursorPosition: 0
     };
 
@@ -97,7 +95,3 @@ function removeThinkingMessage() {
     }
 }
 
-function parseMarkdown(text: string): string {
-    const markdown = require('markdown-it')();
-    return markdown.render(text);
-}

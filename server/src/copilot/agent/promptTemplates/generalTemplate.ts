@@ -1,7 +1,8 @@
-export function getGeneralTemplate(content: string): Array<{ content: string, role: string }> {
+export function getGeneralTemplate(promptConfig: any): Array<{ content: string, role: string }> {
+    const { instruction } = promptConfig;
     return [
         {
-            content: `${content}`,
+            content: `${instruction}`,
             role: "user"
         }
     ];

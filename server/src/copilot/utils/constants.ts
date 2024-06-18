@@ -23,3 +23,10 @@ export const DEFAULTS = {
     TEMP_DOCUMENT_EXTENSION: 'temp-document.',
     MAX_CACHE_ITEMS: 100 
 };
+
+export const LLM_ENDPOINTS = {
+    GEMINI: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
+    OPENAI: 'https://api.openai.com/v1/chat/completions',
+    ANTHROPIC: 'https://api.anthropic.com/v1/complete',
+    HUGGINGFACE: 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1/v1/chat/completions'
+};

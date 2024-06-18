@@ -6,7 +6,8 @@ export const ERROR_MESSAGES = {
     NO_MODEL_NAME: "Model name is required.",
     NO_MAX_TOKENS: "Max tokens is required.",
     NO_TEMPERATURE: "Temperature is required.",
-    NO_ADDITIONAL_PARAMS: "Additional parameters are required."
+    NO_ADDITIONAL_PARAMS: "Additional parameters are required.",
+    GENERATE_CONTENT_ERROR: "Error generating content: "
 };
 
 // General constants
@@ -35,7 +36,8 @@ export const PROMPTS = {
     ENTER_MODEL_NAME: "Enter the model name",
     ENTER_MAX_TOKENS: "Enter the maximum number of tokens",
     ENTER_TEMPERATURE: "Enter the temperature value",
-    ENTER_ADDITIONAL_PARAMS: "Enter additional parameters as a JSON string"
+    ENTER_ADDITIONAL_PARAMS: "Enter additional parameters as a JSON string",
+    GENERATING_CODE: "Generating code...  Please wait."
 };
 
 // Constants for status bar
@@ -58,14 +60,16 @@ export const CONFIG_DEFAULTS = {
     apiUrl: '',
     provider: '',
     llmModel: '',
-    maxTokens: 4096,
-    temperature: 1.0,
-    additionalParams: {}
+    additionalParams: {
+        topP: 1.0,
+        maxTokens: 100,
+        temperature: 0.8
+    }
 };
 
 // Constants for chatPanel.ts
 export const CHAT_PANEL = {
-    TITLE: 'Chat Agent',
+    TITLE: 'Accord Assistant',
     NEW_MESSAGE_ICON: '<span class="codicon codicon-person"></span>&nbsp;',
     THINKING_MESSAGE: '<span class="codicon codicon-copilot"></span>&nbsp; Thinking...',
     ERROR_MESSAGE: '<span class="codicon codicon-copilot"></span>&nbsp; Unable to generate a response at this time.'
@@ -75,7 +79,15 @@ export const CHAT_PANEL = {
 export const DEFAULT_LLM_MODELS = {
     GEMINI: 'gemini-pro',
     OPENAI: 'gpt-3.5-turbo',
-    ANTHROPIC: 'claude-1.5'
+    ANTHROPIC: 'claude-1.5',
+    HUGGINGFACE_MISTRAL: 'Mistral-7B-Instruct-v0.1'
+};
+
+export const DEFAULT_LLM_ENDPOINTS = {
+    GEMINI: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
+    OPENAI: 'https://api.openai.com/v1/chat/completions',
+    ANTHROPIC: 'https://api.anthropic.com/v1/complete',
+    HUGGINGFACE: 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1/v1/chat/completions'
 };
   
   

@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { integer } from 'vscode-languageserver';
 import {log} from '../../state';
+import { LLM_ENDPOINTS } from '../utils/constants';
+import { ModelConfig } from '../utils/types';
 
 /*
 	API request to generate content using the Gemini model: 
@@ -21,20 +23,20 @@ interface GenerateContentRequest {
 	};
 }
 
-function createGenerateContentRequest(promptArray: { content: string; role: string }[], config: any): GenerateContentRequest {
-	const { maxTokens, topP, topK, temperature } = config;
+function createGenerateContentRequest(promptArray: { content: string; role: string }[], config: ModelConfig): GenerateContentRequest {
+	const { additionalParams } = config;
 
 	const generationConfig: { 
-	temperature?: number;
-	maxOutputTokens?: number;
-	topP?: number;
-	topK?: integer;
+		temperature?: number;
+		maxOutputTokens?: number;
+		topP?: number;
+		topK?: integer;
 	} = {};
 
-	if (temperature !== undefined) generationConfig.temperature = temperature;
-	if (maxTokens !== undefined) generationConfig.maxOutputTokens = maxTokens;
-	if (topP !== undefined) generationConfig.topP = topP;
-	if (topK !== undefined) generationConfig.topK = topK;
+	if (additionalParams?.temperature !== undefined) generationConfig.temperature = additionalParams.temperature;
+    if (additionalParams?.maxTokens !== undefined) generationConfig.maxOutputTokens = additionalParams.maxTokens;
+    if (additionalParams?.topP !== undefined) generationConfig.topP = additionalParams.topP;
+    if (additionalParams?.topK !== undefined) generationConfig.topK = additionalParams.topK;
 
 	const contents = promptArray.map(item => ({
         parts: [{ text: item.content }],
@@ -57,7 +59,11 @@ function replaceModelInApiUrl(apiUrl: string, llmModel: string): string {
 // API call to generate content using the Gemini model
 export async function generateContent(config: any, promptArray: { content: string; role: string }[] ): Promise<string> {
 
-	const { apiUrl, accessToken, llmModel } = config;
+	let { apiUrl, accessToken, llmModel } = config;
+
+	if(!apiUrl) 
+		apiUrl = LLM_ENDPOINTS.GEMINI;
+
 	const updatedApiUrl = replaceModelInApiUrl(apiUrl, llmModel);
 	const request: GenerateContentRequest = createGenerateContentRequest(promptArray, config);
 

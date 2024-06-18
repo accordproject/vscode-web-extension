@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/browser';
-import { getSuggestion } from './promptParser';
+import { getSuggestion } from './generators/suggestionProvider';
 import { log } from '../log';
 import { DocumentDetails, PromptConfig } from './types';
 

@@ -55,7 +55,15 @@ export const scriptTemplate = `
             thinkingMessage.innerHTML = message.text;
             messagesContainer.appendChild(thinkingMessage);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        } else if (message.command === 'setValue') {
+            messageInput.value = message.text;
+            sendButton.disabled = !messageInput.value.trim();
+            adjustTextareaHeight();
+            sendMessage();
         }
     });
+
+    vscode.postMessage({ type: 'webviewLoaded' });
+
 })();
 `;
