@@ -7,7 +7,9 @@ export const ERROR_MESSAGES = {
     NO_MAX_TOKENS: "Max tokens is required.",
     NO_TEMPERATURE: "Temperature is required.",
     NO_ADDITIONAL_PARAMS: "Additional parameters are required.",
-    GENERATE_CONTENT_ERROR: "Error generating content: "
+    GENERATE_CONTENT_ERROR: "Error generating content: ",
+    OPENING_SAMPLE_FILE_ERROR: "Error opening sample file",
+    OPENING_FILES_ERROR: "Error opening files"
 };
 
 // General constants
@@ -90,4 +92,33 @@ export const DEFAULT_LLM_ENDPOINTS = {
     HUGGINGFACE: 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1/v1/chat/completions'
 };
   
+// Constants for Panel Manager
+export const PANEL_MANAGER = {
+    WEBVIEW_TITLE: 'Model Generation Wizard',
+    FILE_GENERATING_STATE: 'updateGeneratingState',
+    FILE_LIST_COMMAND: 'fileList'
+};
+
+// Constants for File Generators
+export const FILE_GENERATORS = {
+    GRAMMAR_FILE_NAME: 'grammar-ai-generated.md',
+    MODEL_FILE_NAME: 'model-ai-generated.cto',
+    GRAMMAR_FOLDER_PATTERN: '**/text/**',
+    GRAMMAR_FOLDER_SUB_PATH: '/text/',
+    MODEL_FOLDER_PATTERN: '**/model/**',
+    MODEL_FOLDER_SUB_PATH: '/model/',
+    GENERATE_GRAMMAR_FILE: 'generateGrammarFile',
+    GENERATE_MODEL_FILE: 'generateModelFile',
+    REQUEST_FILE_LIST: 'requestFileList'
+};
+
+// Constants for File Utils
+export const FILE_UTILS = {
+    FILE_LIST_EXCLUDE_PATTERN: '{**/node_modules/**,**/.*/**,**/*.!(cto|json|md)}',
+    FOLDER_EXCLUDE_PATTERN: '**/node_modules/**'
+};
+
+export const ASSETS = {
+    ACCORD_LOGO: 'assets/accord_logo.png'
+};
   

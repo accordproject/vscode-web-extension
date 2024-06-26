@@ -20,13 +20,15 @@ describe('Cache Test', function() {
 
     // Run the test case the first time and store the response
     it(`should generate content for: ${testCase.description} (First Run)`, async function() {
-        firstRunContent = await generateContent(config, testCase.documentDetails, testCase.promptConfig);
+        const documents = { main: testCase.documents.main };
+        firstRunContent = await generateContent(config, documents, testCase.promptConfig);
         expect(firstRunContent).to.be.a('string');
     });
 
     // Run the test case the second time and compare the response with the first run
     it(`should generate content for: ${testCase.description} (Second Run)`, async function() {
-        const secondRunContent = await generateContent(config, testCase.documentDetails, testCase.promptConfig);
+        const documents = { main: testCase.documents.main };
+        const secondRunContent = await generateContent(config, documents, testCase.promptConfig);
         expect(secondRunContent).to.be.a('string');
         expect(secondRunContent).to.equal(firstRunContent, 'The second run content should match the first run content (cached response)');
     });
@@ -36,8 +38,8 @@ describe('Cache Test', function() {
         const prompt = "function newFunction() { return 'new'; }";
         const cachedResponse = getPromptFromCache(prompt);
         expect(cachedResponse).to.be.undefined;
-        
-        const generatedContent = await generateContent(config, { content: prompt, cursorPosition: prompt.length }, { requestType: 'inline', language: 'TypeScript' });
+        const documents = { main: testCase.documents.main };
+        const generatedContent = await generateContent(config, documents, { requestType: 'inline', language: 'TypeScript' });
         setPromptToCache(prompt, generatedContent);
         
         const cachedAfterSet = getPromptFromCache(prompt);

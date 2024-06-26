@@ -67,9 +67,9 @@ export async function registerCommandHandlers(state:LanguageServerState) {
 		state.connection.onRequest('loadModels', (event:any) => loadModels());
 		// Register a new command handler for generateContent
 		state.connection.onRequest('generateContent', async (params: any) => {
-			log('generateContent handler called with params:');
-			const { modelConfig, documentDetails, promptConfig } = params;
-			return generateContent(modelConfig, documentDetails, promptConfig);
+			const { modelConfig, documents, promptConfig } = params;
+			log(JSON.stringify(documents));
+			return generateContent(modelConfig, documents, promptConfig);
 		});
 	} else {
 		log('state.connection is null');

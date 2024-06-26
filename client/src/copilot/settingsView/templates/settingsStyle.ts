@@ -1,26 +1,26 @@
 export const cssTemplate = `
     body {
-        font-family: var(--vscode-workbench-widget-font-family);
-        font-size: var(--vscode-font-size);
-        line-height: var(--vscode-workbench-widget-line-height);
-        color: var(--vscode-workbench-foreground);
-        background-color: var(--vscode-workbench-background);
+        font-family: var(--font-family);
+        font-size: var(--font-size);
+        line-height: var(--line-height);
+        color: var(--foreground);
+        background-color: var(--background);
         padding: 20px;
     }
     .container {
         max-width: 800px;
         margin: 0 auto;
         padding: 20px;
-        background-color: var(--vscode-workbench-widget-background);
+        background-color: var(--container-background);
         border-radius: 4px;
-        border: 1px solid var(--vscode-sideBar-border);
+        border: 1px solid var(--container-border);
     }
     h1 {
-        color: var(--vscode-settings-headerForeground);
+        color: var(--header-foreground);
         padding: 5px;
     }
     h1:hover {
-        background-color:  var(--vscode-settings-focusedRowBackground);
+        background-color: var(--hover-background);
     }
     .form-group {
         margin-bottom: 20px;
@@ -30,18 +30,18 @@ export const cssTemplate = `
         border-left: 2px solid transparent;
     }
     .form-group:hover {
-        background-color:  var(--vscode-settings-focusedRowBackground);
-        border-left: 1px solid var(--vscode-focusBorder);
+        background-color: var(--list-hover-background);
+        border-left: 1px solid var(--focus-border);
     }
     .form-group label {
         display: block;
         font-weight: bold;
-        color: var(--vscode-settings-textInputForeground);
+        color: var(--text-input-foreground);
         margin-bottom: 5px;
     }
     .form-group p {
         margin-top: 0;
-        color: var(--vscode-descriptionForeground);
+        color: var(--description-foreground);
     }
     .input-container {
         position: relative;
@@ -49,9 +49,9 @@ export const cssTemplate = `
     .input-container input {
         width: calc(100% - 40px);
         padding: 8px;
-        background-color: var(--vscode-input-background);
-        color: var(--vscode-input-foreground);
-        border: 1px solid var(--vscode-input-border);
+        background-color: var(--input-background);
+        color: var(--input-foreground);
+        border: 1px solid var(--input-border);
         border-radius: 4px;
         margin-top: 4px;
         padding-right: 40px;
@@ -70,23 +70,23 @@ export const cssTemplate = `
     .form-group select {
         width: calc(100% - 16px);
         padding: 8px;
-        background-color: var(--vscode-input-background);
-        color: var(--vscode-input-foreground);
-        border: 1px solid var(--vscode-input-border);
+        background-color: var(--input-background);
+        color: var(--input-foreground);
+        border: 1px solid var(--input-border);
         border-radius: 4px;
         margin-top: 4px;
     }
     .button {
         padding: 10px 20px;
-        background-color: var(--vscode-button-background);
-        color: var(--vscode-button-foreground);
-        border: 1px solid var(--vscode-button-border);
+        background-color: var(--button-background);
+        color: var(--button-foreground);
+        border: 1px solid var(--button-border);
         cursor: pointer;
         border-radius: 4px;
     }
     .button:hover {
-        background-color: var(--vscode-button-hoverBackground);
-        color: var(--vscode-button-hoverForeground);
+        background-color: var(--button-hover-background);
+        color: var(--button-hover-foreground);
     }
     .button:focus {
         outline: none;
@@ -96,14 +96,14 @@ export const cssTemplate = `
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
-        background-color: var(--vscode-input-background);
-        color: var(--vscode-input-foreground);
-        border: 1px solid var(--vscode-input-border);
+        background-color: var(--input-background);
+        color: var(--input-foreground);
+        border: 1px solid var(--input-border);
         padding: 8px;
         padding-right: 30px;
         border-radius: 4px;
     }
-    /* Style for container to ensure the custom arrow appears correctly */
+    
     .select-container {
         position: relative;
         width: 100%;
@@ -113,14 +113,13 @@ export const cssTemplate = `
         right: 10px;
         top: 50%;
         transform: translateY(-50%);
-        pointer-events: none; /* Makes sure the icon doesn't interfere with select functionality */
-        color: var(--vscode-input-foreground); /* Matches the icon color with the text color */
+        pointer-events: none; 
+        color: var(--input-foreground); 
     }
     .error-message { /* New class for error messages */
-        color: var(--vscode-errorForeground);
+        color: var(--error-foreground);
         margin-top: 5px;
         font-size: 0.9em;
         display: none; /* Hidden by default */
     }
-
 `;

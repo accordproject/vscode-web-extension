@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { STATUS_BAR } from '../constants';
+import { STATUS_BAR } from './utils/constants';
 
 export function createStatusBarItem(context: vscode.ExtensionContext) {
     const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, STATUS_BAR.PRIORITY);

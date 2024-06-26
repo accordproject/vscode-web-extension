@@ -1,6 +1,7 @@
 export const ROLE_DESCRIPTION = {
     COPILOT: "You are a copilot assistant. Your task is to complete the code based on the context.",
     CONCERTO_COPILOT: "You are a copilot assistant. Your task is to convert a natural language description of a domain model or incomplete code of a domain model into a complete Accord Project Concerto model.",
+    CONCERTO_GENERATOR: "You are a concerto model generator. Your task is to generate a domain model based on the provided requirements.",
 };
 
 export const EXAMPLES = {
@@ -29,4 +30,9 @@ export const LLM_ENDPOINTS = {
     OPENAI: 'https://api.openai.com/v1/chat/completions',
     ANTHROPIC: 'https://api.anthropic.com/v1/complete',
     HUGGINGFACE: 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1/v1/chat/completions'
+};
+
+export const LLM_EMDEDDINGS_ENDPOINTS = {
+    GEMINI: 'https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent',
+    OPENAI: 'https://api.openai.com/v1/embeddings'
 };

@@ -155,6 +155,10 @@
 			{
 				"command": "cicero-vscode-extension.chatPanelWithErrorMessage",
 				"title": "Fix error with Accord Copilot"
+			},
+			{
+				"command": "cicero-vscode-extension.openFileGenerator",
+				"title": "Open File Generator"
 			}
 		],
 		"viewsContainers": {
@@ -163,6 +167,11 @@
 					"id": "chat",
 					"title": "Chat",
 					"icon": "comments-view-icon"
+				},
+				{
+					"id": "fileGenerator",
+					"title": "File Generator",
+					"icon": "file-generator-view-icon"
 				}
 			]
 		},
@@ -224,6 +233,9 @@
 				},
 				{
 					"command": "cicero-vscode-extension.configureSettings"
+				},
+				{
+					"command": "cicero-vscode-extension.openFileGenerator"
 				}
 			]
 		}

@@ -1,3 +1,5 @@
+import { getCommonStyles } from '../../utils/commonStyles';
+
 export const htmlTemplate = (css: string, script: string, configValues: { [key: string]: string }): string => `
     <!DOCTYPE html>
     <html lang="en">
@@ -7,6 +9,7 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
         <title>Copilot Settings</title>
         <link rel="stylesheet" href="https://microsoft.github.io/vscode-codicons/dist/codicon.css">
         <style>
+            ${getCommonStyles}
             ${css}
         </style>
     </head>

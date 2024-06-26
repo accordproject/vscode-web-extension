@@ -1,3 +1,5 @@
+import { getCommonStyles } from '../../utils/commonStyles';
+
 export const htmlTemplate = (css: string, script: string): string => `
     <!DOCTYPE html>
     <html lang="en">
@@ -8,6 +10,7 @@ export const htmlTemplate = (css: string, script: string): string => `
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/default.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
         <style>
+            ${getCommonStyles}
             ${css}
         </style>
     </head>
