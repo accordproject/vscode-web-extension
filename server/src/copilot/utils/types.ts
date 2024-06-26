@@ -1,11 +1,17 @@
 export interface DocumentDetails {
     content: string;
-    cursorPosition: number;
+    cursorPosition?: number;
 	fileExtension?: string;
+    fileName?: string;
+}
+
+export interface Documents {
+    main: DocumentDetails;
+    contextDocuments?: DocumentDetails[];
 }
 
 export interface PromptConfig {
-    requestType: 'inline' | 'general' | 'fix';
+    requestType: 'inline' | 'general' | 'fix' | 'model' | 'grammar';
     instruction?: string;
 	language?: string;
     previousContent?: string;
@@ -13,13 +19,16 @@ export interface PromptConfig {
 }
 
 export interface AgentPlannerParams {
-    documentDetails: DocumentDetails;
+    documents: Documents;
     promptConfig: PromptConfig;
+    config: ModelConfig;
 }
 
 export interface ModelConfig {
     provider: string;
     llmModel: string;
+    modelConfig?: any;
+    embeddingModel?: string;
     apiUrl?: string;
     accessToken: string;
     additionalParams?: AdditionalParams;
@@ -32,7 +41,9 @@ export interface AdditionalParams {
 export enum RequestType {
     Inline = 'inline',
     General = 'general',
-    Fix = 'fix'
+    Fix = 'fix',
+    Model = 'model',
+    Grammar = 'grammar',
 }
 
 export enum Language {
@@ -40,4 +51,26 @@ export enum Language {
     TypeScript = 'TypeScript',
     JavaScript = 'JavaScript',
     Ergo = 'Ergo'
+}
+
+export interface Embedding {
+    embedding: number[];
+}
+
+export interface GeminiEmbeddings {
+    embeddings: Embedding;
+}
+
+export interface OpenAIEmbeddings {
+    embeddings: number[];
+}
+
+export interface TypesEmbeddings {
+    fileName: string;
+    gemini: GeminiEmbeddings;
+    openai: OpenAIEmbeddings;
+}
+
+export interface EmbeddingsData {
+    [key: string]: TypesEmbeddings;
 }

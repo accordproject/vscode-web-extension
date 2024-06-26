@@ -1,7 +1,7 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { GENERAL } from '../constants';
+import { GENERAL } from './utils/constants';
 import { copilotHealthStatus } from './healthCheck';
 import { createOrShowChatPanel } from './chatPanel/chatPanel';
 import { LanguageClient } from 'vscode-languageclient/browser';

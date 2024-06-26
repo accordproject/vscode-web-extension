@@ -4,5 +4,5 @@ export function generateCacheKey(documentDetails: DocumentDetails, promptConfig:
     const { content, cursorPosition } = documentDetails;
     const { requestType, language, instruction } = promptConfig;
 
-    return `${content}:${cursorPosition}:${requestType}:${language}:${instruction || ''}`;
+    return `${content}:${cursorPosition || content.length}:${requestType}:${language}:${instruction || ''}`;
 }

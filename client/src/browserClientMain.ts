@@ -37,6 +37,7 @@ import { codeActionProvider } from './copilot/codeActionProvider';
 import { registerToggleSettingsCommands } from './copilot/toggleSettings';
 import { registerQuickPickCommand } from './copilot/quickPick';
 import { createOrShowChatPanel } from './copilot/chatPanel/chatPanel';
+import { createFileGeneratorPanel } from './copilot/modelGeneratorWizard/modelGeneratorPanel';
 
 
 /**
@@ -121,6 +122,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(vscode.commands
 		.registerCommand('cicero-vscode-extension.chatPanelWithErrorMessage', (errorMessage) => createOrShowChatPanel(client, context, errorMessage)));
+
+	context.subscriptions.push(vscode.commands
+		.registerCommand('cicero-vscode-extension.openFileGenerator', () => createFileGeneratorPanel(context, client)));	
 }
 
 function createWorkerLanguageClient(context: vscode.ExtensionContext, clientOptions: LanguageClientOptions) {

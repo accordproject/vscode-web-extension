@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { CHAT_PANEL } from '../../constants';
+import { CHAT_PANEL } from '../utils/constants';
 import { htmlTemplate } from './templates/chatView';
 import { cssTemplate } from './templates/chatStyle';
 import { scriptTemplate } from './templates/chatScript';

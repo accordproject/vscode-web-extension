@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/browser';
 import { getSuggestion } from './generators/suggestionProvider';
 import { log } from '../log';
-import { DocumentDetails, PromptConfig } from './types';
+import { DocumentDetails, Documents, PromptConfig } from './utils/types';
 
 const debounceDelay = 2000; // 2 seconds
 let debounceTimer: NodeJS.Timeout | null = null;
@@ -35,13 +35,17 @@ export const inlineSuggestionProvider = (client: LanguageClient): vscode.InlineC
             fileExtension: document.fileName.split('.').pop()
           };
 
+          const documents: Documents = {
+            main: documentDetails
+          };
+
           const promptConfig: PromptConfig = {
             requestType: 'inline',
             language: document.languageId
           };
 
           try {
-            const suggestion = await getSuggestion(client, documentDetails, promptConfig);
+            const suggestion = await getSuggestion(client, documents, promptConfig);
             const items: vscode.InlineCompletionItem[] = [
               new vscode.InlineCompletionItem(
                 suggestion,

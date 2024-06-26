@@ -25,6 +25,7 @@
 		"https-browserify": "^1.0.0",
 		"lru-cache": "^10.2.2",
 		"lz-string": "^1.4.4",
+		"mathjs": "^13.0.0",
 		"path-browserify": "^1.0.1",
 		"perf_hooks": "^0.0.1",
 		"stream-browserify": "^3.0.0",

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { integer } from 'vscode-languageserver';
 import {log} from '../../state';
-import { LLM_ENDPOINTS } from '../utils/constants';
-import { ModelConfig } from '../utils/types';
+import { LLM_EMDEDDINGS_ENDPOINTS, LLM_ENDPOINTS } from '../utils/constants';
+import { Embedding, ModelConfig } from '../utils/types';
 
 /*
 	API request to generate content using the Gemini model: 
@@ -21,6 +21,13 @@ interface GenerateContentRequest {
 	  topP?: number;
 	  topK?: integer;
 	};
+}
+
+interface GenerateEmbeddingsRequest {
+    model: string;
+    content: {
+        parts: { text: string }[];
+    };
 }
 
 function createGenerateContentRequest(promptArray: { content: string; role: string }[], config: ModelConfig): GenerateContentRequest {
@@ -49,6 +56,15 @@ function createGenerateContentRequest(promptArray: { content: string; role: stri
 	};
 
 	return request;
+}
+
+function createGenerateEmbeddingsRequest(text: string, model: string): GenerateEmbeddingsRequest {
+    return {
+        model: model,
+        content: {
+            parts: [{ text: text }]
+        }
+    };
 }
 
 function replaceModelInApiUrl(apiUrl: string, llmModel: string): string {
@@ -95,3 +111,46 @@ export async function generateContent(config: any, promptArray: { content: strin
 	}
 }
 
+export async function generateEmbeddings(config: any, text: string): Promise<Embedding[]> {
+    let { apiUrl, accessToken, embeddingModel } = config;
+
+    if (!apiUrl) 
+        apiUrl = LLM_EMDEDDINGS_ENDPOINTS.GEMINI;
+
+	let updatedApiUrl = apiUrl;
+
+	embeddingModel = embeddingModel || 'embedding-001';
+
+	if (embeddingModel)
+    	updatedApiUrl = replaceModelInApiUrl(apiUrl, embeddingModel);
+
+	const model = 'models/' + embeddingModel;
+
+	
+    const request: GenerateEmbeddingsRequest = createGenerateEmbeddingsRequest(text, model);
+
+    try {
+        const response = await axios.post<any>(
+            `${updatedApiUrl}?key=${accessToken}`,
+            request,
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        if (response.status === 200 && response.data.embedding) {
+			const embedding: Embedding[] = response.data.embedding.values;
+            return embedding;
+        } else {
+            log('Error: Invalid status code or no embedding returned');
+            log('Response Status: ' + response.status + ', Response Data: ' + response.data);
+            throw new Error('Failed to generate embeddings');
+        }
+    } catch (error: any) {
+        log('Error generating embeddings: ' + error?.message + ', for the request:' + request);
+        log('Response Data: ' + JSON.stringify(error?.response?.data));
+        throw new Error('Failed to generate embeddings due to an error');
+    }
+}

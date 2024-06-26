@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { LINE_RANGE } from './constants';
+import { LINE_RANGE } from './copilot/utils/constants';
 
 export async function getSurroundingLines(
   document: vscode.TextDocument,

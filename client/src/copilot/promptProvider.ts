@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { getSuggestion } from './generators/suggestionProvider';
-import { ERROR_MESSAGES, PROMPTS } from '../constants';
-import { DocumentDetails, PromptConfig } from './types';
+import { ERROR_MESSAGES, PROMPTS } from './utils/constants';
+import { DocumentDetails, Documents, PromptConfig } from './utils/types';
 
 export const promptProvider = {
   async showPromptInputBox(client: any) {
@@ -34,6 +34,10 @@ export const promptProvider = {
         fileExtension: document.fileName.split('.').pop()
       };
 
+      const documents: Documents = {
+        main: documentDetails
+      };
+
       const promptConfig: PromptConfig = {
         requestType: 'inline',
         language: document.languageId,
@@ -41,7 +45,7 @@ export const promptProvider = {
       };
 
       try {
-        suggestion = await getSuggestion(client, documentDetails, promptConfig);
+        suggestion = await getSuggestion(client, documents, promptConfig);
       } catch (error) {
         vscode.window.showErrorMessage(`${ERROR_MESSAGES.GENERATE_CONTENT_ERROR}: ${error.message}`);
         inputBox.hide();

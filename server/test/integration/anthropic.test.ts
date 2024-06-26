@@ -1,7 +1,7 @@
 import { generateContent } from '../../src/copilot/api/llmModelManager'; 
 import { expect } from 'chai';
 import 'dotenv/config';
-import { getTestCases } from '../testcases'
+import { getTestCases } from '../testcases';
 
 const configString = process.env.ANTHROPIC_CONFIG;
 const config = configString ? JSON.parse(configString) : null;
@@ -13,7 +13,8 @@ describe('Anthropic API', function() {
 
     testCases.forEach(testCase => {
         it(`should generate content for: ${testCase.description}`, async function() {
-            const generatedContent = await generateContent(config, testCase.documentDetails, testCase.promptConfig);
+            const documents = { main: testCase.documents.main }; // Ensure documents object has a 'main' property
+            const generatedContent = await generateContent(config, documents, testCase.promptConfig);
             expect(generatedContent).to.be.a('string');
         });
     });

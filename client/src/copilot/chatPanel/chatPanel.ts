@@ -1,10 +1,12 @@
 import * as vscode from 'vscode';
 import { getSuggestion } from '../generators/suggestionProvider';
-import { DocumentDetails, PromptConfig } from '../types';
-import { CHAT_PANEL } from '../../constants';
+import { DocumentDetails, Documents, PromptConfig } from '../utils/types';
+import { CHAT_PANEL } from '../utils/constants';
 import { LanguageClient } from 'vscode-languageclient/browser';
 import { parseMarkdown, updateWebview } from './chatUtils';
 import { log } from '../../log';
+import path = require('path-browserify');
+import { ASSETS } from '../utils/constants';
 
 let currentPanel: vscode.WebviewPanel | undefined;
 
@@ -29,6 +31,9 @@ export function createOrShowChatPanel(client: LanguageClient, context: any, erro
             localResourceRoots: [context.extensionUri]
         }
     );
+
+    const iconPath = vscode.Uri.joinPath(context.extensionUri, ASSETS.ACCORD_LOGO);
+    currentPanel.iconPath = iconPath;
 
     currentPanel.onDidDispose(() => {
         currentPanel = undefined;
@@ -69,10 +74,13 @@ async function handleSendMessage(message: string, client: any, content?: string)
 
     const documentDetails: DocumentDetails = {
         content: (content)? content : '',
-        cursorPosition: 0
     };
 
-    const suggestion = await getSuggestion(client, documentDetails, promptConfig);
+    const documents: Documents = {
+        main: documentDetails
+    }
+
+    const suggestion = await getSuggestion(client, documents, promptConfig);
 
     if (suggestion) {
         removeThinkingMessage();

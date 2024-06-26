@@ -15,7 +15,8 @@ describe('OpenAI API', function() {
 
     testCases.forEach(testCase => {
         it(`should generate content for: ${testCase.description}`, async function() {
-            const generatedContent = await generateContent(config, testCase.documentDetails, testCase.promptConfig);
+            const documents = { main: testCase.documents.main };
+            const generatedContent = await generateContent(config, documents, testCase.promptConfig);
             expect(generatedContent).to.be.a('string');
         });
     });

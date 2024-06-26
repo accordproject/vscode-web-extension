@@ -1,19 +1,24 @@
 import * as vscode from 'vscode';
-import { CONFIG_DEFAULTS } from '../../constants';
+import { ASSETS, CONFIG_DEFAULTS } from '../utils/constants';
 import { htmlTemplate } from './templates/settingsView';
 import { cssTemplate } from './templates/settingsStyle';
 import { scriptTemplate } from './templates/settingScript';
 import { checkCopilotHealth, copilotHealthStatus } from '../healthCheck';
 
 export function createSettingsWebview(context: vscode.ExtensionContext, client: any) {
+    const column = vscode.ViewColumn.Beside;
     const panel = vscode.window.createWebviewPanel(
         'copilotSettings', 
         'Copilot Settings', 
-        vscode.ViewColumn.One, 
+        column, 
         {
             enableScripts: true
         }
     );
+
+    const iconPath = vscode.Uri.joinPath(context.extensionUri, ASSETS.ACCORD_LOGO);
+    panel.iconPath = iconPath;
+
 
     const config = vscode.workspace.getConfiguration('cicero-vscode-extension');
     const configValues = {

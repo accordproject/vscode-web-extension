@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/browser';
 import { log } from '../../log';
-import { DocumentDetails, ModelConfig, PromptConfig } from '../types';
-import { DEFAULT_LLM_MODELS, DEFAULT_LLM_ENDPOINTS } from '../../constants';
+import { DocumentDetails, Documents, ModelConfig, PromptConfig } from '../utils/types';
+import { DEFAULT_LLM_MODELS, DEFAULT_LLM_ENDPOINTS } from '../utils/constants';
 
-export async function getSuggestion(client: LanguageClient, documentDetails: DocumentDetails, promptConfig: PromptConfig): Promise<string | null> {
+export async function getSuggestion(client: LanguageClient, documents: Documents, promptConfig: PromptConfig): Promise<string | null> {
     const config = vscode.workspace.getConfiguration('cicero-vscode-extension');
     const apiKey = config.get<string>('apiKey');
     const provider = config.get<string>('provider');
@@ -57,7 +57,7 @@ export async function getSuggestion(client: LanguageClient, documentDetails: Doc
         log('Generating content...');
         const response: string = await client.sendRequest('generateContent', {
             modelConfig,
-            documentDetails,
+            documents,
             promptConfig
         });
         return response;
