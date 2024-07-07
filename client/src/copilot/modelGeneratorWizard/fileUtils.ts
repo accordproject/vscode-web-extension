@@ -28,10 +28,6 @@ export function extractDocumentDetails(documents: { [key: string]: vscode.TextDo
                     fileName = 'grammar.tem.md';
                     fileExtension = 'md';
                     break;
-                case 'sampleRequestDocument':
-                    fileName = 'request.json';
-                    fileExtension = 'json';
-                    break;
                 case 'packageDocument':
                     fileName = 'package.json';
                     fileExtension = 'json';

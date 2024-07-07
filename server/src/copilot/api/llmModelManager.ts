@@ -103,6 +103,8 @@ export async function generateContent(config: ModelConfig, documents: Documents,
 					iteration++;
 				} else if (promptConfig.requestType === 'model') {
 					generatedContent = beautifyConcertoCode(generatedContent);
+					errors = await handleErrors(generatedContent, promptConfig, documentDetails, iteration);
+					iteration++;
 				}
 				shouldCache = true;
 			}

@@ -1,5 +1,6 @@
 export const wizardScript = `
     const vscode = acquireVsCodeApi();
+    const state = vscode.getState() || {};
 
     document.getElementById('generate-grammar').addEventListener('click', () => {
         const filePath = document.getElementById('sample-file').value;
@@ -9,8 +10,7 @@ export const wizardScript = `
     document.getElementById('generate-model').addEventListener('click', () => {
         const packageFile = document.getElementById('package-file').value;
         const grammarFile = document.getElementById('grammar-file').value;
-        const sampleRequestFile = document.getElementById('sample-request-file').value;
-        vscode.postMessage({ command: 'generateModelFile', packageFile, grammarFile, sampleRequestFile });
+        vscode.postMessage({ command: 'generateModelFile', packageFile, grammarFile });
     });
 
     window.addEventListener('message', event => {
@@ -18,8 +18,8 @@ export const wizardScript = `
         if (message.command === 'preloadFileLists') {
             populateFileOptions(message.mdFiles, 'sample-file');
             populateFileOptions(message.mdFiles, 'grammar-file');
-            populateFileOptions(message.jsonFiles, 'sample-request-file');
             populateFileOptions(message.jsonFiles, 'package-file');
+            saveState();
         } else if (message.command === 'updateGeneratingState') {
             const { type, isGenerating, errorMessage } = message;
             const spinner = document.getElementById(\`\${type}-spinner\`);
@@ -48,5 +48,9 @@ export const wizardScript = `
             option.textContent = file;
             selectElement.appendChild(option);
         });
+        if (state[targetElementId]) {
+            selectElement.value = state[targetElementId];
+        }
     }
+
 `;

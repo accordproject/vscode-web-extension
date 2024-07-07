@@ -1,4 +1,4 @@
-import { ROLE_DESCRIPTION } from '../../utils/constants';
+import { ROLE_DESCRIPTION } from './guide';
 
 export function getInlineTemplate(beforeCursor: string, afterCursor: string, promptConfig: any): Array<{ content: string, role: string }> {
     const { instruction, previousContent, language, previousError } = promptConfig;

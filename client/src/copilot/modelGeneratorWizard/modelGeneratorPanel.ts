@@ -33,6 +33,12 @@ export function createFileGeneratorPanel(context: vscode.ExtensionContext, clien
         currentPanel = undefined;
     });
 
+    currentPanel.onDidChangeViewState(e => {
+        if (currentPanel) {
+            preloadFileLists(currentPanel, context);
+        }
+    });
+
     currentPanel.webview.onDidReceiveMessage(
         async message => {
             switch (message.command) {
@@ -49,7 +55,7 @@ export function createFileGeneratorPanel(context: vscode.ExtensionContext, clien
                 case FILE_GENERATORS.GENERATE_MODEL_FILE:
                     updateGeneratingState('model', true);
                     try {
-                        await generateModelFile(client, message.packageFile, message.grammarFile, message.sampleRequestFile);
+                        await generateModelFile(client, message.packageFile, message.grammarFile);
                         updateGeneratingState('model', false);
                     } catch (error) {
                         log(`Error generating model file: ${error.message}`);
@@ -64,9 +70,6 @@ export function createFileGeneratorPanel(context: vscode.ExtensionContext, clien
             }
         }
     );
-
-    // Preload file lists
-    preloadFileLists(currentPanel, context);
 
     currentPanel.webview.html = getWebviewContent(currentPanel.webview, context.extensionUri);
 }

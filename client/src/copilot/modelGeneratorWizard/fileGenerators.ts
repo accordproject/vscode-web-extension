@@ -26,17 +26,16 @@ export async function generateGrammarFile(client: LanguageClient, sampleFilePath
     }
 }
 
-export async function generateModelFile(client: LanguageClient, packageFilePath: string, grammarFilePath: string, sampleRequestFilePath: string) {
+export async function generateModelFile(client: LanguageClient, packageFilePath: string, grammarFilePath: string) {
     const modelFileName = 'model-ai-generated.cto';
 
-    log(`Generating model file from: ${packageFilePath}, ${grammarFilePath}, ${sampleRequestFilePath}`);
+    log(`Generating model file from: ${packageFilePath}, ${grammarFilePath}`);
 
     try {
         const packageDocument = await vscode.workspace.openTextDocument(vscode.Uri.file(resolveWorkspacePath(packageFilePath)));
         const grammarDocument = await vscode.workspace.openTextDocument(vscode.Uri.file(resolveWorkspacePath(grammarFilePath)));
-        const sampleRequestDocument = await vscode.workspace.openTextDocument(vscode.Uri.file(resolveWorkspacePath(sampleRequestFilePath)));
 
-        const modelContent = await getSuggestionsFromClient(client, { grammarDocument, packageDocument, sampleRequestDocument });
+        const modelContent = await getSuggestionsFromClient(client, { grammarDocument, packageDocument });
 
         const modelFolderPath = await getFolderPath('**/model/**', '/model/');
         const uri = vscode.Uri.file(resolveWorkspacePath(`${modelFolderPath}/${modelFileName}`));
