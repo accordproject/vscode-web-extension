@@ -1,4 +1,5 @@
 import * as Diff from 'diff';
+import { REGEX } from './constants';
 import { log } from '../../state';
 
 interface ProviderResponse {
@@ -71,58 +72,53 @@ export function cleanSuggestion(documentContent: string, cursorPosition: number,
     return cleanSuggestion;
 }
 
-const REGEX = {
-    BLOCK_START: /{\s*$/,
-    BLOCK_END: /^\s*}/,
-    STATEMENT_END: /;$/,
-    COMMENT: /\/\/.*/,
-    EMPTY_LINE: /^\s*$/,
-    TRIPLE_QUOTES_CONTENT: /```([\s\S]*?)```/,
-    KEYWORDS: /\b(namespace|import|transaction|asset|concept)\b/g
-};
-
-
-
 export function beautifyConcertoCode(rawCode: string): string {
     let code = extractCodeFromResponse(rawCode);
-
-    // Ensure the code has proper newlines around keywords and braces
-    code = code.replace(REGEX.KEYWORDS, '\n$1')
-               .replace(/({|})/g, '\n$1\n')
-               .replace(/;/g, ';\n')
-               .replace(/\n\s*\n/g, '\n') // Remove multiple newlines
-               .replace(/(\s*}\s*)(\S)/g, '$1\n$2'); // Newline after closing brace if there isn't one
-
-    let lines = code.split('\n');
-    let beautifiedCode = '';
-    let indentLevel = 0;
-    const indentSize = 4;
-
-    for (let i = 0; i < lines.length; i++) {
-        let line = lines[i].trim();
-
-        if (REGEX.COMMENT.test(line)) {
-            beautifiedCode += ' '.repeat(indentLevel * indentSize) + line + '\n';
-            continue;
-        }
-
-        if (REGEX.BLOCK_END.test(line)) {
-            indentLevel = Math.max(indentLevel - 1, 0);
-        }
-
-        beautifiedCode += ' '.repeat(indentLevel * indentSize) + line + '\n';
-
-        if (REGEX.BLOCK_START.test(line)) {
-            indentLevel++;
-        }
-
-        if (i < lines.length - 1 && REGEX.EMPTY_LINE.test(lines[i + 1])) {
-            beautifiedCode += '\n';
-        }
-    }
-
-    return beautifiedCode.trim();
+    
+    return code;
 }
+// export function beautifyConcertoCode(rawCode: string): string {
+//     let code = extractCodeFromResponse(rawCode);
+
+//     // Ensure the code has proper newlines around keywords and braces
+//     code = code.replace(REGEX.KEYWORDS, '\n$1')
+//                .replace(/({|})/g, '\n$1\n')
+//                .replace(/;/g, ';\n')
+//                .replace(/\n\s*\n/g, '\n') // Remove multiple newlines
+//                .replace(/(\s*}\s*)(\S)/g, '$1\n$2'); // Newline after closing brace if there isn't one
+
+//     let lines = code.split('\n');
+//     let beautifiedCode = '';
+//     let indentLevel = 0;
+//     const indentSize = 4;
+
+//     beautifiedCode += REGEX.GENERATOR_COMMENT;
+
+//     for (let i = 0; i < lines.length; i++) {
+//         let line = lines[i].trim();
+
+//         if (REGEX.COMMENTED.test(line)) {
+//             beautifiedCode += ' '.repeat(indentLevel * indentSize) + line + '\n';
+//             continue;
+//         }
+
+//         if (REGEX.BLOCK_END.test(line)) {
+//             indentLevel = Math.max(indentLevel - 1, 0);
+//         }
+
+//         beautifiedCode += ' '.repeat(indentLevel * indentSize) + line + '\n';
+
+//         if (REGEX.BLOCK_START.test(line)) {
+//             indentLevel++;
+//         }
+
+//         if (i < lines.length - 1 && REGEX.EMPTY_LINE.test(lines[i + 1])) {
+//             beautifiedCode += '\n';
+//         }
+//     }
+
+//     return beautifiedCode.trim();
+// }
 
 export function beautifyGrammarMd(text: any): string {
     // Regular expression to match and clean up the placeholders

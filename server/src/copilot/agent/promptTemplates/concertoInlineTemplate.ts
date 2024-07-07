@@ -1,4 +1,4 @@
-import { ROLE_DESCRIPTION, EXAMPLES } from '../../utils/constants';
+import { ROLE_DESCRIPTION, EXAMPLES } from './guide';
 
 export function getConcertoInlineTemplate(beforeCursor: string, afterCursor: string, promptConfig: any): Array<{ content: string, role: string }> {
     const { instruction, previousContent, previousError } = promptConfig;

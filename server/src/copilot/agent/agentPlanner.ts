@@ -3,7 +3,7 @@ import { getConcertoInlineTemplate } from './promptTemplates/concertoInlineTempl
 import { getInlineTemplate } from './promptTemplates/inlineTemplate';
 import { getFixTemplate } from './promptTemplates/fixTemplate';
 import { getGrammarTemplate } from './promptTemplates/grammarTemplate';
-import { AgentPlannerParams, RequestType, Language, Documents, PromptConfig } from '../utils/types';
+import { AgentPlannerParams, RequestType, Language } from '../utils/types';
 import { generateEmbeddingPrompt } from '../utils/embeddingsUtils';
 import { generateEmbeddingsByProvider } from '../api/llmModelManager';
 import { getConcertoModelTemplate } from './promptTemplates/concertoModelTemplate';
@@ -26,10 +26,10 @@ export async function agentPlanner(params: AgentPlannerParams): Promise<Array<{ 
       prompt = getGeneralTemplate(promptConfig);
       break;
     case RequestType.Model:
-      prompt = await modelRequestPrompt(documents, config);
+      prompt = await modelRequestPrompt(documents, config, promptConfig);
       break;  
     case RequestType.Grammar:
-      prompt = await getGrammarTemplate(documents);
+      prompt = await modelRequestPrompt(documents, config, promptConfig);
       break;  
     default:
       throw new Error('Unsupported request type');
@@ -53,12 +53,18 @@ function inlineRequestPrompt(documents: any, promptConfig: any) {
     : getInlineTemplate(beforeCursor, afterCursor, promptConfig);
 }
 
-async function modelRequestPrompt(documents: any, config: any) {
+async function modelRequestPrompt(documents: any, config: any, promptConfig: any) {
   const { provider } = config;
+  const { requestType } = promptConfig;
 
-  const embeddingPrompt = generateEmbeddingPrompt(documents);
+  const embeddingPrompt = generateEmbeddingPrompt(documents, requestType);
   const promptEmbedding = await generateEmbeddingsByProvider(provider, config, embeddingPrompt);
-  return getConcertoModelTemplate(documents, promptEmbedding, provider);
+
+  if (requestType === RequestType.Grammar) {
+    return getGrammarTemplate(documents, promptEmbedding, provider);
+  }
+
+  return getConcertoModelTemplate(documents, promptEmbedding, provider, promptConfig);
 }
 
 

@@ -65,12 +65,31 @@ export interface OpenAIEmbeddings {
     embeddings: number[];
 }
 
-export interface TypesEmbeddings {
+export interface ModelEmbeddings {
     fileName: string;
+    fileContent: string;
     gemini: GeminiEmbeddings;
     openai: OpenAIEmbeddings;
 }
 
-export interface EmbeddingsData {
-    [key: string]: TypesEmbeddings;
+export interface ModelsEmbeddingsData {
+    [key: string]: ModelEmbeddings;
+}
+
+export interface EmbeddingsTemplates {
+    gemini: any; 
+    openai: any;
+}
+
+export interface TemplateContent {
+    content: string;
+    embeddings?: EmbeddingsTemplates;
+}
+
+export interface TemplateEmbeddings {
+    [templateName: string]: {
+        model: TemplateContent;
+        grammar: TemplateContent;
+        sample: TemplateContent;
+    };
 }

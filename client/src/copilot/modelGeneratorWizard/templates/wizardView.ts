@@ -52,15 +52,6 @@ export function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="sample-request-file">Select Sample Request JSON File:<span class="required-asterisk">*</span></label>
-                    <div class="select-container">
-                        <select id="sample-request-file" style="width: 100%;">
-                            <option value="">Select a file</option>
-                        </select>
-                        <i class="codicon codicon-chevron-down"></i>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="package-file">Select Package JSON File:<span class="required-asterisk">*</span></label>
                     <div class="select-container">
                         <select id="package-file" style="width: 100%;">

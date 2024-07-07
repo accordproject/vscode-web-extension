@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/browser';
 import { getSuggestion } from './generators/suggestionProvider';
-import { DocumentDetails, PromptConfig } from './utils/types';
+import { DocumentDetails, Documents, PromptConfig } from './utils/types';
 import { log } from '../log';
 
 export let copilotHealthStatus: boolean = true;
@@ -14,12 +14,16 @@ export async function checkCopilotHealth(client: LanguageClient): Promise<void> 
 		cursorPosition: 0
 	};
 
+    const documents: Documents = {
+        main: documentDetails
+    };
+
     const promptConfig: PromptConfig = {
         requestType: 'general',
 		language: 'plaintext'
 	};
 
-    const response = await getSuggestion(client, documentDetails, promptConfig);
+    const response = await getSuggestion(client, documents, promptConfig);
     
     if (response) {
         copilotHealthStatus = true;
