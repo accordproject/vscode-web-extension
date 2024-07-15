@@ -77,10 +77,6 @@ export async function activate(context: vscode.ExtensionContext) {
 	// to query the workspace from its process
 	initVFS(client);
 
-	const config = vscode.workspace.getConfiguration('cicero-vscode-extension');
-	const enableInlineSuggestions = config.get('enableInlineSuggestions', true);
-  	const enableCodeActions = config.get('enableCodeActions', true);
-
 	// register commands
 	// menus etc for commands are defined in package.json
 	context.subscriptions.push(vscode.commands
@@ -88,13 +84,6 @@ export async function activate(context: vscode.ExtensionContext) {
 	
 	context.subscriptions.push(vscode.commands
 			.registerCommand('cicero-vscode-extension.loadModels', (file) => loadModels(client,file)));	
-	
-	// Register the inline suggestion provider
-	if (enableInlineSuggestions) 
-		context.subscriptions.push(vscode.languages.registerInlineCompletionItemProvider(
-			{ pattern: '**/*' }, // Apply to all file types
-			inlineSuggestionProvider(client)
-		));
 	
 	// Register the prompt provider command, startPromptProviderUI
 	context.subscriptions.push(vscode.commands
@@ -110,13 +99,6 @@ export async function activate(context: vscode.ExtensionContext) {
     // Create and show the status bar item, statusBarItem
     createStatusBarItem(context);
 	
-	// Register quick fix suggestions
-	if (enableCodeActions)
-		context.subscriptions.push(vscode.languages.registerCodeActionsProvider(
-			{ scheme: 'file'}, { provideCodeActions: codeActionProvider.provideCodeActions }
-		)
-	)
-
 	// Register the toggle settings commands	
 	registerToggleSettingsCommands(context, client);
 

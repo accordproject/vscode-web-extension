@@ -5,7 +5,7 @@ import { getFixTemplate } from './promptTemplates/fixTemplate';
 import { getGrammarTemplate } from './promptTemplates/grammarTemplate';
 import { AgentPlannerParams, RequestType, Language } from '../utils/types';
 import { generateEmbeddingPrompt } from '../utils/embeddingsUtils';
-import { generateEmbeddingsByProvider } from '../api/llmModelManager';
+import { generateEmbeddingsByProvider } from '../llm/llmManager';
 import { getConcertoModelTemplate } from './promptTemplates/concertoModelTemplate';
 
 export async function agentPlanner(params: AgentPlannerParams): Promise<Array<{ content: string; role: string }>> {

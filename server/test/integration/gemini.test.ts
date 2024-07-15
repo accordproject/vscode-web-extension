@@ -1,4 +1,4 @@
-import { generateContent } from '../../src/copilot/api/llmModelManager'; 
+import { generateContent } from '../../src/copilot/llm/llmManager'; 
 import { expect } from 'chai';
 import 'dotenv/config';
 import { getTestCases } from '../testcases';

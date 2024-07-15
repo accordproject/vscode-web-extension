@@ -1,11 +1,12 @@
-import { generateContent } from '../../src/copilot/api/llmModelManager'; 
+import { generateContent } from '../../src/copilot/llm/llmManager'; 
 import { expect } from 'chai';
 import { LRUCache } from 'lru-cache';
 import 'dotenv/config';
 import { getUnitTestCase } from '../testcases';
 import { getPromptFromCache, setPromptToCache } from '../../src/copilot/utils/promptCache';
 
-const configString = process.env.ANTHROPIC_CONFIG || process.env.OPENAI_CONFIG || process.env.GEMINI_CONFIG || process.env.HUGGINGFACE_CONFIG;
+const configString = process.env.GEMINI_CONFIG || process.env.OPENAI_CONFIG || process.env.MISTRAL_CONFIG;
+
 if (!configString) {
     throw new Error('No configuration found in environment variables.');
 }

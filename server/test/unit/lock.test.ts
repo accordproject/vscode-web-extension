@@ -3,16 +3,23 @@ import { Lock } from '../../src/copilot/utils/lock';
 
 describe('Lock', function() {
     this.timeout(5000); // Set timeout to 5 seconds
+    let lock: Lock;
+
+    beforeEach(() => {
+        lock = new Lock();
+    });
+
+    afterEach(() => {
+        lock = null!;
+    });
 
     it('should allow a single acquisition', async function() {
-        const lock = new Lock();
         await lock.acquire();
         lock.release();
-        expect(true).to.be.true; // If we reach here, the lock worked as expected
+        expect(true).to.be.true; 
     });
 
     it('should queue and release correctly', async function() {
-        const lock = new Lock();
         let acquiredSecond = false;
 
         await lock.acquire(); // Acquire the lock first
@@ -32,7 +39,6 @@ describe('Lock', function() {
     });
 
     it('should handle multiple queued acquisitions in order', async function() {
-        const lock = new Lock();
         const acquiredOrder: number[] = [];
 
         await lock.acquire(); // Acquire the lock first
@@ -62,7 +68,6 @@ describe('Lock', function() {
     });
 
     it('should handle simultaneous acquisitions and releases', async function() {
-        const lock = new Lock();
         const results: string[] = [];
 
         const task = async (name: string, delay: number) => {
@@ -86,5 +91,52 @@ describe('Lock', function() {
             'B acquired', 'B releasing',
             'C acquired', 'C releasing'
         ], 'Tasks should acquire and release the lock in the correct order');
+    });
+
+    it('should reject if too many are waiting to acquire the lock', async function() {
+        let limitedLock = new Lock(2, 3000); // Set max waiting to 2
+        let rejected = false;
+    
+        // Acquire the lock initially
+        await limitedLock.acquire();
+    
+        // Add the second and third acquires to the waiting array
+        const promise1 = limitedLock.acquire();
+        const promise2 = limitedLock.acquire();
+    
+        // Now attempt to acquire the lock a fourth time, which should be rejected
+        try {
+            await limitedLock.acquire();
+        } catch (error) {
+            rejected = true;
+        }
+    
+        limitedLock.release();
+    
+        await promise1;
+        limitedLock.release();
+        await promise2;
+        limitedLock.release();
+    
+        limitedLock = null!;
+
+        expect(rejected).to.be.true;
+    });    
+
+    it('should release automatically if release is not called within timeout', async function() {
+        const timedLock = new Lock(100, 500); // Set release timeout to 500ms
+        let secondAcquired = false;
+
+        await timedLock.acquire();
+
+        setTimeout(async () => {
+            await timedLock.acquire();
+            secondAcquired = true;
+            timedLock.release();
+        }, 600); // Wait longer than the timeout to try acquiring the lock
+
+        await new Promise(resolve => setTimeout(resolve, 700));
+
+        expect(secondAcquired).to.be.true;
     });
 });

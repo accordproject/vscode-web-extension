@@ -38,6 +38,35 @@ export const DOCUMENTATION = {
 		}
 		\`\`\`
 	`,
+	TEMPLATE_PROCESSING: `
+        ### Grammar Template Processing Guidelines
+        Your grammar templates can include various types of statements and logic. Below are guidelines on how to handle them:
+        1. **Basic Placeholders**: Replace placeholders with corresponding values from your data.
+           Example: 
+           Template: \`Hello {{firstName}}!\`
+           Data: \`{ firstName: "John" }\`
+           Result: \`Hello John!\`
+        2. **Conditionals**: Use if-else logic to conditionally render content.
+           Example: 
+           Template: \`{{#if active}}Your account is active.{{else}}Your account has been deactivated.{{/if}}\`
+           Data: \`{ active: true }\`
+           Result: \`Your account is active.\`
+        3. **Loops**: Iterate over lists to render each item.
+           Example: 
+           Template: \`{{#olist middleNames}}- {{this}}{{/olist}}\`
+           Data: \`{ middleNames: ["James", "Andrew"] }\`
+           Result: \`- James\n- Andrew\`
+        4. **Helpers and Inline Functions**: Use custom helpers to manipulate and render data.
+           Example: 
+           Template: \`Hello {{#join middleNames separator="-"}}{{this}}{{/join}}!\`
+           Data: \`{ middleNames: ["James", "Andrew"] }\`
+           Result: \`Hello James-Andrew!\`
+        5. **Custom Logic Blocks**: Execute embedded code and insert the result.
+           Example: 
+           Template: \`{{% return new Date().toLocaleDateString(); %}}\`
+           Result: \`07/14/2024\`
+        Ensure your templates follow these guidelines to dynamically generate the desired content.
+    `,
     PACKAGE_JSON_INFO: `
 		### Package JSON
 		This file contains template information.
@@ -66,7 +95,7 @@ export const DOCUMENTATION = {
 export const MODEL_GENERATION_INSTRUCTIONS = {
 	INSTRUCTIONS: `
         ### Instructions for Model CTO Generation
-        1. Create an asset extending Contract with variables from the grammar file.
+        1. Create an asset/concept with variables from the grammar file started with @template decorator.
         2. Define Request and Response transactions.
         3. Use types from the provided namespaces. If no suitable type exists, use primitive types or create a new asset or concept.
         4. Follow proper indentation and structure.
@@ -76,7 +105,8 @@ export const MODEL_GENERATION_INSTRUCTIONS = {
         ### Final Checklist
         - [ ] Namespace declaration before imports is mandatory for the model and it should include version.
         - [ ] All imports are specific (no wildcards) and include versions and corresponding source URL.
-        - [ ] Asset extending Contract is defined.
+        - [ ] Asset/concept with variables from the grammar file is defined. 
+		- [ ] Ensure that the @template decorator is applied to the asset/concept to distinguish it from other asset/concepts. 
         - [ ] Request and Response transactions are defined.
         - [ ] No comments in the generated code.
         - [ ] Proper indentation and structure.

@@ -16,9 +16,13 @@ export function createSettingsWebview(context: vscode.ExtensionContext, client: 
         }
     );
 
-    const iconPath = vscode.Uri.joinPath(context.extensionUri, ASSETS.ACCORD_LOGO);
+    const iconPathDark = vscode.Uri.joinPath(context.extensionUri, ASSETS.ACCORD_LOGO_DARK);
+    const iconPathLight = vscode.Uri.joinPath(context.extensionUri, ASSETS.ACCORD_LOGO_LIGHT);
+    const iconPath = {
+        light: iconPathLight,
+        dark: iconPathDark
+    };
     panel.iconPath = iconPath;
-
 
     const config = vscode.workspace.getConfiguration('cicero-vscode-extension');
     const configValues = {

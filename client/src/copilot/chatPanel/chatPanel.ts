@@ -32,7 +32,13 @@ export function createOrShowChatPanel(client: LanguageClient, context: any, erro
         }
     );
 
-    const iconPath = vscode.Uri.joinPath(context.extensionUri, ASSETS.ACCORD_LOGO);
+    const iconPathDark = vscode.Uri.joinPath(context.extensionUri, ASSETS.ACCORD_LOGO_DARK);
+    const iconPathLight = vscode.Uri.joinPath(context.extensionUri, ASSETS.ACCORD_LOGO_LIGHT);
+    const iconPath = {
+        light: iconPathLight,
+        dark: iconPathDark
+    };
+    
     currentPanel.iconPath = iconPath;
 
     currentPanel.onDidDispose(() => {

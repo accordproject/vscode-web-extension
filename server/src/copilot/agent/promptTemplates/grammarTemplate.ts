@@ -15,6 +15,7 @@ export function getGrammarTemplate(documents: Documents, promptEmbedding: any, p
     let userMessage = `We need to convert the provided sample markdown content into a grammar template file by identifying and replacing specific values with placeholders. `;
     userMessage += `Consider nouns, proper nouns, unique numerical values, and context-specific terms as potential placeholders. Use double curly braces {{}} for placeholders, and provide meaningful names based on the context.\n\n`;
 
+    userMessage += DOCUMENTATION.TEMPLATE_PROCESSING;
     userMessage += DOCUMENTATION.GRAMMAR_TEMPLATE_GUIDELINES;
 
     userMessage += `### Example Grammar Templates\n`;

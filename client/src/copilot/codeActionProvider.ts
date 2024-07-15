@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { log } from '../log';
 
 export const codeActionProvider = {
 	provideCodeActions(document: vscode.TextDocument, range: vscode.Range, context: vscode.CodeActionContext, token: vscode.CancellationToken): vscode.CodeAction[] {

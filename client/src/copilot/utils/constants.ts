@@ -119,6 +119,7 @@ export const FILE_UTILS = {
 };
 
 export const ASSETS = {
-    ACCORD_LOGO: 'assets/accord_logo.png'
+    ACCORD_LOGO_DARK: 'assets/dark/accord_logo.png',
+    ACCORD_LOGO_LIGHT: 'assets/light/accord_logo.png'
 };
   

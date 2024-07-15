@@ -65,11 +65,16 @@ export interface OpenAIEmbeddings {
     embeddings: number[];
 }
 
+export interface MistralAIEmbeddings {
+    embeddings: number[];
+}
+
 export interface ModelEmbeddings {
     fileName: string;
     fileContent: string;
     gemini: GeminiEmbeddings;
     openai: OpenAIEmbeddings;
+    mistralai: MistralAIEmbeddings;
 }
 
 export interface ModelsEmbeddingsData {
@@ -79,6 +84,7 @@ export interface ModelsEmbeddingsData {
 export interface EmbeddingsTemplates {
     gemini: any; 
     openai: any;
+    mistralai: any;
 }
 
 export interface TemplateContent {
