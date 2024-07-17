@@ -2,6 +2,7 @@ import { LargeLanguageModel } from './largeLanguageModel';
 import { Embedding, ModelConfig } from '../../utils/types';
 import  { robustFetch as fetch } from '../../utils/robustFetch';
 import { log } from '../../../state';
+import { DocumentationType } from '../../utils/constants';
 
 class Gemini implements LargeLanguageModel {
     getIdentifier(): string {
@@ -9,7 +10,8 @@ class Gemini implements LargeLanguageModel {
     }
 
     async generateContent(config: any, promptArray: { content: string; role: string }[]): Promise<string> {
-        let { apiUrl, accessToken, llmModel } = config;
+        let { apiUrl } = config;
+        const { accessToken, llmModel } = config;
 
         if (!apiUrl) {
             apiUrl = GEMINI_ENDPOINTS.CONTENT;
@@ -30,8 +32,8 @@ class Gemini implements LargeLanguageModel {
             if (response.ok) {
                 const data = await response.json();
                 if (data.candidates && data.candidates.length > 0) {
-                    let generatedContent = data.candidates[0]?.content;
-                    let text = generatedContent?.parts[0]?.text;
+                    const generatedContent = data.candidates[0]?.content;
+                    const text = generatedContent?.parts[0]?.text;
                     return text;
                 } else {
                     log('Error: No candidates returned');
@@ -49,7 +51,8 @@ class Gemini implements LargeLanguageModel {
     }
 
     async generateEmbeddings(config: any, text: string): Promise<Embedding[]> {
-        let { apiUrl, accessToken, embeddingModel } = config;
+        let { apiUrl, embeddingModel } = config;
+        const { accessToken } = config;
 
         if (!apiUrl) {
             apiUrl = GEMINI_ENDPOINTS.EMBEDDINGS;
@@ -87,6 +90,19 @@ class Gemini implements LargeLanguageModel {
             throw new Error('Failed to generate embeddings due to an error');
         }
     }
+
+    getDocsEmbeddings(data: any, docType: string): number[] {
+        switch (docType) {
+            case DocumentationType.NAMESPACE:
+                return data.gemini?.embeddings?.embedding;
+            case DocumentationType.TEMPLATE:
+                return data.model?.embeddings?.gemini?.embedding;
+            case DocumentationType.GRAMMAR:
+                return data.grammar?.embeddings?.gemini?.embedding;
+        }
+
+        return [];
+    } 
 
     private createGenerateContentRequest(promptArray: { content: string; role: string }[], config: ModelConfig) {
         const { additionalParams } = config;

@@ -32,8 +32,7 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
                     <select id="provider" style="width: 100%;">
                         <option value="gemini" ${configValues.provider === 'gemini' ? 'selected' : ''}>Gemini</option>
                         <option value="openai" ${configValues.provider === 'openai' ? 'selected' : ''}>OpenAI</option>
-                        <option value="anthropic" ${configValues.provider === 'anthropic' ? 'selected' : ''}>Anthropic</option>
-                        <option value="huggingface" ${configValues.provider === 'huggingface' ? 'selected' : ''}>Hugging Face</option>
+                        <option value="mistral" ${configValues.provider === 'mistral' ? 'selected' : ''}>MistralAI</option>
                     </select>
                     <i class="codicon codicon-chevron-down"></i>
                 </div> 
@@ -41,7 +40,7 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
             </div>
             <div class="form-group">
                 <label for="llmModel">LLM Model</label>
-                <p>The specific language model (default: Gemini - gemini-pro, OpenAI - gpt-3.5-turbo, Anthropic - claude-1.5).</p>
+                <p>The specific language model (default: Gemini - gemini-pro, OpenAI - gpt-3.5-turbo, MistralAI - mistral-large-latest).</p>
                 <input type="text" id="llmModel" value="${configValues.llmModel}">
                 <span class="error-message" id="llmModelError"></span>
             </div>

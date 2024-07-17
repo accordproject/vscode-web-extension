@@ -111,7 +111,7 @@ export const MODEL_GENERATION_INSTRUCTIONS = {
         - [ ] No comments in the generated code.
         - [ ] Proper indentation and structure.
     `
-}
+};
 
 export const ROLE_DESCRIPTION = {
     COPILOT: "You are a copilot assistant. Your task is to complete the code based on the context.",

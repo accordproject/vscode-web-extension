@@ -1,6 +1,10 @@
 import * as math from 'mathjs';
 import { Documents, ModelEmbeddings, ModelsEmbeddingsData, TemplateEmbeddings } from './types';
-import { log } from 'console';
+import { log } from '../../state';
+import LargeLanguageModelProvider from '../llm/llmProvider';
+import { DocumentationType } from './constants';
+
+const modelProvider: LargeLanguageModelProvider = new LargeLanguageModelProvider();
 
 function cosineSimilarity(vec1: number[], vec2: number[]): number {
     const dotProduct = math.dot(vec1, vec2);
@@ -10,17 +14,15 @@ function cosineSimilarity(vec1: number[], vec2: number[]): number {
 }
 
 export function fetchRelevantNamespaces(modelNamespaces: { [key: string]: ModelEmbeddings }, promptEmbedding: number[], provider: string, topN = 4): string[] {
-    log('Fetching relevant namespaces' + promptEmbedding );
+    log('Fetching relevant namespaces');
     const namespaceSimilarities: [number, string, string][] = [];
 
+    const model = modelProvider.get(provider);
     for (const [file, obj] of Object.entries(modelNamespaces)) {
         let embeddings: number[] | undefined; 
 
-        if (provider === 'gemini' && obj.gemini?.embeddings?.embedding) {
-            embeddings = obj.gemini.embeddings.embedding;
-        } else if (provider === 'openai' && obj.openai?.embeddings) {
-            embeddings = obj.openai.embeddings;
-        }
+        if (model && obj) 
+            embeddings = model.getDocsEmbeddings(obj, DocumentationType.NAMESPACE);
 
         if (embeddings && Array.isArray(embeddings)) {
             const similarity = cosineSimilarity(promptEmbedding, embeddings);
@@ -38,17 +40,15 @@ export function fetchRelevantNamespaces(modelNamespaces: { [key: string]: ModelE
 }
 
 export function fetchRelevantTemplates(templateEmbeddings: TemplateEmbeddings, promptEmbedding: number[], provider: string, topN = 4): string[] {
-    log('Fetching relevant templates' + promptEmbedding);
+    log('Fetching relevant templates');
     const templateSimilarities: [number, string, string, string][] = [];
 
+    const model = modelProvider.get(provider);
     for (const [templateName, template] of Object.entries(templateEmbeddings)) {
         let embeddings: number[] | undefined;
 
-        if (provider === 'gemini' && template.grammar?.embeddings?.gemini?.embedding) {
-            embeddings = template.grammar.embeddings.gemini.embedding;
-        } else if (provider === 'openai' && template.grammar?.embeddings?.openai) {
-            embeddings = template.grammar.embeddings.openai;
-        }
+        if (model && template) 
+            embeddings = model.getDocsEmbeddings(template, DocumentationType.TEMPLATE);
 
         if (embeddings && Array.isArray(embeddings)) {
             const similarity = cosineSimilarity(promptEmbedding, embeddings);
@@ -58,10 +58,8 @@ export function fetchRelevantTemplates(templateEmbeddings: TemplateEmbeddings, p
         }
     }
 
-    // Sort the templates by similarity in descending order
     const topTemplates = templateSimilarities.sort((a, b) => b[0] - a[0]).slice(0, topN);
 
-    // Generate the relevant templates output
     const relevantTemplates = topTemplates.map(([similarity, templateName, grammarContent, modelContent]) => {
         return `Template: ${templateName}\nTemplate grammar: ${grammarContent}\nCorresponding model: ${modelContent}\n`;
     });
@@ -70,17 +68,15 @@ export function fetchRelevantTemplates(templateEmbeddings: TemplateEmbeddings, p
 }
 
 export function fetchRelevantGrammar(templateEmbeddings: TemplateEmbeddings, promptEmbedding: number[], provider: string, topN = 3): string[] {
-    log('Fetching relevant grammar templates' + promptEmbedding);
+    log('Fetching relevant grammar templates');
     const templateSimilarities: [number, string, string, string][] = [];
 
+    const model = modelProvider.get(provider);
     for (const [templateName, template] of Object.entries(templateEmbeddings)) {
         let embeddings: number[] | undefined; 
 
-        if (provider === 'gemini' && template.grammar?.embeddings?.gemini?.embedding) {
-            embeddings = template.grammar.embeddings.gemini.embedding;
-        } else if (provider === 'openai' && template.grammar?.embeddings?.openai) {
-            embeddings = template.grammar.embeddings.openai;
-        }
+        if (model && template) 
+            embeddings = model.getDocsEmbeddings(template, DocumentationType.GRAMMAR);
 
         if (embeddings && Array.isArray(embeddings)) {
             const similarity = cosineSimilarity(promptEmbedding, embeddings);
@@ -142,7 +138,7 @@ export function getNamespaceMappings(modelEmbeddings: ModelsEmbeddingsData): str
         namespaceMappings[fileName] = namespaces;
     });
 
-    let result = generateCTOImports(namespaceMappings);
+    const result = generateCTOImports(namespaceMappings);
 
     return result;
 }

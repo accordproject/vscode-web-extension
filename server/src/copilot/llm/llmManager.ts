@@ -1,7 +1,4 @@
 import LargeLanguageModelProvider from './llmProvider';
-import gemini from './providers/gemini';
-import openai from './providers/openai';
-import mistral from './providers/mistral';
 import { Embedding, ModelConfig, DocumentDetails, PromptConfig, Documents } from '../utils/types';
 import { agentPlanner } from '../agent/agentPlanner';
 import { getPromptFromCache, setPromptToCache } from '../utils/promptCache';
@@ -17,9 +14,6 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 const lock = new Lock();
 
 const modelProvider = new LargeLanguageModelProvider();
-modelProvider.register(gemini);
-modelProvider.register(openai);
-modelProvider.register(mistral);
 
 async function generateContentByProvider(provider: string, config: ModelConfig, promptArray: Array<{ content: string, role: string }>): Promise<string> {
     const model = modelProvider.get(provider);
@@ -53,12 +47,12 @@ async function handleErrors(updatedContent: string, promptConfig: PromptConfig, 
 export async function generateContent(config: ModelConfig, documents: Documents, promptConfig: PromptConfig): Promise<string> {
     await lock.acquire();
 
-    let generatedContent: string = '';
+    let generatedContent = '';
     let shouldCache = false;
     let errors: any[] = [];
     let iteration = 0;
     log('Generating content for document: ' + documents);
-    let documentDetails: DocumentDetails = documents.main;
+    const documentDetails: DocumentDetails = documents.main;
 
     const cacheKey = generateCacheKey(documentDetails, promptConfig);
     const maxRetries = DEFAULTS.MAX_RETRIES;
@@ -73,13 +67,12 @@ export async function generateContent(config: ModelConfig, documents: Documents,
                 log('Fixing errors in generated content from model:' + provider + ' Attempt: ' + iteration);    
             
             const promptArray = await agentPlanner({ documents, promptConfig, config});
-            // log('Prompt Array: ' + JSON.stringify(promptArray));
             const cachedResponse = getPromptFromCache(cacheKey);
             if (!cachedResponse) {
                 generatedContent = await generateContentByProvider(provider, config, promptArray);
                 if (promptConfig.requestType === 'inline') {
-                    let documentContent = documentDetails.content;
-                    let cursorPosition = documentDetails.cursorPosition? documentDetails.cursorPosition : documentContent.length;
+                    const documentContent = documentDetails.content;
+                    const cursorPosition = documentDetails.cursorPosition? documentDetails.cursorPosition : documentContent.length;
 
                     const filteredResponse = cleanSuggestion(documentContent, cursorPosition, generatedContent.replace(REGEX.COMMENT, ''));
                     generatedContent = filteredResponse;

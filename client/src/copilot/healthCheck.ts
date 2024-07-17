@@ -6,11 +6,11 @@ import { getSuggestion } from './generators/suggestionProvider';
 import { DocumentDetails, Documents, PromptConfig } from './utils/types';
 import { log } from '../log';
 
-export let copilotHealthStatus: boolean = true;
+export let copilotHealthStatus = true;
 
 export async function checkCopilotHealth(client: LanguageClient): Promise<void> {
     const documentDetails: DocumentDetails = {
-        content: 'Health check, please respond.',
+        content: '',
 		cursorPosition: 0
 	};
 
@@ -20,7 +20,8 @@ export async function checkCopilotHealth(client: LanguageClient): Promise<void> 
 
     const promptConfig: PromptConfig = {
         requestType: 'general',
-		language: 'plaintext'
+		language: 'plaintext',
+        instruction: 'Health check, please respond.'
 	};
 
     const response = await getSuggestion(client, documents, promptConfig);

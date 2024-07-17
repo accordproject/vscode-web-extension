@@ -14,3 +14,9 @@ export const DEFAULTS = {
     TEMP_DOCUMENT_EXTENSION: 'temp-document.',
     MAX_CACHE_ITEMS: 100 
 };
+
+export enum DocumentationType {
+    NAMESPACE = 'namespace',
+    TEMPLATE = 'template',
+    GRAMMAR = 'grammar',
+}

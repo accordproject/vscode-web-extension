@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/browser';
 import { log } from '../../log';
-import { DocumentDetails, Documents, ModelConfig, PromptConfig } from '../utils/types';
+import { Documents, ModelConfig, PromptConfig } from '../utils/types';
 import { DEFAULT_LLM_MODELS, DEFAULT_LLM_ENDPOINTS } from '../utils/constants';
 
 export async function getSuggestion(client: LanguageClient, documents: Documents, promptConfig: PromptConfig): Promise<string | null> {
@@ -21,14 +21,10 @@ export async function getSuggestion(client: LanguageClient, documents: Documents
                 llmModel = DEFAULT_LLM_MODELS.OPENAI;
                 apiUrl =  DEFAULT_LLM_ENDPOINTS.OPENAI;
                 break;
-            case 'anthropic':
-                llmModel = DEFAULT_LLM_MODELS.ANTHROPIC;
-                apiUrl =  DEFAULT_LLM_ENDPOINTS.ANTHROPIC;
-                break;
-            case 'huggingface':
-                llmModel = DEFAULT_LLM_MODELS.HUGGINGFACE_MISTRAL;
-                apiUrl =  DEFAULT_LLM_ENDPOINTS.HUGGINGFACE;
-                break;    
+            case 'mistralai':
+                llmModel = DEFAULT_LLM_MODELS.MISTRALAI;
+                apiUrl =  DEFAULT_LLM_ENDPOINTS.MISTRALAI;
+                break;   
             default:
                 llmModel = '';
                 apiUrl = '';
@@ -38,7 +34,7 @@ export async function getSuggestion(client: LanguageClient, documents: Documents
     // keys like maxTokens, temperature, topP comes from additionalParams
     const additionalParams = config.get<any>('additionalParams');
 
-    let modelConfig: ModelConfig = {
+    const modelConfig: ModelConfig = {
         provider,
         llmModel,
         apiUrl,

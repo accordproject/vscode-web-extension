@@ -2,6 +2,7 @@ import { LargeLanguageModel } from './largeLanguageModel';
 import { Embedding, ModelConfig } from '../../utils/types';
 import  { robustFetch as fetch } from '../../utils/robustFetch';
 import { log } from '../../../state';
+import { DocumentationType } from '../../utils/constants';
 
 class OpenAI implements LargeLanguageModel {
     getIdentifier(): string {
@@ -9,7 +10,8 @@ class OpenAI implements LargeLanguageModel {
     }
 
     async generateContent(config: any, promptArray: { content: string; role: string }[]): Promise<string> {
-        let { apiUrl, accessToken, llmModel } = config;
+        let { apiUrl } = config;
+        const { accessToken } = config;
 
         if (!apiUrl) {
             apiUrl = OPENAI_ENDPOINTS.CONTENT;
@@ -48,8 +50,9 @@ class OpenAI implements LargeLanguageModel {
     }
 
     async generateEmbeddings(config: any, text: string): Promise<Embedding[]> {
-        let { apiUrl, accessToken, embeddingModel } = config;
-
+        let { apiUrl, embeddingModel } = config;
+        const { accessToken } = config;
+        
         if (!apiUrl) {
             apiUrl = OPENAI_ENDPOINTS.EMBEDDINGS;
         }
@@ -86,6 +89,20 @@ class OpenAI implements LargeLanguageModel {
             throw new Error('Failed to generate embeddings due to an error');
         }
     }
+
+    getDocsEmbeddings(data: any, docType: string): number[] {
+
+        switch (docType) {
+            case DocumentationType.NAMESPACE:
+                return data.openai?.embeddings;
+            case DocumentationType.TEMPLATE:
+                return data.model?.embeddings?.openai;
+            case DocumentationType.GRAMMAR:
+                return data.grammar?.embeddings?.openai;
+        }
+
+        return [];
+    } 
 
     private createGenerateContentRequest(promptArray: { content: string; role: string }[], config: ModelConfig) {
         const { llmModel, additionalParams } = config;

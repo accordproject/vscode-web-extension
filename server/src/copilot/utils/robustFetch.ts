@@ -1,6 +1,6 @@
 import { log } from '../../state';
 
-export async function robustFetch(url: string, options: RequestInit, maxRetries = 3, timeout = 5000): Promise<Response> {
+export async function robustFetch(url: string, options: RequestInit, maxRetries = 3, timeout = 15000): Promise<Response> {
     let attempts = 0;
 
     while (attempts < maxRetries) {

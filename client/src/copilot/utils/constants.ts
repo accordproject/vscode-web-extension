@@ -81,15 +81,13 @@ export const CHAT_PANEL = {
 export const DEFAULT_LLM_MODELS = {
     GEMINI: 'gemini-pro',
     OPENAI: 'gpt-3.5-turbo',
-    ANTHROPIC: 'claude-1.5',
-    HUGGINGFACE_MISTRAL: 'Mistral-7B-Instruct-v0.1'
+    MISTRALAI: 'mistral-large-latest'
 };
 
 export const DEFAULT_LLM_ENDPOINTS = {
     GEMINI: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
     OPENAI: 'https://api.openai.com/v1/chat/completions',
-    ANTHROPIC: 'https://api.anthropic.com/v1/complete',
-    HUGGINGFACE: 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1/v1/chat/completions'
+    MISTRALAI: 'https://api.mistralai.com/v1/chat/completions'
 };
   
 // Constants for Panel Manager

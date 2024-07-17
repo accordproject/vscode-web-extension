@@ -2,6 +2,7 @@ import { LargeLanguageModel } from './largeLanguageModel';
 import  { robustFetch as fetch } from '../../utils/robustFetch';
 import { log } from '../../../state';
 import { Embedding, ModelConfig } from '../../utils/types';
+import { DocumentationType } from '../../utils/constants';
 
 class Mistral implements LargeLanguageModel {
     getIdentifier(): string {
@@ -9,14 +10,14 @@ class Mistral implements LargeLanguageModel {
     }
 
     async generateContent(config: any, promptArray: { content: string; role: string }[]): Promise<string> {
-        let { apiUrl, accessToken, llmModel } = config;
+        let { apiUrl } = config;
+        const { accessToken } = config;
 
         if (!apiUrl) {
             apiUrl = MISTRAL_ENDPOINTS.CONTENT;
         }
 
         const request = this.createGenerateContentRequest(promptArray, config);
-
         try {
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -49,7 +50,8 @@ class Mistral implements LargeLanguageModel {
     }
 
     async generateEmbeddings(config: any, text: string): Promise<Embedding[]> {
-        let { apiUrl, accessToken, embeddingModel } = config;
+        let { apiUrl, embeddingModel } = config;
+        const { accessToken } = config;
 
         if (!apiUrl) {
             apiUrl = MISTRAL_ENDPOINTS.EMBEDDINGS;
@@ -88,6 +90,20 @@ class Mistral implements LargeLanguageModel {
             throw new Error('Failed to generate embeddings due to an error');
         }
     }
+
+    getDocsEmbeddings(data: any, docType: string): number[] {
+
+        switch (docType) {
+            case DocumentationType.NAMESPACE:
+                return data.mistralai?.embeddings;
+            case DocumentationType.TEMPLATE:
+                return data.model?.embeddings?.mistralai;
+            case DocumentationType.GRAMMAR:
+                return data.grammar?.embeddings?.mistralai;
+        }
+
+        return [];
+    } 
 
     private createGenerateContentRequest(promptArray: { content: string; role: string }[], config: ModelConfig) {
         const { llmModel, additionalParams } = config;

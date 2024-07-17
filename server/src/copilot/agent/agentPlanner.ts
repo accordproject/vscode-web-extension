@@ -39,7 +39,8 @@ export async function agentPlanner(params: AgentPlannerParams): Promise<Array<{ 
 }
 
 function inlineRequestPrompt(documents: any, promptConfig: any) {
-  let { content, cursorPosition } = documents.main;
+  let { cursorPosition } = documents.main;
+  const { content } = documents.main;
   const { language } = promptConfig;
 
   if (!cursorPosition) {
