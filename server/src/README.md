@@ -4,29 +4,16 @@ This server is the backend part of our VSCode extension, responsible for handlin
 
 ## Table of Contents
 
-- [Components](#components)
+- [User Guide](#user-guide)
+  - [Input Format for Copilot](#input-format-for-copilot)
+- [Developer Guide](#developer-guide) 
   - [Language Server Initialization](#language-server-initialization)
   - [LLM Manager](#llm-manager)
-  - [Input Format for Copilot](#input-format-for-copilot)
-- [Test Server](#test-server)
+  - [Test Server](#test-server)
+  - [Implementing a New LLM Provider](#implementing-a-new-llm-provider)
 
-## Components
 
-### Language Server Initialization
-
-The `browserServerMain.ts` file initializes the language server and sets up the connection with the VSCode client. It handles the following tasks:
-
-- Initializes the language server capabilities.
-- Tracks document open, change, and close events.
-- Loads models and registers command handlers.
-
-### LLM Manager
-
-The `llmManager.ts` is responsible for managing interactions of user with different large language models (LLMs) such as Gemini, OpenAI, and Mistral for code generation. It handles:
-
-- Generating content using the selected LLM provider.
-- Generating embeddings for given text.
-- Error handling and retry mechanisms on generated suggestions.
+## User Guide
 
 ### Input Format for Copilot
 
@@ -79,13 +66,68 @@ const modelConfig: ModelConfig = {
 };
 ````
 
-## Test Server
+## Developer Guide
+
+### Language Server Initialization
+
+The `browserServerMain.ts` file initializes the language server and sets up the connection with the VSCode client. It handles the following tasks:
+
+- Initializes the language server capabilities.
+- Tracks document open, change, and close events.
+- Loads models and registers command handlers.
+
+### LLM Manager
+
+The `llmManager.ts` is responsible for managing interactions of user with different large language models (LLMs) such as Gemini, OpenAI, and Mistral for code generation. It handles:
+
+- Generating content using the selected LLM provider.
+- Generating embeddings for given text.
+- Error handling and retry mechanisms on generated suggestions.
+
+### Test Server
 
 To run the test cases, use the following command:
 ```bash
 npm run test
 ```
 Before running the tests, ensure that you have the necessary environment variables set up in the .env file. Update the .env file with the required configurations for testing, such as API keys and model endpoints.
+
+### Steps to Implement a New LLM Provider
+To add a new LLM provider, follow the steps below.
+
+1. **Implement the `LargeLanguageModel` Interface:**
+
+    Create a new TypeScript file for your LLM provider in the `src/copilot/llm/providers/` directory. Implement the `LargeLanguageModel` interface, which includes the following methods:
+
+    - `getIdentifier()`: Returns a unique identifier for the LLM provider.
+    - `generateContent(config: any, promptArray: { content: string; role: string }[]): Promise<string>`: Generates content based on the provided prompt.
+    - `generateEmbeddings(config: any, text: string): Promise<Embedding[]>`: Generates embeddings for the given text.
+    - `getDocsEmbeddings(data: any, docType: string): number[]`: Retrieves document embeddings based on the provided data and document type.
+
+2. **Register the New Provider:**
+
+    After implementing the new LLM provider, register it in the LargeLanguageModelProvider class. Open `src/copilot/llm/llmProvider.ts` and add the registration logic.
+    ```typescript
+    constructor() {
+        // existing providers
+        this.register(YourLLMProvider); // Register your new provider here
+    }
+    ```
+
+3. **Populate Embeddings:**
+
+    Ensure that your new provider can generate embeddings for templates, grammar, and sample files. Update the embedding.ts file with the corresponding embeddings. Check the JSON strucutre of the deserialized object. For example for adding templates embeddings we follow this structure:
+    ```JSON
+    "embeddings": {
+        "gemini": { "embedding": [/* ... */] },
+        "mistralai": [/* ... */],
+        "openai": [/* ... */]
+        // Add your new provider here
+    }
+    ```
+4. **Testing Your Provider Implementation:**
+
+    To ensure your implementation works correctly, write integration tests for your new LLM provider. Create a new test file in test/integration/ and follow the structure of existing tests for other providers.
 
 ## Contact Us
 

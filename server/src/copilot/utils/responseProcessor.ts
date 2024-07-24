@@ -1,6 +1,4 @@
 import * as Diff from 'diff';
-import { REGEX } from './constants';
-import { log } from '../../state';
 
 interface ProviderResponse {
     content: string;
@@ -73,7 +71,7 @@ export function cleanSuggestion(documentContent: string, cursorPosition: number,
 }
 
 export function beautifyConcertoCode(rawCode: string): string {
-    let code = extractCodeFromResponse(rawCode); 
+    const code = extractCodeFromResponse(rawCode); 
     return code;
 }
 
@@ -89,4 +87,4 @@ export function beautifyGrammarMd(text: any): string {
     const finalCleanedText = cleanedText.replace(cleanNewlinesPattern, (match: any, p1: any) => `{{${p1.trim()}}}`);
   
     return finalCleanedText;
-  }
+}

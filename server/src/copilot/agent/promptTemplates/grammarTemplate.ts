@@ -5,7 +5,7 @@ import { ROLE_DESCRIPTION, DOCUMENTATION } from './guide';
 
 export function getGrammarTemplate(documents: Documents, promptEmbedding: any, provider: any): Array<{ content: string; role: string }> {
     const { contextDocuments } = documents;
-    let sampleContent = contextDocuments?.find(doc => doc.fileName === 'sample.md')?.content;
+    const sampleContent = contextDocuments?.find(doc => doc.fileName === 'sample.md')?.content;
 
     // Fetch relevant grammar templates based on embeddings
     const relevantTemplates = fetchRelevantGrammar(templateEmbeddings, promptEmbedding, provider, 3);

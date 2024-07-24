@@ -45,62 +45,60 @@ async function handleErrors(updatedContent: string, promptConfig: PromptConfig, 
 }
 
 export async function generateContent(config: ModelConfig, documents: Documents, promptConfig: PromptConfig): Promise<string> {
-    await lock.acquire();
+    return lock.execute(async () => {
+        let generatedContent = '';
+        let shouldCache = false;
+        let errors: any[] = [];
+        let iteration = 0;
+        log('Generating content for document: ' + documents);
+        const documentDetails: DocumentDetails = documents.main;
 
-    let generatedContent = '';
-    let shouldCache = false;
-    let errors: any[] = [];
-    let iteration = 0;
-    log('Generating content for document: ' + documents);
-    const documentDetails: DocumentDetails = documents.main;
+        const cacheKey = generateCacheKey(documentDetails, promptConfig);
+        const maxRetries = DEFAULTS.MAX_RETRIES;
 
-    const cacheKey = generateCacheKey(documentDetails, promptConfig);
-    const maxRetries = DEFAULTS.MAX_RETRIES;
+        try {
+            const { provider } = config;
 
-    try {
-        const { provider } = config;
+            do {        
+                if (iteration === 0) 
+                    log('Generating content from model:' + provider);
+                else
+                    log('Fixing errors in generated content from model:' + provider + ' Attempt: ' + iteration);    
+                
+                const promptArray = await agentPlanner({ documents, promptConfig, config});
+                const cachedResponse = getPromptFromCache(cacheKey);
+                if (!cachedResponse) {
+                    generatedContent = await generateContentByProvider(provider, config, promptArray);
+                    if (promptConfig.requestType === 'inline') {
+                        const documentContent = documentDetails.content;
+                        const cursorPosition = documentDetails.cursorPosition? documentDetails.cursorPosition : documentContent.length;
 
-        do {        
-            if (iteration === 0) 
-                log('Generating content from model:' + provider);
-            else
-                log('Fixing errors in generated content from model:' + provider + ' Attempt: ' + iteration);    
-            
-            const promptArray = await agentPlanner({ documents, promptConfig, config});
-            const cachedResponse = getPromptFromCache(cacheKey);
-            if (!cachedResponse) {
-                generatedContent = await generateContentByProvider(provider, config, promptArray);
-                if (promptConfig.requestType === 'inline') {
-                    const documentContent = documentDetails.content;
-                    const cursorPosition = documentDetails.cursorPosition? documentDetails.cursorPosition : documentContent.length;
-
-                    const filteredResponse = cleanSuggestion(documentContent, cursorPosition, generatedContent.replace(REGEX.COMMENT, ''));
-                    generatedContent = filteredResponse;
-                    const updatedContent = incorporateSuggestion(documentContent, cursorPosition, generatedContent);
-                    errors = await handleErrors(updatedContent, promptConfig, documentDetails, iteration);
-                    iteration++;
-                } else if (promptConfig.requestType === 'model') {
-                    generatedContent = beautifyConcertoCode(generatedContent);
-                    errors = await handleErrors(generatedContent, promptConfig, documentDetails, iteration);
-                    iteration++;
+                        const filteredResponse = cleanSuggestion(documentContent, cursorPosition, generatedContent.replace(REGEX.COMMENT, ''));
+                        generatedContent = filteredResponse;
+                        const updatedContent = incorporateSuggestion(documentContent, cursorPosition, generatedContent);
+                        errors = await handleErrors(updatedContent, promptConfig, documentDetails, iteration);
+                        iteration++;
+                    } else if (promptConfig.requestType === 'model') {
+                        generatedContent = beautifyConcertoCode(generatedContent);
+                        errors = await handleErrors(generatedContent, promptConfig, documentDetails, iteration);
+                        iteration++;
+                    }
+                    shouldCache = true;
                 }
-                shouldCache = true;
-            }
-            else {
-                generatedContent = cachedResponse;
-            }
+                else {
+                    generatedContent = cachedResponse;
+                }
 
-        } while (errors.length > 0 && iteration < maxRetries);
+            } while (errors.length > 0 && iteration < maxRetries);
 
-        return generatedContent;
+            return generatedContent;
 
-    } catch (error) {
-        log('Error generating content: ' + error);
-        throw error;
-    } finally {
-        if (shouldCache && generatedContent) 
-            setPromptToCache(cacheKey, generatedContent); 
-        
-        lock.release();
-    }
+        } catch (error) {
+            log('Error generating content: ' + error);
+            throw error;
+        } finally {
+            if (shouldCache && generatedContent) 
+                setPromptToCache(cacheKey, generatedContent);             
+        }
+    });    
 }

@@ -3,7 +3,7 @@ import { ROLE_DESCRIPTION, EXAMPLES } from './guide';
 export function getConcertoInlineTemplate(beforeCursor: string, afterCursor: string, promptConfig: any): Array<{ content: string, role: string }> {
     const { instruction, previousContent, previousError } = promptConfig;
 
-    let messageArray: Array<{ content: string, role: string }> = [
+    const messageArray: Array<{ content: string, role: string }> = [
         {
             content: ROLE_DESCRIPTION.CONCERTO_COPILOT,
             role: "system"
@@ -26,7 +26,7 @@ export function getConcertoInlineTemplate(beforeCursor: string, afterCursor: str
     }
 
     if (previousError) {
-        let userMessage = `Fix the following errors in previously outputed code: ${previousError.map((e: any) => e.message).join('. ')}. Don't put comments in the code.`;
+        const userMessage = `Fix the following errors in previously outputed code: ${previousError.map((e: any) => e.message).join('. ')}. Don't put comments in the code.`;
         messageArray.push({
             content: userMessage,
             role: "user"

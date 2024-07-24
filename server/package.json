@@ -18,7 +18,6 @@
 		"@accordproject/concerto-codegen": "^3.22.1",
 		"@ts-morph/bootstrap": "^0.18.0",
 		"@typescript/vfs": "^1.4.0",
-		"axios": "^1.7.0",
 		"browserify-zlib": "^0.2.0",
 		"crypto-browserify": "^3.12.0",
 		"diff": "^5.2.0",
