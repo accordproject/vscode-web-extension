@@ -33,19 +33,21 @@ export async function findTemplateRoot(state:LanguageServerState, uri:URI) : Pro
 		const curPath = paths.slice(0,n).join('/');
 		const rootPath = `${uri.scheme}://${uri.authority}/${curPath}`;
 		const packageJson = `${rootPath}/package.json`;
-		const exists = await state.connection.sendRequest('vfs/exists', {path: packageJson});
-		if(exists) {
-			const fileContents:string = await state.connection.sendRequest('vfs/readFile', {path: packageJson});
-			try {
-				const json = JSON.parse(fileContents);
-				if(json.accordproject) {
-					return URI.parse(rootPath);
+		if(state.connection) {
+			const exists = await state.connection.sendRequest('vfs/exists', {path: packageJson});
+			if(exists) {
+				const fileContents:string = await state.connection.sendRequest('vfs/readFile', {path: packageJson});
+				try {
+					const json = JSON.parse(fileContents);
+					if(json.accordproject) {
+						return URI.parse(rootPath);
+					}
+				}
+				catch(error) {
+					// ignore
 				}
 			}
-			catch(error) {
-				// ignore
-			}
-		}
+		}	
 	}
 	return null;
 }
@@ -104,6 +106,6 @@ export async function handleConcertoDocumentChange(state:LanguageServerState, ch
 			}
 		}
 	
-		state.diagnostics.send(state.connection);
+		state.diagnostics.send(state.connection!);
 	}
 }

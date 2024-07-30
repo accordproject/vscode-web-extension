@@ -29,6 +29,17 @@ import {
 	loadModels,
 } from './commands/loadModels';
 
+import { inlineSuggestionProvider } from './copilot/inlineSuggestionProvider';
+import { promptProvider } from './copilot/promptProvider';
+import { createSettingsWebview } from './copilot/settingsView/configSetting';
+import { createStatusBarItem } from './copilot/statusBarItemProvider';
+import { codeActionProvider } from './copilot/codeActionProvider';
+import { registerToggleSettingsCommands } from './copilot/toggleSettings';
+import { registerQuickPickCommand } from './copilot/quickPick';
+import { createOrShowChatPanel } from './copilot/chatPanel/chatPanel';
+import { createFileGeneratorPanel } from './copilot/modelGeneratorWizard/modelGeneratorPanel';
+
+
 /**
  * Called when VS Code extension is activated. The conditions for
  * activation are specified in package.json (e.g. opening a .cto file)
@@ -73,6 +84,29 @@ export async function activate(context: vscode.ExtensionContext) {
 	
 	context.subscriptions.push(vscode.commands
 			.registerCommand('cicero-vscode-extension.loadModels', (file) => loadModels(client,file)));	
+	
+	// Register the prompt provider command, startPromptProviderUI
+	context.subscriptions.push(vscode.commands
+		.registerCommand('cicero-vscode-extension.startPromptProviderUI', () => promptProvider.showPromptInputBox(client)));
+
+	// Register the settings webview command, configureSettings	
+	context.subscriptions.push(vscode.commands
+		.registerCommand('cicero-vscode-extension.configureSettings', () => createSettingsWebview(context, client)));
+
+    // Register the quick pick command
+    registerQuickPickCommand(context, client);
+
+    // Create and show the status bar item, statusBarItem
+    createStatusBarItem(context);
+	
+	// Register the toggle settings commands	
+	registerToggleSettingsCommands(context, client);
+
+	context.subscriptions.push(vscode.commands
+		.registerCommand('cicero-vscode-extension.chatPanelWithErrorMessage', (errorMessage) => createOrShowChatPanel(client, context, errorMessage)));
+
+	context.subscriptions.push(vscode.commands
+		.registerCommand('cicero-vscode-extension.openFileGenerator', () => createFileGeneratorPanel(context, client)));	
 }
 
 function createWorkerLanguageClient(context: vscode.ExtensionContext, clientOptions: LanguageClientOptions) {

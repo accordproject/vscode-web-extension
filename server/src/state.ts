@@ -21,8 +21,11 @@ import { Diagnostics } from './diagnostics';
 import { LanguageServerState } from './types';
 
 /* browser specific setup code */
-const messageReader = new BrowserMessageReader(self);
-const messageWriter = new BrowserMessageWriter(self);
+let messageReader, messageWriter;
+if (typeof self !== 'undefined') {
+  messageReader = new BrowserMessageReader(self);
+  messageWriter = new BrowserMessageWriter(self);
+}
 
 /**
  * Globals maintained by the language server
@@ -30,7 +33,7 @@ const messageWriter = new BrowserMessageWriter(self);
 export const GLOBAL_STATE:LanguageServerState = {
 	modelManager: new ModelManager({strict: true}),
 	diagnostics: new Diagnostics(),
-	connection: createConnection(messageReader, messageWriter),
+	connection: messageReader && messageWriter ? createConnection(messageReader, messageWriter) : null,
 	isLoading: false,
 	documents: new TextDocuments(TextDocument)
 };

@@ -35,7 +35,10 @@
 		}
 	},
 	"activationEvents": [
-		"onLanguage:concerto"
+		"onLanguage:concerto",
+		"onCommand:cicero-vscode-extension.showQuickPick",
+		"onCommand:cicero-vscode-extension.openChatPanel",
+		"onCommand:cicero-vscode-extension.chatPanelWithErrorMessage"
 	],
 	"contributes": {
 		"configuration": [
@@ -54,6 +57,36 @@
 						],
 						"default": "off",
 						"description": "Traces the communication between VS Code and the cicero-vscode-extension language server."
+					},
+					"cicero-vscode-extension.apiKey": {
+						"type": "string",
+						"default": "",
+						"description": "API Key for the LLM service"
+					},
+					"cicero-vscode-extension.provider": {
+						"type": "string",
+						"default": "openai",
+						"description": "AI Provider for the LLM service"
+					},
+					"cicero-vscode-extension.llmModel": {
+						"type": "string",
+						"default": "",
+						"description": "LLM Model for the LLM service"
+					},
+					"cicero-vscode-extension.additionalParams": {
+						"type": "object",
+						"default": {},
+						"description": "Additional parameters for the LLM service"
+					},
+					"cicero-vscode-extension.enableInlineSuggestions": {
+						"type": "boolean",
+						"default": true,
+						"description": "Enable inline suggestions"
+					},
+					"cicero-vscode-extension.enableCodeActions": {
+						"type": "boolean",
+						"default": true,
+						"description": "Enable code actions"
 					}
 				}
 			}
@@ -94,6 +127,66 @@
 				"command": "cicero-vscode-extension.compileToTarget",
 				"title": "Compile Model To Target",
 				"category": "Accord Project"
+			},
+			{
+				"command": "cicero-vscode-extension.startPromptProviderUI",
+				"title": "Start in Editor"
+			},
+			{
+				"command": "cicero-vscode-extension.configureSettings",
+				"title": "Configure Settings"
+			},
+			{
+				"command": "cicero-vscode-extension.showQuickPick",
+				"title": "Show Quick Pick"
+			},
+			{
+				"command": "cicero-vscode-extension.toggleInlineSuggestions",
+				"title": "Toggle Inline Suggestions"
+			},
+			{
+				"command": "cicero-vscode-extension.toggleCodeActions",
+				"title": "Toggle Code Actions"
+			},
+			{
+				"command": "cicero-vscode-extension.openChat",
+				"title": "Open Chat Agent"
+			},
+			{
+				"command": "cicero-vscode-extension.chatPanelWithErrorMessage",
+				"title": "Fix error with Accord Copilot"
+			},
+			{
+				"command": "cicero-vscode-extension.openFileGenerator",
+				"title": "Open File Generator"
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "chat",
+					"title": "Chat",
+					"icon": "comments-view-icon"
+				},
+				{
+					"id": "fileGenerator",
+					"title": "File Generator",
+					"icon": "file-generator-view-icon"
+				}
+			]
+		},
+		"views": {
+			"chat": [
+				{
+					"id": "chatPanel",
+					"name": "Accord Assistant"
+				}
+			]
+		},
+		"submenus": [
+			{
+				"id": "accordProjectSubmenu",
+				"label": "Accord Project"
 			}
 		],
 		"menus": {
@@ -107,6 +200,10 @@
 					"when": "resourceLangId == concerto",
 					"command": "cicero-vscode-extension.compileToTarget",
 					"group": "AccordProject@8"
+				},
+				{
+					"command": "cicero-vscode-extension.configureSettings",
+					"group": "AccordProject@10"
 				}
 			],
 			"editor/title": [],
@@ -118,6 +215,27 @@
 				{
 					"command": "cicero-vscode-extension.compileToTarget",
 					"when": "false"
+				},
+				{
+					"command": "cicero-vscode-extension.configureSettings",
+					"when": "false"
+				}
+			],
+			"editor/context": [
+				{
+					"submenu": "accordProjectSubmenu",
+					"group": "navigation"
+				}
+			],
+			"accordProjectSubmenu": [
+				{
+					"command": "cicero-vscode-extension.startPromptProviderUI"
+				},
+				{
+					"command": "cicero-vscode-extension.configureSettings"
+				},
+				{
+					"command": "cicero-vscode-extension.openFileGenerator"
 				}
 			]
 		}
@@ -144,7 +262,7 @@
 		"node-polyfill-webpack-plugin": "^2.0.1",
 		"path-browserify": "^1.0.1",
 		"ts-loader": "^9.3.0",
-		"vsce": "^2.15.0",
+		"vsce": "^1.97.0",
 		"webpack": "^5.76.0",
 		"webpack-cli": "^4.7.2",
 		"webpack-dev-server": "^4.11.1"

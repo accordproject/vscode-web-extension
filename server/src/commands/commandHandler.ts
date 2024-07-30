@@ -21,53 +21,71 @@ import { InMemoryWriter } from '@accordproject/concerto-util';
 import { URI } from 'vscode-uri';
 import { handleConcertoDocumentChange } from '../documents/concertoHandler';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import { generateContent } from '../copilot/llm/llmManager';
 
 export async function loadModels() {
-	const folders = await GLOBAL_STATE.connection.workspace.getWorkspaceFolders();
-	log(`Read workspace folders: ${folders !== null ? folders.length : 'null'}`);
-	if (folders) {
-		for (let n = 0; n < folders.length; n++) {
-			const folder = folders[n];
-			const uri = URI.parse(folder.uri);
-			log(`Folder URI: ${JSON.stringify(uri)}`);
-			const readDirectoryResponse: ReadDirectoryRecursiveResponse[] =
-				await GLOBAL_STATE.connection.sendRequest("vfs/readDirectoryRecursive",
-					{ path: uri.toString() });
-			log(`Got ${readDirectoryResponse.length} files`);
-			for (let i = 0; i < readDirectoryResponse.length; i++) {
-				const res = readDirectoryResponse[i];
-				if (res.type === FileType.File && res.path.endsWith('.cto')) {
-					log(`Requesting client read ${res.path}`);
-					// request that the client open the file
-					// which will cause the handleConcertoDocumentChange handler to fire
-					await GLOBAL_STATE.connection.sendRequest("vfs/openFile", { path: res.path });
+	if (GLOBAL_STATE.connection) {
+		const folders = await GLOBAL_STATE.connection.workspace.getWorkspaceFolders();
+		log(`Read workspace folders: ${folders !== null ? folders.length : 'null'}`);
+		if (folders) {
+			for (let n = 0; n < folders.length; n++) {
+				const folder = folders[n];
+				const uri = URI.parse(folder.uri);
+				log(`Folder URI: ${JSON.stringify(uri)}`);
+				const readDirectoryResponse: ReadDirectoryRecursiveResponse[] =
+					await GLOBAL_STATE.connection.sendRequest("vfs/readDirectoryRecursive",
+						{ path: uri.toString() });
+				log(`Got ${readDirectoryResponse.length} files`);
+				for (let i = 0; i < readDirectoryResponse.length; i++) {
+					const res = readDirectoryResponse[i];
+					if (res.type === FileType.File && res.path.endsWith('.cto')) {
+						log(`Requesting client read ${res.path}`);
+						// request that the client open the file
+						// which will cause the handleConcertoDocumentChange handler to fire
+						await GLOBAL_STATE.connection.sendRequest("vfs/openFile", { path: res.path });
+					}
 				}
 			}
 		}
-	}
 
-	// we are done opening documents - let's process all the documents
-	// to rebuild our global state
-	log(`Document count: ${GLOBAL_STATE.documents.all().length}`);
-	GLOBAL_STATE.documents.all().forEach(async document => {
-		const change: TextDocumentChangeEvent<TextDocument> = { document };
-		handleConcertoDocumentChange(GLOBAL_STATE, change);
-	});
+		// we are done opening documents - let's process all the documents
+		// to rebuild our global state
+		log(`Document count: ${GLOBAL_STATE.documents.all().length}`);
+		GLOBAL_STATE.documents.all().forEach(async document => {
+			const change: TextDocumentChangeEvent<TextDocument> = { document };
+			handleConcertoDocumentChange(GLOBAL_STATE, change);
+		});
+	} else {
+		log('GLOBAL_STATE.connection is null');
+	}	
 }
 
 export async function registerCommandHandlers(state:LanguageServerState) {
-	state.connection.onRequest('concertoCompile', (event:any) => concertoCompileToTarget(GLOBAL_STATE, event));
-	state.connection.onRequest('concertoCompileTargets', (event:any) => concertoCompileTargets());
-	state.connection.onRequest('loadModels', (event:any) => loadModels());
+	if (state.connection) {
+		state.connection.onRequest('concertoCompile', (event:any) => concertoCompileToTarget(GLOBAL_STATE, event));
+		state.connection.onRequest('concertoCompileTargets', (event:any) => concertoCompileTargets());
+		state.connection.onRequest('loadModels', (event:any) => loadModels());
+		// Register a new command handler for generateContent
+		state.connection.onRequest('generateContent', async (params: any) => {
+			const { modelConfig, documents, promptConfig } = params;
+			return generateContent(modelConfig, documents, promptConfig);
+		});
+	} else {
+		log('state.connection is null');
+	}	
 }
 
 export async function saveInMemoryWriter(state:LanguageServerState, path:string, imw:InMemoryWriter) {
-	const enc = new TextEncoder();
-	const keys:string[] = [...imw.getFilesInMemory().keys()];
-	const values:string[] = [...imw.getFilesInMemory().values()];
-	for(let n=0; n < keys.length; n++) {
-		log(`Saving file ${path}/${keys[n]}`);
-		const bytes = Array.from(enc.encode(values[n]));
-		await state.connection.sendRequest("vfs/writeFile", {path: `${path}/${keys[n]}`, content:bytes});
-	}
+	if (state.connection) {
+		const enc = new TextEncoder();
+		const keys:string[] = [...imw.getFilesInMemory().keys()];
+		const values:string[] = [...imw.getFilesInMemory().values()];
+		for(let n=0; n < keys.length; n++) {
+			log(`Saving file ${path}/${keys[n]}`);
+			const bytes = Array.from(enc.encode(values[n]));
+			await state.connection.sendRequest("vfs/writeFile", {path: `${path}/${keys[n]}`, content:bytes});
+		}
+	} else {
+		log('state.connection is null');
+	}	
 }
