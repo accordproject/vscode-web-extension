@@ -34,3 +34,7 @@ export async function checkCopilotHealth(client: LanguageClient): Promise<void> 
         log('Copilot failed health check.');
     }
 }
+
+export function setLLMHealthStatus(status: boolean): void {
+    copilotHealthStatus = status;
+}
