@@ -3,6 +3,7 @@ import { LanguageClient } from 'vscode-languageclient/browser';
 import { log } from '../../log';
 import { Documents, ModelConfig, PromptConfig } from '../utils/types';
 import { DEFAULT_LLM_MODELS, DEFAULT_LLM_ENDPOINTS } from '../utils/constants';
+import { setLLMHealthStatus } from '../healthCheck';
 
 export async function getSuggestion(client: LanguageClient, documents: Documents, promptConfig: PromptConfig): Promise<string | null> {
     const config = vscode.workspace.getConfiguration('cicero-vscode-extension');
@@ -58,6 +59,7 @@ export async function getSuggestion(client: LanguageClient, documents: Documents
         });
         return response;
     } catch (error) {
+        setLLMHealthStatus(false);
         log('Error generating content: ' + error);
         return null;
     }

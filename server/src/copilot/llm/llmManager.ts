@@ -53,7 +53,7 @@ export async function generateContent(config: ModelConfig, documents: Documents,
         log('Generating content for document: ' + documents);
         const documentDetails: DocumentDetails = documents.main;
 
-        const cacheKey = generateCacheKey(documentDetails, promptConfig);
+        const cacheKey = generateCacheKey(documentDetails, promptConfig, config);
         const maxRetries = DEFAULTS.MAX_RETRIES;
 
         try {
