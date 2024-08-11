@@ -16,7 +16,7 @@ For a step-by-step guide on getting started with the extension's features, acces
 
 ## Contributing
 
-We love Open Source contributions; whether they be [fixes to the documentation](https://github.com/accordproject/concerto-docs), or [bug reports, feature requests, or code contrbutions](https://github.com/accordproject/vscode-web-extension) to the extension itself.
+We love Open Source contributions; whether they be [fixes to the documentation](https://github.com/accordproject/concerto-docs), or [bug reports, feature requests, or code contributions](https://github.com/accordproject/vscode-web-extension) to the extension itself.
 
 Financial contributions are also very welcome and can be made to Accord Project, via the [Linux Foundation Crowdfunding portal](https://crowdfunding.lfx.linuxfoundation.org/projects/accordproject).
 
