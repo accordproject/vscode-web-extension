@@ -161,28 +161,6 @@
 				"title": "Open File Generator"
 			}
 		],
-		"viewsContainers": {
-			"activitybar": [
-				{
-					"id": "chat",
-					"title": "Chat",
-					"icon": "comments-view-icon"
-				},
-				{
-					"id": "fileGenerator",
-					"title": "File Generator",
-					"icon": "file-generator-view-icon"
-				}
-			]
-		},
-		"views": {
-			"chat": [
-				{
-					"id": "chatPanel",
-					"name": "Accord Assistant"
-				}
-			]
-		},
 		"submenus": [
 			{
 				"id": "accordProjectSubmenu",
