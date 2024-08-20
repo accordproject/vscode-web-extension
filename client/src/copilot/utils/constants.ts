@@ -120,4 +120,10 @@ export const ASSETS = {
     ACCORD_LOGO_DARK: 'assets/dark/accord_logo.png',
     ACCORD_LOGO_LIGHT: 'assets/light/accord_logo.png'
 };
-  
+
+export const COPILOT_SETTINGS = {
+    CONFIG_UPDATED_SUCCESS: 'Configuration updated successfully!',
+    CONNECTION_SUCCESS: 'Connection to Copilot established successfully!',
+    CONNECTION_FAILED: 'Connection to Copilot failed!',
+    CONNECTION_FAILED_MESSAGE: 'Connection to Copilot failed! Please check your API key, billing status, and LLM model.',
+};

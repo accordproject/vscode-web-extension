@@ -29,7 +29,7 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
                 <label for="provider">Provider <span class="required-asterisk">*</span></label>
                 <p>Select the AI provider.</p>
                 <div class="select-container">
-                    <select id="provider" style="width: 100%;">
+                    <select id="provider" style="width: 100%;" onchange="updateLLMModel()">
                         <option value="gemini" ${configValues.provider === 'gemini' ? 'selected' : ''}>Gemini</option>
                         <option value="openai" ${configValues.provider === 'openai' ? 'selected' : ''}>OpenAI</option>
                         <option value="mistral" ${configValues.provider === 'mistral' ? 'selected' : ''}>MistralAI</option>
@@ -39,7 +39,7 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
                 <span class="error-message" id="providerError"></span>         
             </div>
             <div class="form-group">
-                <label for="llmModel">LLM Model</label>
+                <label for="llmModel">LLM Model <span class="required-asterisk">*</span></label>
                 <p>The specific language model (default: Gemini - gemini-pro, OpenAI - gpt-3.5-turbo, MistralAI - mistral-large-latest).</p>
                 <input type="text" id="llmModel" value="${configValues.llmModel}">
                 <span class="error-message" id="llmModelError"></span>
@@ -61,6 +61,7 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
                 </div>
             </div>
             <button class="button" onclick="saveSettings()">Save Settings</button>
+            <span class="error-message" id="copilotHealthError"></span>
         </div>
         <script>
             ${script}

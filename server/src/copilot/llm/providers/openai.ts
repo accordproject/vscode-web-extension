@@ -138,7 +138,7 @@ class OpenAI implements LargeLanguageModel {
 }
 
 export const OPENAI_ENDPOINTS = {
-    CONTENT: 'https://api.openai.com/v1/completions',
+    CONTENT: 'https://api.openai.com/v1/chat/completions',
     EMBEDDINGS: 'https://api.openai.com/v1/embeddings',
     EMBEDDING_MODEL: 'text-embedding-ada-002',
 };

@@ -40,8 +40,8 @@ export function createFileGeneratorPanel(context: vscode.ExtensionContext, clien
     });
 
     currentPanel.onDidChangeViewState(e => {
-        if (currentPanel) {
-            preloadFileLists(currentPanel, context);
+        if (currentPanel.visible) {
+            preloadFileLists(currentPanel);
         }
     });
 
@@ -80,7 +80,7 @@ export function createFileGeneratorPanel(context: vscode.ExtensionContext, clien
     currentPanel.webview.html = getWebviewContent(currentPanel.webview, context.extensionUri);
 }
 
-async function preloadFileLists(panel: vscode.WebviewPanel, context: vscode.ExtensionContext) {
+async function preloadFileLists(panel: vscode.WebviewPanel) {
     const mdFiles = await getFileList('md');
     const jsonFiles = await getFileList('json');
 
