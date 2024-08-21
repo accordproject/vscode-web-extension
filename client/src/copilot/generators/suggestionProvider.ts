@@ -19,7 +19,7 @@ export async function getSuggestion(client: LanguageClient, documents: Documents
         case 'openai':
             apiUrl =  DEFAULT_LLM_ENDPOINTS.OPENAI;
             break;
-        case 'mistralai':
+        case 'mistral':
             apiUrl =  DEFAULT_LLM_ENDPOINTS.MISTRALAI;
             break;
         default:

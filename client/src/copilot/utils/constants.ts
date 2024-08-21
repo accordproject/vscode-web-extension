@@ -87,7 +87,7 @@ export const DEFAULT_LLM_MODELS = {
 export const DEFAULT_LLM_ENDPOINTS = {
     GEMINI: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
     OPENAI: 'https://api.openai.com/v1/chat/completions',
-    MISTRALAI: 'https://api.mistralai.com/v1/chat/completions'
+    MISTRALAI: 'https://api.mistral.ai/v1/chat/completions'
 };
   
 // Constants for Panel Manager
