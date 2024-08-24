@@ -9,7 +9,7 @@ export function getInlineTemplate(beforeCursor: string, afterCursor: string, pro
             role: "system"
         },
         {
-            content: `${beforeCursor} /* The user's cursor is here. Analyze the following code in ${language} language and provide a suggestion to complete it according to this instruction from user: ${instruction}. Only add new code at the cursor position without modifying the existing code. Remove this comment in the final output. */ ${afterCursor}`,
+            content: `${beforeCursor} /* The user's cursor is here. Analyze the following code in ${language} language and complete it according to this instruction from user: ${instruction}. Only add new code at the cursor position without modifying the existing code. Remove this comment in the final output. */ ${afterCursor}. Start output from here ${beforeCursor}`,
             role: "user"
         }
     ];
