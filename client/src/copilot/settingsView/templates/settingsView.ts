@@ -54,8 +54,8 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
                 <p>Select whether to save the settings globally (for all projects) or for the current workspace only.</p>
                 <div class="select-container">
                     <select id="scope" style="width: 100%;">
-                        <option value="workspace" selected>Workspace</option>
-                        <option value="global">Global</option>
+                        <option value="workspace">Workspace</option>
+                        <option value="global" selected>Global</option>
                     </select>
                     <i class="codicon codicon-chevron-down"></i>
                 </div>

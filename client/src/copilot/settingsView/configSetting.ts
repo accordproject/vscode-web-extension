@@ -31,6 +31,13 @@ export function createSettingsWebview(context: vscode.ExtensionContext, client: 
         switch (message.command) {
             case 'saveSettings':
                 const target = message.scope === 'workspace' ? vscode.ConfigurationTarget.Workspace : vscode.ConfigurationTarget.Global;
+
+                if (message.scope === 'workspace' && !vscode.workspace.workspaceFolders) {
+                    vscode.window.showErrorMessage(COPILOT_SETTINGS.CONNECTION_FAILED);
+                    panel.webview.postMessage({ command: 'showError', message: COPILOT_SETTINGS.WORKSPACE_REQUIRED });
+                    return;
+                }
+
                 const sanitizedLLMModel = message.llmModel.trim();
 
                 await config.update('apiKey', message.apiKey, target);

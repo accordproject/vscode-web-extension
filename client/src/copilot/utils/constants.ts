@@ -126,4 +126,5 @@ export const COPILOT_SETTINGS = {
     CONNECTION_SUCCESS: 'Connection to Copilot established successfully!',
     CONNECTION_FAILED: 'Connection to Copilot failed!',
     CONNECTION_FAILED_MESSAGE: 'Connection to Copilot failed! Please check your API key, billing status, and LLM model.',
+    WORKSPACE_REQUIRED: 'Cannot save settings with "Workspace" scope because no workspace is open. Please save them as Global settings.'
 };
