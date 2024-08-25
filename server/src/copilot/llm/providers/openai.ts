@@ -50,15 +50,11 @@ class OpenAI implements LargeLanguageModel {
     }
 
     async generateEmbeddings(config: any, text: string): Promise<Embedding[]> {
-        let { apiUrl, embeddingModel } = config;
-        const { accessToken } = config;
+        const { embeddingModel, accessToken } = config
+        let apiUrl = OPENAI_ENDPOINTS.EMBEDDINGS;
         
-        if (!apiUrl) {
-            apiUrl = OPENAI_ENDPOINTS.EMBEDDINGS;
-        }
-
-        embeddingModel = embeddingModel || OPENAI_ENDPOINTS.EMBEDDING_MODEL;
-        const request = this.createGenerateEmbeddingsRequest(text, embeddingModel);
+        let model = embeddingModel || OPENAI_ENDPOINTS.EMBEDDING_MODEL;
+        const request = this.createGenerateEmbeddingsRequest(text, model);
 
         try {
             const response = await fetch(apiUrl, {
