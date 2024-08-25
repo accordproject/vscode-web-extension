@@ -40,8 +40,8 @@ export function createFileGeneratorPanel(context: vscode.ExtensionContext, clien
     });
 
     currentPanel.onDidChangeViewState(e => {
-        if (currentPanel) {
-            preloadFileLists(currentPanel, context);
+        if (currentPanel.visible) {
+            preloadFileLists(currentPanel);
         }
     });
 
@@ -53,9 +53,11 @@ export function createFileGeneratorPanel(context: vscode.ExtensionContext, clien
                     try {
                         await generateGrammarFile(client, message.filePath);
                         updateGeneratingState('grammar', false);
+                        vscode.window.showInformationMessage('Grammar file generated successfully');
                     } catch (error) {
                         log(`Error generating grammar file: ${error.message}`);
                         updateGeneratingState('grammar', false, error.message);
+                        vscode.window.showErrorMessage('Error generating grammar file');
                     }
                     break;
                 case FILE_GENERATORS.GENERATE_MODEL_FILE:
@@ -63,9 +65,11 @@ export function createFileGeneratorPanel(context: vscode.ExtensionContext, clien
                     try {
                         await generateModelFile(client, message.packageFile, message.grammarFile);
                         updateGeneratingState('model', false);
+                        vscode.window.showInformationMessage('Model file generated successfully');
                     } catch (error) {
                         log(`Error generating model file: ${error.message}`);
                         updateGeneratingState('model', false, error.message);
+                        vscode.window.showErrorMessage('Error generating model file');
                     }
                     break;
                 case FILE_GENERATORS.REQUEST_FILE_LIST:
@@ -80,7 +84,7 @@ export function createFileGeneratorPanel(context: vscode.ExtensionContext, clien
     currentPanel.webview.html = getWebviewContent(currentPanel.webview, context.extensionUri);
 }
 
-async function preloadFileLists(panel: vscode.WebviewPanel, context: vscode.ExtensionContext) {
+async function preloadFileLists(panel: vscode.WebviewPanel) {
     const mdFiles = await getFileList('md');
     const jsonFiles = await getFileList('json');
 
