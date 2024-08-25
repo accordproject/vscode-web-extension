@@ -41,6 +41,11 @@ async function handleErrors(updatedContent: string, promptConfig: PromptConfig, 
         promptConfig.previousError = errors;
     }
 
+    if (GLOBAL_STATE.connection) {
+        GLOBAL_STATE.diagnostics.clearErrors(tempDocumentName, 'model');
+        GLOBAL_STATE.diagnostics.send(GLOBAL_STATE.connection);
+    }
+
     return errors;
 }
 
