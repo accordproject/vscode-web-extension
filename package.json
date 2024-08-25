@@ -211,9 +211,6 @@
 				},
 				{
 					"command": "cicero-vscode-extension.configureSettings"
-				},
-				{
-					"command": "cicero-vscode-extension.openFileGenerator"
 				}
 			]
 		}
