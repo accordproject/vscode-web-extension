@@ -29,7 +29,7 @@ export function registerQuickPickCommand(context: vscode.ExtensionContext, clien
             vscode.commands.executeCommand('cicero-vscode-extension.configureSettings');
         } else if (selection?.label === GENERAL.QUICK_PICK_OPTION_SUGGESTIONS) {
             vscode.commands.executeCommand('cicero-vscode-extension.startPromptProviderUI');
-        } else if (selection?.label === 'Open Chat Agent') {
+        } else if (selection?.label === GENERAL.QUICK_PICK_OPTION_CHAT_AGENT) {
             createOrShowChatPanel(client, context);
         } else if (selection?.label === GENERAL.QUICK_PICK_OPTION_GENERATOR) {
             vscode.commands.executeCommand('cicero-vscode-extension.openFileGenerator');
