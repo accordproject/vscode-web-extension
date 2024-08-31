@@ -50,15 +50,11 @@ class OpenAI implements LargeLanguageModel {
     }
 
     async generateEmbeddings(config: any, text: string): Promise<Embedding[]> {
-        let { apiUrl, embeddingModel } = config;
-        const { accessToken } = config;
+        const { embeddingModel, accessToken } = config
+        let apiUrl = OPENAI_ENDPOINTS.EMBEDDINGS;
         
-        if (!apiUrl) {
-            apiUrl = OPENAI_ENDPOINTS.EMBEDDINGS;
-        }
-
-        embeddingModel = embeddingModel || OPENAI_ENDPOINTS.EMBEDDING_MODEL;
-        const request = this.createGenerateEmbeddingsRequest(text, embeddingModel);
+        let model = embeddingModel || OPENAI_ENDPOINTS.EMBEDDING_MODEL;
+        const request = this.createGenerateEmbeddingsRequest(text, model);
 
         try {
             const response = await fetch(apiUrl, {
@@ -138,7 +134,7 @@ class OpenAI implements LargeLanguageModel {
 }
 
 export const OPENAI_ENDPOINTS = {
-    CONTENT: 'https://api.openai.com/v1/completions',
+    CONTENT: 'https://api.openai.com/v1/chat/completions',
     EMBEDDINGS: 'https://api.openai.com/v1/embeddings',
     EMBEDDING_MODEL: 'text-embedding-ada-002',
 };

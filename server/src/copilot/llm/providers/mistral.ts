@@ -50,15 +50,11 @@ class Mistral implements LargeLanguageModel {
     }
 
     async generateEmbeddings(config: any, text: string): Promise<Embedding[]> {
-        let { apiUrl, embeddingModel } = config;
-        const { accessToken } = config;
+        const { embeddingModel, accessToken } = config;
+        let apiUrl = MISTRAL_ENDPOINTS.EMBEDDINGS;
 
-        if (!apiUrl) {
-            apiUrl = MISTRAL_ENDPOINTS.EMBEDDINGS;
-        }
-
-        embeddingModel = embeddingModel || MISTRAL_ENDPOINTS.EMBEDDING_MODEL;
-        const request = this.createGenerateEmbeddingsRequest(text, embeddingModel);
+        let model = embeddingModel || MISTRAL_ENDPOINTS.EMBEDDING_MODEL;
+        const request = this.createGenerateEmbeddingsRequest(text, model);
 
         try {
             const response = await fetch(apiUrl, {

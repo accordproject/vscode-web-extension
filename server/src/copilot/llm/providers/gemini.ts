@@ -51,12 +51,9 @@ class Gemini implements LargeLanguageModel {
     }
 
     async generateEmbeddings(config: any, text: string): Promise<Embedding[]> {
-        let { apiUrl, embeddingModel } = config;
+        let { embeddingModel } = config;
         const { accessToken } = config;
-
-        if (!apiUrl) {
-            apiUrl = GEMINI_ENDPOINTS.EMBEDDINGS;
-        }
+        let apiUrl = GEMINI_ENDPOINTS.EMBEDDINGS;
 
         embeddingModel = embeddingModel || GEMINI_ENDPOINTS.EMBEDDING_MODEL;
         const updatedApiUrl = this.replaceModelInApiUrl(apiUrl, embeddingModel);

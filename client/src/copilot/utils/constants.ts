@@ -19,7 +19,8 @@ export const GENERAL = {
     QUICK_PICK_STATUS_OK: '$(copilot)  Status:  Ready',
     QUICK_PICK_STATUS_ERROR: '$(copilot)  Status:  Configuration Error',
     QUICK_PICK_PLACEHOLDER: 'Choose an action',
-    QUICK_PICK_OPTION_CHAT_AGENT: 'Open Chat Agent',
+    QUICK_PICK_OPTION_CHAT_AGENT: '$(comment-discussion)  Open Chat Agent',
+    QUICK_PICK_OPTION_GENERATOR: '$(wand)  Model Generation Wizard',
     QUICK_PICK_OPTION_SETTINGS: '$(gear)  Open Copilot Settings',
     QUICK_PICK_OPTION_SUGGESTIONS: '$(copilot)  Get Inline Suggestions',
     QUICK_PICK_OPTION_ENABLE_INLINE_SUGGESTIONS: 'Enable Inline Suggestions',
@@ -87,7 +88,7 @@ export const DEFAULT_LLM_MODELS = {
 export const DEFAULT_LLM_ENDPOINTS = {
     GEMINI: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
     OPENAI: 'https://api.openai.com/v1/chat/completions',
-    MISTRALAI: 'https://api.mistralai.com/v1/chat/completions'
+    MISTRALAI: 'https://api.mistral.ai/v1/chat/completions'
 };
   
 // Constants for Panel Manager
@@ -120,4 +121,11 @@ export const ASSETS = {
     ACCORD_LOGO_DARK: 'assets/dark/accord_logo.png',
     ACCORD_LOGO_LIGHT: 'assets/light/accord_logo.png'
 };
-  
+
+export const COPILOT_SETTINGS = {
+    CONFIG_UPDATED_SUCCESS: 'Configuration updated successfully!',
+    CONNECTION_SUCCESS: 'Connection to Copilot established successfully!',
+    CONNECTION_FAILED: 'Connection to Copilot failed!',
+    CONNECTION_FAILED_MESSAGE: 'Connection to Copilot failed! Please check your API key, billing status, and LLM model.',
+    WORKSPACE_REQUIRED: 'Cannot save settings with "Workspace" scope because no workspace is open. Please save them as Global settings.'
+};

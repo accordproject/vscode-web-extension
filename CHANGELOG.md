@@ -1,5 +1,13 @@
 ## Change Log
 
+## 2.0.0
+  - Inline Suggestions: Real-time, context-aware code completions for TypeScript, Concerto, and more.
+  - Prompt Provider UI: Context-aware prompts based on user input and surrounding code context.
+  - Status Bar Item: Quick access to actions and status updates for AI model connections.
+  - Configuration Settings UI: Seamless AI model configuration and API key integration.
+  - Chat Panel: Interactive chat for code analysis, debugging, and Q&A with AI models.
+  - Grammar/Model Generation Wizard: Automates grammar and data model creation from markdown files.
+
 ### 0.22.0
 - Update to Cicero 0.22.0
 ### 0.21.17

@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/browser';
 import { log } from '../../log';
 import { Documents, ModelConfig, PromptConfig } from '../utils/types';
-import { DEFAULT_LLM_MODELS, DEFAULT_LLM_ENDPOINTS } from '../utils/constants';
+import { DEFAULT_LLM_ENDPOINTS } from '../utils/constants';
 import { setLLMHealthStatus } from '../healthCheck';
 
 export async function getSuggestion(client: LanguageClient, documents: Documents, promptConfig: PromptConfig): Promise<string | null> {
@@ -10,26 +10,20 @@ export async function getSuggestion(client: LanguageClient, documents: Documents
     const apiKey = config.get<string>('apiKey');
     const provider = config.get<string>('provider');
     let llmModel = config.get<string>('llmModel');
-    let apiUrl;
 
-    if (!llmModel) {
-        switch (provider) {
-            case 'gemini':
-                llmModel = DEFAULT_LLM_MODELS.GEMINI;
-                apiUrl =  DEFAULT_LLM_ENDPOINTS.GEMINI;
-                break;
-            case 'openai':
-                llmModel = DEFAULT_LLM_MODELS.OPENAI;
-                apiUrl =  DEFAULT_LLM_ENDPOINTS.OPENAI;
-                break;
-            case 'mistralai':
-                llmModel = DEFAULT_LLM_MODELS.MISTRALAI;
-                apiUrl =  DEFAULT_LLM_ENDPOINTS.MISTRALAI;
-                break;   
-            default:
-                llmModel = '';
-                apiUrl = '';
-        }
+    let apiUrl;
+    switch (provider) {
+        case 'gemini':
+            apiUrl =  DEFAULT_LLM_ENDPOINTS.GEMINI;
+            break;
+        case 'openai':
+            apiUrl =  DEFAULT_LLM_ENDPOINTS.OPENAI;
+            break;
+        case 'mistral':
+            apiUrl =  DEFAULT_LLM_ENDPOINTS.MISTRALAI;
+            break;
+        default:
+            apiUrl = '';
     }
 
     // keys like maxTokens, temperature, topP comes from additionalParams
@@ -40,15 +34,8 @@ export async function getSuggestion(client: LanguageClient, documents: Documents
         llmModel,
         apiUrl,
         accessToken: apiKey,
-        additionalParams: {} 
+        additionalParams: {...additionalParams}
     };
-
-    if (additionalParams) {
-        modelConfig.additionalParams = {
-            ...modelConfig.additionalParams,
-            ...additionalParams
-        };
-    }
 
     try {
         log('Generating content...');
