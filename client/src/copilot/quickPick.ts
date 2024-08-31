@@ -18,6 +18,7 @@ export function registerQuickPickCommand(context: vscode.ExtensionContext, clien
             { label: GENERAL.QUICK_PICK_OPTION_SETTINGS },
             { label: GENERAL.QUICK_PICK_OPTION_SUGGESTIONS },
 			{ label: GENERAL.QUICK_PICK_OPTION_CHAT_AGENT },
+            { label: GENERAL.QUICK_PICK_OPTION_GENERATOR },
             { label: '', kind: vscode.QuickPickItemKind.Separator },
             { label: enableInlineSuggestions ? GENERAL.QUICK_PICK_OPTION_DISABLE_INLINE_SUGGESTIONS : GENERAL.QUICK_PICK_OPTION_ENABLE_INLINE_SUGGESTIONS },
             { label: enableCodeActions ? GENERAL.QUICK_PICK_OPTION_DISABLE_CODE_ACTIONS : GENERAL.QUICK_PICK_OPTION_ENABLE_CODE_ACTIONS }
@@ -28,8 +29,10 @@ export function registerQuickPickCommand(context: vscode.ExtensionContext, clien
             vscode.commands.executeCommand('cicero-vscode-extension.configureSettings');
         } else if (selection?.label === GENERAL.QUICK_PICK_OPTION_SUGGESTIONS) {
             vscode.commands.executeCommand('cicero-vscode-extension.startPromptProviderUI');
-        } else if (selection?.label === 'Open Chat Agent') {
+        } else if (selection?.label === GENERAL.QUICK_PICK_OPTION_CHAT_AGENT) {
             createOrShowChatPanel(client, context);
+        } else if (selection?.label === GENERAL.QUICK_PICK_OPTION_GENERATOR) {
+            vscode.commands.executeCommand('cicero-vscode-extension.openFileGenerator');
         } else if (selection?.label === GENERAL.QUICK_PICK_OPTION_ENABLE_INLINE_SUGGESTIONS || selection?.label === GENERAL.QUICK_PICK_OPTION_DISABLE_INLINE_SUGGESTIONS) {
             vscode.commands.executeCommand('cicero-vscode-extension.toggleInlineSuggestions');
         } else if (selection?.label === GENERAL.QUICK_PICK_OPTION_ENABLE_CODE_ACTIONS || selection?.label === GENERAL.QUICK_PICK_OPTION_DISABLE_CODE_ACTIONS) {
