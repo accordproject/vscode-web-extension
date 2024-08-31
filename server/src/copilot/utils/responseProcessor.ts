@@ -51,8 +51,8 @@ export function cleanSuggestion(documentContent: string, cursorPosition: number,
     const overlapLength = Math.min(beforeCursor.length, cleanSuggestion.length);
 
     for (let i = 0; i < overlapLength; i++) {
-        const beforeCursorSuffix = beforeCursor.slice(beforeCursor.length - i);
-        const suggestionPrefix = cleanSuggestion.slice(0, i);
+        const beforeCursorSuffix = beforeCursor.slice(beforeCursor.length - i).toLowerCase();
+        const suggestionPrefix = cleanSuggestion.slice(0, i).toLowerCase();
 
         if (beforeCursorSuffix === suggestionPrefix) {
             cleanSuggestion = cleanSuggestion.slice(i);
@@ -66,6 +66,9 @@ export function cleanSuggestion(documentContent: string, cursorPosition: number,
     if (afterCursorTrimmed && afterCursorIndex !== -1) {
         cleanSuggestion = cleanSuggestion.slice(0, afterCursorIndex);
     }
+
+    if(cleanSuggestion.length === 0 && suggestion.length !== 0)
+        cleanSuggestion = suggestion;
 
     return cleanSuggestion;
 }

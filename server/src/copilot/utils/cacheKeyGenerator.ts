@@ -1,11 +1,17 @@
-import { DocumentDetails, PromptConfig, ModelConfig } from './types';
+import { PromptConfig, ModelConfig, Documents } from './types';
 
 export function generateCacheKey(
-    documentDetails: DocumentDetails,
+    documents: Documents,
     promptConfig: PromptConfig,
     modelConfig: ModelConfig
 ): string {
-    const { content, cursorPosition } = documentDetails;
+    const { main, contextDocuments } = documents;
+    const { content, cursorPosition } = main;
+    let contextContent = '';
+
+    if (contextDocuments)
+        contextContent = contextDocuments.map((doc) => doc.content).join('');
+
     const { requestType, language, instruction } = promptConfig;
     const { provider, llmModel, apiUrl, additionalParams, accessToken } = modelConfig;
 
@@ -20,5 +26,6 @@ export function generateCacheKey(
         apiUrl || '',
         accessToken,
         JSON.stringify(additionalParams || {}),
+        contextContent,
     ].join(':');
 }

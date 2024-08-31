@@ -50,10 +50,11 @@ export async function generateContent(config: ModelConfig, documents: Documents,
         let shouldCache = false;
         let errors: any[] = [];
         let iteration = 0;
-        log('Generating content for document: ' + documents);
         const documentDetails: DocumentDetails = documents.main;
 
-        const cacheKey = generateCacheKey(documentDetails, promptConfig, config);
+        log('Generating content for document :' + (documentDetails.fileName || ''));
+
+        const cacheKey = generateCacheKey(documents, promptConfig, config);
         const maxRetries = DEFAULTS.MAX_RETRIES;
 
         try {
@@ -65,9 +66,9 @@ export async function generateContent(config: ModelConfig, documents: Documents,
                 else
                     log('Fixing errors in generated content from model:' + provider + ' Attempt: ' + iteration);    
                 
-                const promptArray = await agentPlanner({ documents, promptConfig, config});
                 const cachedResponse = getPromptFromCache(cacheKey);
                 if (!cachedResponse) {
+                    const promptArray = await agentPlanner({ documents, promptConfig, config});
                     generatedContent = await generateContentByProvider(provider, config, promptArray);
                     if (promptConfig.requestType === 'inline') {
                         const documentContent = documentDetails.content;
