@@ -27,7 +27,7 @@
     "url": "https://crowdfunding.lfx.linuxfoundation.org/projects/accordproject"
   },
   "engines": {
-    "vscode": "^1.63.0"
+    "vscode": "^1.75.0"
   },
   "capabilities": {
     "virtualWorkspaces": {
@@ -35,10 +35,6 @@
     }
   },
   "activationEvents": [
-    "onLanguage:concerto",
-    "onCommand:cicero-vscode-extension.showQuickPick",
-    "onCommand:cicero-vscode-extension.openChatPanel",
-    "onCommand:cicero-vscode-extension.chatPanelWithErrorMessage"
   ],
   "contributes": {
     "configuration": [
@@ -102,6 +98,16 @@
           ".cto"
         ],
         "configuration": "./client/concerto.language-configuration.json"
+      },
+      {
+        "id": "concerto-vocabulary",
+        "aliases": [
+          "Concerto vocabulary",
+          "vocabulary"
+        ],
+        "extensions": [
+          ".voc"
+        ]
       }
     ],
     "grammars": [
@@ -119,8 +125,8 @@
     ],
     "commands": [
       {
-        "command": "cicero-vscode-extension.loadModels",
-        "title": "Load All Models",
+        "command": "cicero-vscode-extension.loadProjectFiles",
+        "title": "Load All Project Files",
         "category": "Accord Project"
       },
       {
@@ -193,7 +199,7 @@
       "explorer/context": [
         {
           "when": "resourceLangId == concerto",
-          "command": "cicero-vscode-extension.loadModels",
+          "command": "cicero-vscode-extension.loadProjectFiles",
           "group": "AccordProject@2"
         },
         {
@@ -209,7 +215,7 @@
       "editor/title": [],
       "commandPalette": [
         {
-          "command": "cicero-vscode-extension.loadModels",
+          "command": "cicero-vscode-extension.loadProjectFiles",
           "when": "false"
         },
         {
