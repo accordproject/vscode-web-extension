@@ -22,7 +22,7 @@ const browserClientConfig = {
 	mode: 'none',
 	target: 'webworker', // web extensions run in a webworker context
 	entry: {
-		extension: './src/browserClientMain.ts',
+		'extension': './src/browserClientMain.ts',
 	},
 	output: {
 		filename: '[name].js',
