@@ -27,7 +27,7 @@
     "url": "https://crowdfunding.lfx.linuxfoundation.org/projects/accordproject"
   },
   "engines": {
-    "vscode": "^1.75.0"
+    "vscode": "^1.94.0"
   },
   "capabilities": {
     "virtualWorkspaces": {
