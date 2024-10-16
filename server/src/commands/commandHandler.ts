@@ -35,6 +35,8 @@ import { onCodeAction } from './codeaction';
  * automatically synced from the client to the server when documents are created or updated.
  */
 export async function loadProjectFiles(fileExtensions:string[]) {
+	GLOBAL_STATE.modelManager.clearModelFiles();
+	GLOBAL_STATE.vocabularyManager.clear();
 	if (GLOBAL_STATE.connection) {
 		const folders = await GLOBAL_STATE.connection.workspace.getWorkspaceFolders();
 		log(`Read workspace folders: ${folders !== null ? folders.length : 'null'}`);

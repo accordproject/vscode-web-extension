@@ -91,6 +91,11 @@ export async function handleConcertoDocumentChange(state: LanguageServerState, c
 			}
 			else {
 				state.modelManager.addCTOModel(modelText, change.document.uri, true);
+				// BUG - this fails to detect when we have edited the namespace within a cto file
+				// - it will add the new version of the cto file to the model manager, but keep the old
+				// namespace version around, even though there is no longer a file in the workspace that
+				// represents that file. The way to recover is to force a "reload project files" which will
+				// clear and then rebuild the model manager from the files in the workspace
 				log(`Added namespace: ${ast.namespace}`);
 			}
 			try {
