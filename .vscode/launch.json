@@ -4,7 +4,7 @@
 	"configurations": [
 		{
 			"name": "Launch Client",
-			"type": "extensionHost",
+			"type": "pwa-extensionHost",
 			"debugWebWorkerHost": true,
 			"request": "launch",
 			"args": [
@@ -16,7 +16,7 @@
 			],
 			"preLaunchTask": {
 				"type": "npm",
-				"script": "watch"
+				"script": "watch-web"
 			}
 		},
 		{
