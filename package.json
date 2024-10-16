@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "version": "2.0.0",
   "icon": "icon.png",
-  "browser": "./client/dist/browserClientMain.js",
+  "browser": "./client/dist/extension.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/accordproject/vscode-web-extension"
@@ -247,7 +247,7 @@
     }
   },
   "scripts": {
-    "test": "echo \"No test specified\" && exit 0",
+    "test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=client/dist/test/suite/index.js",
     "package:vsix": "vsce package",
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",

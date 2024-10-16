@@ -23,8 +23,10 @@ const browserClientConfig = {
 	target: 'webworker', // web extensions run in a webworker context
 	entry: {
 		'extension': './src/browserClientMain.ts',
+		'test/suite/index': './src/test/suite/index.ts'
 	},
 	output: {
+		clean: true,
 		filename: '[name].js',
 		path: path.join(__dirname, 'client', 'dist'),
 		libraryTarget: 'commonjs',
@@ -145,11 +147,7 @@ const browserServerConfig = {
 		new HtmlWebpackPlugin({
 			template: "../index.html",
 		}),
-	],
-	devServer: {
-		static: "./server/dist",
-		port: 5001,
-	},
+	]
 };
 
 module.exports = [browserClientConfig, browserServerConfig];
