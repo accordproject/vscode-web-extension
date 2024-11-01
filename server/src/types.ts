@@ -1,4 +1,5 @@
 import { ModelManager } from '@accordproject/concerto-core';
+import { VocabularyManager } from '@accordproject/concerto-vocabulary';
 import { Connection, TextDocuments } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { Diagnostics } from './diagnostics';
@@ -34,6 +35,7 @@ export type ReadDirectoryRecursiveResponse = {
 
 export type LanguageServerState = {
 	modelManager: ModelManager;
+	vocabularyManager: VocabularyManager;
 	diagnostics: Diagnostics;
 	connection: Connection | null;
 	isLoading: boolean;

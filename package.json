@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "version": "2.0.0",
   "icon": "icon.png",
-  "browser": "./client/dist/browserClientMain",
+  "browser": "./client/dist/extension.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/accordproject/vscode-web-extension"
@@ -27,7 +27,7 @@
     "url": "https://crowdfunding.lfx.linuxfoundation.org/projects/accordproject"
   },
   "engines": {
-    "vscode": "^1.63.0"
+    "vscode": "^1.94.0"
   },
   "capabilities": {
     "virtualWorkspaces": {
@@ -35,10 +35,6 @@
     }
   },
   "activationEvents": [
-    "onLanguage:concerto",
-    "onCommand:cicero-vscode-extension.showQuickPick",
-    "onCommand:cicero-vscode-extension.openChatPanel",
-    "onCommand:cicero-vscode-extension.chatPanelWithErrorMessage"
   ],
   "contributes": {
     "configuration": [
@@ -102,6 +98,16 @@
           ".cto"
         ],
         "configuration": "./client/concerto.language-configuration.json"
+      },
+      {
+        "id": "concerto-vocabulary",
+        "aliases": [
+          "Concerto vocabulary",
+          "vocabulary"
+        ],
+        "extensions": [
+          ".voc"
+        ]
       }
     ],
     "grammars": [
@@ -119,8 +125,8 @@
     ],
     "commands": [
       {
-        "command": "cicero-vscode-extension.loadModels",
-        "title": "Load All Models",
+        "command": "cicero-vscode-extension.loadProjectFiles",
+        "title": "Load All Project Files",
         "category": "Accord Project"
       },
       {
@@ -171,7 +177,7 @@
       "explorer/context": [
         {
           "when": "resourceLangId == concerto",
-          "command": "cicero-vscode-extension.loadModels",
+          "command": "cicero-vscode-extension.loadProjectFiles",
           "group": "AccordProject@2"
         },
         {
@@ -187,7 +193,7 @@
       "editor/title": [],
       "commandPalette": [
         {
-          "command": "cicero-vscode-extension.loadModels",
+          "command": "cicero-vscode-extension.loadProjectFiles",
           "when": "false"
         },
         {
@@ -216,31 +222,38 @@
     }
   },
   "scripts": {
-    "test": "echo \"No test specified\" && exit 0",
+    "test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=client/dist/test/suite/index.js",
     "package:vsix": "vsce package",
-    "vscode:prepublish": "npm run compile",
-    "compile": "webpack",
-    "watch": "webpack --watch",
-    "package": "webpack --mode production --devtool hidden-source-map",
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-    "start": "webpack serve --mode development --open",
-    "chrome": "npm run compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data"
+    "pretest": "npm run compile-web",
+    "vscode:prepublish": "npm run package-web",
+    "compile-web": "webpack",
+    "watch-web": "webpack --watch",
+    "package-web": "webpack --mode production --devtool hidden-source-map",
+    "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data"
   },
   "devDependencies": {
+    "@types/vscode": "^1.94.0",
+    "@types/mocha": "^10.0.8",
+    "@types/assert": "^1.5.10",
+    "eslint": "^9.11.1",
+    "@typescript-eslint/eslint-plugin": "^8.7.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "mocha": "^10.7.3",
+    "typescript": "^5.6.2",
+    "@vscode/test-web": "^0.0.61",
+    "ts-loader": "^9.5.1",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "@types/webpack-env": "^1.18.5",
+    "assert": "^2.1.0",
+    "process": "^0.11.10",
     "@types/path-browserify": "^1.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.42.0",
-    "@typescript-eslint/parser": "^5.42.0",
-    "@vscode/test-web": "^0.0.56",
-    "eslint": "^8.26.0",
     "html-webpack-plugin": "^5.5.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "path-browserify": "^1.0.1",
-    "ts-loader": "^9.3.0",
-    "vsce": "^2.15.0",
-    "webpack": "^5.76.0",
-    "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "^4.11.1"
+    "vsce": "^2.15.0"
   },
   "dependencies": {
     "browserify-zlib": "^0.2.0",

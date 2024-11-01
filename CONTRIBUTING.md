@@ -11,16 +11,20 @@ Please update CHANGELOG.md when you make changes.
 
 ### Code Structure
 
+This is a VSCode WEB Extension, meaning that it is composed on two parts: the client and the server. The client and server communicate using JSON over HTTP, and use the Language Server Protocol. When running on the web the language server runs in a web worker, while the language client runs on the web page.
+
+Note that this means that you must be careful what assumptions you make and the 3rd-party packages you use - as they must be webpacked to build the web extension package for distribution. In particular the language server cannot access the underlying file system, but must request files from the language client, over RPC.
+
 ```
 .
 ├── client // Language Client
 │   ├── src
 │   │   ├── test // End to End tests for Language Client / Server
-│   │   └── extension.ts // Language Client entry point
+│   │   └── browserClientMain.ts // Language Client entry point
 ├── package.json // The extension manifest.
 └── server // Language Server
     └── src
-        └── server.ts // Language Server entry point
+        └── browserServerMain.ts // Language Server entry point
 ```
 
 ### Running
@@ -32,6 +36,10 @@ Please update CHANGELOG.md when you make changes.
 - Select `Launch Client` from the drop down.
 - Run the launch config.
 - If you want to debug the server as well use the launch configuration `Attach to Server`
+
+#### Run in Browser
+
+- Run `npm run run-in-browser` to open the extension in Chrome.
 
 ### Manual Build and Install
 

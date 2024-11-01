@@ -12,19 +12,20 @@
  * limitations under the License.
  */
 'use strict';
-import { InitializedParams, InitializeParams, InitializeResult, ServerCapabilities, TextDocumentChangeEvent, TextDocumentSyncKind } from 'vscode-languageserver';
+import { CodeActionParams, Command, CompletionItem, CompletionItemKind, DidChangeWatchedFilesParams, FileChangeType, InitializedParams, InitializeParams, InitializeResult, Location, ServerCapabilities, TextDocumentChangeEvent, TextDocumentIdentifier, TextDocumentSyncKind } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
 import { GLOBAL_STATE, log } from './state';
 import { handleConcertoDocumentChange } from './documents/concertoHandler';
-import { loadModels, registerCommandHandlers } from './commands/commandHandler';
+import { loadProjectFiles, registerCommandHandlers } from './commands/commandHandler';
+import { ModelFile } from '@accordproject/concerto-core';
+import { getModelFileByUri } from './utils';
 
 /**
  * Called when the language server is initialized
  */
-if(GLOBAL_STATE.connection) {
+if (GLOBAL_STATE.connection) {
 	GLOBAL_STATE.connection.onInitialize((params: InitializeParams): InitializeResult => {
-
 		// Set the process.browser variable so that the Concerto logger 
 		// doesn't try to create log files
 		(process as any).browser = true;
@@ -37,6 +38,9 @@ if(GLOBAL_STATE.connection) {
 				change: TextDocumentSyncKind.Full,
 				save: true
 			},
+			codeActionProvider: true, // custom refactoring actions
+			referencesProvider: true, // get all references support
+			renameProvider: true, // refactor / rename
 		};
 		return { capabilities: serverCapabilities };
 	});
@@ -54,6 +58,8 @@ if(GLOBAL_STATE.connection) {
 		if (GLOBAL_STATE.connection) {
 			GLOBAL_STATE.documents.listen(GLOBAL_STATE.connection);
 			log('Listening for document changes.');
+			GLOBAL_STATE.connection.onDidChangeWatchedFiles(handleWatchedFiles);
+			log('Listening for file system changes.');
 		}
 
 		// register RPC command handlers, so the client can trigger actions
@@ -63,15 +69,15 @@ if(GLOBAL_STATE.connection) {
 
 		GLOBAL_STATE.isLoading = true;
 		try {
-			await loadModels();
-			log('Loaded workspace models.');
+			await loadProjectFiles(['.cto', '.voc']);
+			log('Loaded project files.');
 		}
 		finally {
 			GLOBAL_STATE.isLoading = false;
 			log('Initialized.');
 		}
 	});
-}	
+}
 
 /**
  * Handles changes to documents
@@ -83,28 +89,36 @@ async function handleDocumentChange(change: TextDocumentChangeEvent<TextDocument
 }
 
 /**
- * Handles changes to watched files
+ * Handles file deletions
  * @param change the file change event
  */
-//  async function handleWatchedFiles(change: DidChangeWatchedFilesParams) {
-// 	change.changes.forEach( async fileEvent => {
-// 		let file:string|undefined = undefined;
-// 		if( fileEvent.type === FileChangeType.Created || FileChangeType.Changed ) {
-// 			file = await GLOBAL_STATE.connection.sendRequest('vfs/readFile', {path: fileEvent.uri}); 
-// 		}
-// 		await handleWatchedFileChange(GLOBAL_STATE, fileEvent.type, fileEvent.uri, file);
-// 	});
-// }
+async function handleWatchedFiles(change: DidChangeWatchedFilesParams) {
+	change.changes.forEach(async fileEvent => {
+		let file: string | undefined = undefined;
+		if (fileEvent.type === FileChangeType.Deleted) {
+			log(`File deleted: ${fileEvent.uri}`);
+			if (fileEvent.uri.endsWith('.cto')) {
+				const model = getModelFileByUri(GLOBAL_STATE.modelManager, fileEvent.uri);
+				if (model) {
+					log(`Model removed: ${model.getNamespace()}`);
+					GLOBAL_STATE.modelManager.deleteModelFile(model.getNamespace());
+				}
+			}
+			else if (fileEvent.uri.endsWith('.voc')) {
+				// we trash the vocabulary manager because we are not able
+				// to determine the namespace + locale of the deleted file from the URI
+				GLOBAL_STATE.vocabularyManager.clear();
+				// reload all vocs
+				await loadProjectFiles(['.voc']);
+			}
+		}
+	});
+}
 
 /**
  * Register our handler for when a document is opened or edited
  */
 GLOBAL_STATE.documents.onDidChangeContent(handleDocumentChange);
-
-/**
- * Register to receive notifications when watched files change
- */
-// GLOBAL_STATE.connection.onDidChangeWatchedFiles(handleWatchedFiles);
 
 log('Language Server listening.');
 GLOBAL_STATE.connection?.listen();
