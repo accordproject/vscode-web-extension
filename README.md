@@ -37,6 +37,9 @@ This is a [Web Extension](https://code.visualstudio.com/api/extension-guides/web
 - Compilation of Concerto files to other languages
 - Syntax highlighting for all files
 - Compilation and problem markers
+- AI-powered context-aware inline code suggestions
+- Chat Panel for AI-driven Q&A sessions and debugging support
+- Grammar/Model generation from markdown files
 - Find all references for Concerto concepts and primitives
 - Code actions:
    - Update major, minor or patch version of a namespace, updating references in model files and vocabularies
@@ -48,6 +51,10 @@ This is a [Web Extension](https://code.visualstudio.com/api/extension-guides/web
 ![Code Gen GIF](./assets/Code%20Gen.gif)
 
 - Work offline by downloading Concerto model dependencies (context-click on a `*.cto` file)
+- Configure copilot settings
+- Access AI-powered suggestions and chat with the Co-Pilot for real-time assistance
+- Generate grammar and data models from markdown files
+- Toggle inline suggestions and code actions
 
 ### Concerto Snippets
 
