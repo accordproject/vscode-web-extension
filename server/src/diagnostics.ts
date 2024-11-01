@@ -26,6 +26,11 @@ function getRange(error: any) {
 	return FULL_RANGE;
 }
 
+export type ErrorType = {
+	message: string;
+	fileName?: string;
+}
+
 export class Diagnostics {
 
 	diagnosticMap:DiagnosticMap;
@@ -56,6 +61,7 @@ export class Diagnostics {
 		}
 	}
 
+	
 	/**
 	 * Converts an error (exception) to a VSCode Diagnostic and
 	 * pushes it onto the diagnosticMap
@@ -64,7 +70,7 @@ export class Diagnostics {
 	 * @param error the exception
 	 * @param type the type of the exception
 	 */
-	public pushDiagnostic(severity: DiagnosticSeverity, textDocument: TextDocument, error: any, type: string) {
+	public pushDiagnostic(severity: DiagnosticSeverity, textDocument: TextDocument, error: ErrorType, type: string) {
 
 		let fileName = error.fileName;
 

@@ -10,13 +10,13 @@
 		"url": "https://github.com/accordproject/vscode-web-extension.git"
 	},
 	"engines": {
-		"vscode": "^1.52.0"
+		"vscode": "^1.94.0"
 	},
 	"dependencies": {
 		"path-browserify": "^1.0.1",
 		"vscode-languageclient": "^7.0.0"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.52.0"
+		"@types/vscode": "^1.94.0"
 	}
 }

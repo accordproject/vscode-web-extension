@@ -22,20 +22,23 @@ const browserClientConfig = {
 	mode: 'none',
 	target: 'webworker', // web extensions run in a webworker context
 	entry: {
-		browserClientMain: './src/browserClientMain.ts',
+		'extension': './src/browserClientMain.ts',
+		'test/suite/index': './src/test/suite/index.ts'
 	},
 	output: {
+		clean: true,
 		filename: '[name].js',
 		path: path.join(__dirname, 'client', 'dist'),
 		libraryTarget: 'commonjs',
-		clean: true
+		devtoolModuleFilenameTemplate: '../../[resource-path]'
 	},
 	resolve: {
-		mainFields: ['module', 'main'],
+		mainFields: ['browser', 'module', 'main'], // look for `browser` entry point in imported node modules
 		extensions: ['.ts', '.js'], // support ts-files and js-files
 		alias: {},
 		fallback: {
 			path: require.resolve('path-browserify'),
+			'assert': require.resolve('assert')
 		},
 	},
 	module: {
@@ -55,13 +58,24 @@ const browserClientConfig = {
 			}
 		],
 	},
+	plugins: [
+		new webpack.optimize.LimitChunkCountPlugin({
+			maxChunks: 1 // disable chunks by default since web extensions must be a single bundle
+		}),
+		new webpack.ProvidePlugin({
+			process: 'process/browser', // provide a shim for the global `process` variable
+		}),
+	],
 	externals: {
-		vscode: 'commonjs vscode', // ignored because it doesn't exist
+		'vscode': 'commonjs vscode', // ignored because it doesn't exist
 	},
 	performance: {
-		hints: false,
+		hints: false
 	},
-	devtool: 'source-map',
+	devtool: 'nosources-source-map', // create a source map that points to the original source file
+	infrastructureLogging: {
+		level: "log", // enables logging required for problem matchers
+	}
 };
 
 /** @type WebpackConfig */
@@ -121,7 +135,7 @@ const browserServerConfig = {
 	performance: {
 		hints: false,
 	},
-	devtool: 'source-map',
+	devtool: 'nosources-source-map',
 	plugins: [
 		new webpack.ProvidePlugin({
 			Buffer: ['buffer', 'Buffer'],
@@ -133,11 +147,7 @@ const browserServerConfig = {
 		new HtmlWebpackPlugin({
 			template: "../index.html",
 		}),
-	],
-	devServer: {
-		static: "./server/dist",
-		port: 5001,
-	},
+	]
 };
 
 module.exports = [browserClientConfig, browserServerConfig];

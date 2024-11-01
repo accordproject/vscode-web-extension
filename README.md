@@ -33,9 +33,13 @@ This is a [Web Extension](https://code.visualstudio.com/api/extension-guides/web
 ## Features
 
 - Create data models using the [Concerto](https://concerto.accordproject.org) modeling language
+- Create vocabulary files
 - Compilation of Concerto files to other languages
 - Syntax highlighting for all files
 - Compilation and problem markers
+- Find all references for Concerto concepts and primitives
+- Code actions:
+   - Update major, minor or patch version of a namespace, updating references in model files and vocabularies
 
 ### Commands
 

@@ -17,6 +17,8 @@ import { createConnection, BrowserMessageReader, BrowserMessageWriter, TextDocum
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
 import { ModelManager } from '@accordproject/concerto-core';
+import { VocabularyManager } from '@accordproject/concerto-vocabulary';
+
 import { Diagnostics } from './diagnostics';
 import { LanguageServerState } from './types';
 
@@ -31,7 +33,8 @@ if (typeof self !== 'undefined') {
  * Globals maintained by the language server
  */
 export const GLOBAL_STATE:LanguageServerState = {
-	modelManager: new ModelManager({strict: true}),
+	modelManager: new ModelManager({strict: true, enableMapType: true, importAliasing: true}),
+	vocabularyManager: new VocabularyManager(),
 	diagnostics: new Diagnostics(),
 	connection: messageReader && messageWriter ? createConnection(messageReader, messageWriter) : null,
 	isLoading: false,

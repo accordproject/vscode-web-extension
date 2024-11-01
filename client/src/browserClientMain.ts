@@ -26,8 +26,8 @@ import {
 } from './commands/compileToTarget';
 
 import {
-	loadModels,
-} from './commands/loadModels';
+	loadProjectFiles,
+} from './commands/loadProjectFiles';
 
 import { inlineSuggestionProvider } from './copilot/inlineSuggestionProvider';
 import { promptProvider } from './copilot/promptProvider';
@@ -50,17 +50,20 @@ export async function activate(context: vscode.ExtensionContext) {
 	log('Accord Project Extension activated');
 
 	const documentSelector = [
-		{ language: 'concerto' }, 
+		{ language: 'concerto' },
+		{ language: 'concerto-vocabulary' },
 		{ language: 'templatemark' }
 	];
 
 	// Options to control the language client
 	const clientOptions: LanguageClientOptions = {
 		documentSelector,
-		// synchronize: {
-		// 	fileEvents: vscode.workspace.createFileSystemWatcher('**/logic/*.ts')
-		// },
-		initializationOptions: {}
+		synchronize: {
+			fileEvents: [vscode.workspace.createFileSystemWatcher('**/*.cto'),
+			vscode.workspace.createFileSystemWatcher('**/*.voc')
+			]
+		},
+		initializationOptions: {},
 	};
 
 	const client = createWorkerLanguageClient(context, clientOptions);
@@ -80,11 +83,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	// register commands
 	// menus etc for commands are defined in package.json
 	context.subscriptions.push(vscode.commands
-		.registerCommand('cicero-vscode-extension.compileToTarget', (file) => compileToTarget(client,file)));
-	
+		.registerCommand('cicero-vscode-extension.compileToTarget', (file) => compileToTarget(client, file)));
+
 	context.subscriptions.push(vscode.commands
-			.registerCommand('cicero-vscode-extension.loadModels', (file) => loadModels(client,file)));	
-	
+		.registerCommand('cicero-vscode-extension.loadProjectFiles', (file) => loadProjectFiles(client, file)));
+
 	// Register the prompt provider command, startPromptProviderUI
 	context.subscriptions.push(vscode.commands
 		.registerCommand('cicero-vscode-extension.startPromptProviderUI', () => promptProvider.showPromptInputBox(client)));
@@ -93,12 +96,12 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands
 		.registerCommand('cicero-vscode-extension.configureSettings', () => createSettingsWebview(context, client)));
 
-    // Register the quick pick command
-    registerQuickPickCommand(context, client);
+	// Register the quick pick command
+	registerQuickPickCommand(context, client);
 
-    // Create and show the status bar item, statusBarItem
-    createStatusBarItem(context);
-	
+	// Create and show the status bar item, statusBarItem
+	createStatusBarItem(context);
+
 	// Register the toggle settings commands	
 	registerToggleSettingsCommands(context, client);
 
@@ -106,7 +109,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		.registerCommand('cicero-vscode-extension.chatPanelWithErrorMessage', (errorMessage) => createOrShowChatPanel(client, context, errorMessage)));
 
 	context.subscriptions.push(vscode.commands
-		.registerCommand('cicero-vscode-extension.openFileGenerator', () => createFileGeneratorPanel(context, client)));	
+		.registerCommand('cicero-vscode-extension.openFileGenerator', () => createFileGeneratorPanel(context, client)));
 }
 
 function createWorkerLanguageClient(context: vscode.ExtensionContext, clientOptions: LanguageClientOptions) {
