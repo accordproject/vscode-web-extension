@@ -117,7 +117,7 @@ export const cssTemplate = `
         color: var(--input-foreground); 
     }
     .error-message { /* New class for error messages */
-        color: var(--error-foreground);
+        color: var(--vscode-list-errorForeground);
         margin-top: 5px;
         font-size: 0.9em;
         display: none; /* Hidden by default */

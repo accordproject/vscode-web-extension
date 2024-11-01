@@ -53,4 +53,37 @@ export const scriptTemplate = `
         }
     }
     
+    function updateLLMModel() {
+        const provider = document.getElementById('provider').value;
+        const llmModelInput = document.getElementById('llmModel');
+        let defaultModel = '';
+
+        switch (provider) {
+            case 'gemini':
+                defaultModel = 'gemini-pro';
+                break;
+            case 'openai':
+                defaultModel = 'gpt-3.5-turbo';
+                break;
+            case 'mistral':
+                defaultModel = 'mistral-large-latest';
+                break;
+        }
+
+        llmModelInput.value = defaultModel;
+    }
+
+    window.addEventListener('message', event => {
+        const message = event.data;
+        const errorElement = document.getElementById('copilotHealthError');
+        switch (message.command) {
+            case 'showError':
+                errorElement.innerText = message.message;
+                errorElement.style.display = 'block';
+                break;
+            case 'hideError':
+                errorElement.style.display = 'none';
+                break;
+        }
+    });
 `;

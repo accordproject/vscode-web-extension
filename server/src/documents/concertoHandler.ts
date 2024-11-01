@@ -105,8 +105,13 @@ export async function handleConcertoDocumentChange(state: LanguageServerState, c
 			catch (error: any) {
 				if (!state.isLoading) {
 					// we may be offline? Validate without external models
-					state.modelManager.validateModelFiles();
-					state.diagnostics.pushDiagnostic(DiagnosticSeverity.Warning, change.document, error, 'model');
+					if (!navigator.onLine){
+						state.modelManager.validateModelFiles();
+					}
+					// we only report errors for the document that changed, if error has a fileName
+					if(change.document.uri == error.fileName || !error.fileName){
+						state.diagnostics.pushDiagnostic(DiagnosticSeverity.Warning, change.document, error, 'model');
+					}	
 				}
 				else {
 					log(`Ignored model validation error while initializing ${change.document.uri}`);
@@ -114,8 +119,10 @@ export async function handleConcertoDocumentChange(state: LanguageServerState, c
 			}
 		}
 		catch (error: any) {
-			if (!state.isLoading) {
-				state.diagnostics.pushDiagnostic(DiagnosticSeverity.Error, change.document, error, 'model');
+			if(!state.isLoading) {
+				if(change.document.uri == error.fileName || !error.fileName){
+					state.diagnostics.pushDiagnostic(DiagnosticSeverity.Error, change.document, error, 'model');
+				}			
 			}
 			else {
 				log(`Ignored model validation error while initializing ${change.document.uri}`);

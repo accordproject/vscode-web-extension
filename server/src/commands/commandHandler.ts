@@ -69,7 +69,7 @@ export async function loadProjectFiles(fileExtensions:string[]) {
 		log(`Document count: ${GLOBAL_STATE.documents.all().length}`);
 		GLOBAL_STATE.documents.all().forEach(async document => {
 			const change: TextDocumentChangeEvent<TextDocument> = { document };
-			handleConcertoDocumentChange(GLOBAL_STATE, change);
+			await handleConcertoDocumentChange(GLOBAL_STATE, change);
 		});
 	} else {
 		log('GLOBAL_STATE.connection is null');
