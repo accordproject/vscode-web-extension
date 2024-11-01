@@ -1,282 +1,295 @@
 {
-	"name": "concerto-vscode-extension",
-	"displayName": "Accord Project (Concerto)",
-	"description": "Accord Project extension for Visual Studio Code, providing tools for Concerto model development.",
-	"author": "Accord Project",
-	"license": "Apache-2.0",
-	"version": "1.10.0",
-	"icon": "icon.png",
-	"browser": "./client/dist/browserClientMain",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/accordproject/vscode-web-extension"
-	},
-	"publisher": "accordproject",
-	"categories": [
-		"Programming Languages",
-		"Snippets"
-	],
-	"keywords": [
-		"multi-root ready",
-		"accord project",
-		"concerto",
-		"modeling"
-	],
-	"pricing": "Free",
-	"sponsor": {
-		"url": "https://crowdfunding.lfx.linuxfoundation.org/projects/accordproject"
-	},
-	"engines": {
-		"vscode": "^1.43.0"
-	},
-	"capabilities": {
-		"virtualWorkspaces": {
-			"supported": true
-		}
-	},
-	"activationEvents": [
-		"onLanguage:concerto",
-		"onCommand:cicero-vscode-extension.showQuickPick",
-		"onCommand:cicero-vscode-extension.openChatPanel",
-		"onCommand:cicero-vscode-extension.chatPanelWithErrorMessage"
-	],
-	"contributes": {
-		"configuration": [
-			{
-				"order": 22,
-				"id": "cicero-vscode-extension",
-				"title": "cicero-vscode-extension",
-				"properties": {
-					"cicero-vscode-extension.trace.server": {
-						"type": "string",
-						"scope": "window",
-						"enum": [
-							"off",
-							"messages",
-							"verbose"
-						],
-						"default": "off",
-						"description": "Traces the communication between VS Code and the cicero-vscode-extension language server."
-					},
-					"cicero-vscode-extension.apiKey": {
-						"type": "string",
-						"default": "",
-						"description": "API Key for the LLM service"
-					},
-					"cicero-vscode-extension.provider": {
-						"type": "string",
-						"default": "openai",
-						"description": "AI Provider for the LLM service"
-					},
-					"cicero-vscode-extension.llmModel": {
-						"type": "string",
-						"default": "",
-						"description": "LLM Model for the LLM service"
-					},
-					"cicero-vscode-extension.additionalParams": {
-						"type": "object",
-						"default": {},
-						"description": "Additional parameters for the LLM service"
-					},
-					"cicero-vscode-extension.enableInlineSuggestions": {
-						"type": "boolean",
-						"default": true,
-						"description": "Enable inline suggestions"
-					},
-					"cicero-vscode-extension.enableCodeActions": {
-						"type": "boolean",
-						"default": true,
-						"description": "Enable code actions"
-					}
-				}
-			}
-		],
-		"languages": [
-			{
-				"id": "concerto",
-				"aliases": [
-					"Concerto model",
-					"concerto"
-				],
-				"extensions": [
-					".cto"
-				],
-				"configuration": "./client/concerto.language-configuration.json"
-			}
-		],
-		"grammars": [
-			{
-				"language": "concerto",
-				"scopeName": "source.concerto",
-				"path": "./client/syntaxes/concerto.tmLanguage.json"
-			}
-		],
-		"snippets": [
-			{
-				"language": "concerto",
-				"path": "./client/snippets/concerto.json"
-			}
-		],
-		"commands": [
-			{
-				"command": "cicero-vscode-extension.loadModels",
-				"title": "Load All Models",
-				"category": "Accord Project"
-			},
-			{
-				"command": "cicero-vscode-extension.compileToTarget",
-				"title": "Compile Model To Target",
-				"category": "Accord Project"
-			},
-			{
-				"command": "cicero-vscode-extension.startPromptProviderUI",
-				"title": "Start in Editor"
-			},
-			{
-				"command": "cicero-vscode-extension.configureSettings",
-				"title": "Configure Settings"
-			},
-			{
-				"command": "cicero-vscode-extension.showQuickPick",
-				"title": "Show Quick Pick"
-			},
-			{
-				"command": "cicero-vscode-extension.toggleInlineSuggestions",
-				"title": "Toggle Inline Suggestions"
-			},
-			{
-				"command": "cicero-vscode-extension.toggleCodeActions",
-				"title": "Toggle Code Actions"
-			},
-			{
-				"command": "cicero-vscode-extension.openChat",
-				"title": "Open Chat Agent"
-			},
-			{
-				"command": "cicero-vscode-extension.chatPanelWithErrorMessage",
-				"title": "Fix error with Accord Copilot"
-			},
-			{
-				"command": "cicero-vscode-extension.openFileGenerator",
-				"title": "Open File Generator"
-			}
-		],
-		"viewsContainers": {
-			"activitybar": [
-				{
-					"id": "chat",
-					"title": "Chat",
-					"icon": "comments-view-icon"
-				},
-				{
-					"id": "fileGenerator",
-					"title": "File Generator",
-					"icon": "file-generator-view-icon"
-				}
-			]
-		},
-		"views": {
-			"chat": [
-				{
-					"id": "chatPanel",
-					"name": "Accord Assistant"
-				}
-			]
-		},
-		"submenus": [
-			{
-				"id": "accordProjectSubmenu",
-				"label": "Accord Project"
-			}
-		],
-		"menus": {
-			"explorer/context": [
-				{
-					"when": "resourceLangId == concerto",
-					"command": "cicero-vscode-extension.loadModels",
-					"group": "AccordProject@2"
-				},
-				{
-					"when": "resourceLangId == concerto",
-					"command": "cicero-vscode-extension.compileToTarget",
-					"group": "AccordProject@8"
-				},
-				{
-					"command": "cicero-vscode-extension.configureSettings",
-					"group": "AccordProject@10"
-				}
-			],
-			"editor/title": [],
-			"commandPalette": [
-				{
-					"command": "cicero-vscode-extension.loadModels",
-					"when": "false"
-				},
-				{
-					"command": "cicero-vscode-extension.compileToTarget",
-					"when": "false"
-				},
-				{
-					"command": "cicero-vscode-extension.configureSettings",
-					"when": "false"
-				}
-			],
-			"editor/context": [
-				{
-					"submenu": "accordProjectSubmenu",
-					"group": "navigation"
-				}
-			],
-			"accordProjectSubmenu": [
-				{
-					"command": "cicero-vscode-extension.startPromptProviderUI"
-				},
-				{
-					"command": "cicero-vscode-extension.configureSettings"
-				},
-				{
-					"command": "cicero-vscode-extension.openFileGenerator"
-				}
-			]
-		}
-	},
-	"scripts": {
-		"test": "echo \"No test specified\" && exit 0",
-		"package:vsix": "vsce package",
-		"vscode:prepublish": "npm run compile",
-		"compile": "webpack",
-		"watch": "webpack --watch",
-		"package": "webpack --mode production --devtool hidden-source-map",
-		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
-		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-		"start": "webpack serve --mode development --open",
-		"chrome": "npm run compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data"
-	},
-	"devDependencies": {
-		"@types/path-browserify": "^1.0.0",
-		"@typescript-eslint/eslint-plugin": "^5.42.0",
-		"@typescript-eslint/parser": "^5.42.0",
-		"@vscode/test-web": "^0.0.56",
-		"eslint": "^8.26.0",
-		"html-webpack-plugin": "^5.5.0",
-		"node-polyfill-webpack-plugin": "^2.0.1",
-		"path-browserify": "^1.0.1",
-		"ts-loader": "^9.3.0",
-		"vsce": "^1.97.0",
-		"webpack": "^5.76.0",
-		"webpack-cli": "^4.7.2",
-		"webpack-dev-server": "^4.11.1"
-	},
-	"dependencies": {
-		"browserify-zlib": "^0.2.0",
-		"crypto-browserify": "^3.12.0",
-		"https-browserify": "^1.0.0",
-		"os-browserify": "^0.3.0",
-		"stream-browserify": "^3.0.0",
-		"stream-http": "^3.2.0",
-		"tty-browserify": "^0.0.1",
-		"typescript": "^4.9.3",
-		"url": "^0.11.0",
-		"vm-browserify": "^1.1.2"
-	}
+  "name": "concerto-vscode-extension",
+  "displayName": "Accord Project (Concerto)",
+  "description": "Accord Project extension for Visual Studio Code, providing tools for Concerto model development.",
+  "author": "Accord Project",
+  "license": "Apache-2.0",
+  "version": "2.0.0",
+  "icon": "icon.png",
+  "browser": "./client/dist/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/accordproject/vscode-web-extension"
+  },
+  "publisher": "accordproject",
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "multi-root ready",
+    "accord project",
+    "concerto",
+    "modeling"
+  ],
+  "pricing": "Free",
+  "sponsor": {
+    "url": "https://crowdfunding.lfx.linuxfoundation.org/projects/accordproject"
+  },
+  "engines": {
+    "vscode": "^1.94.0"
+  },
+  "capabilities": {
+    "virtualWorkspaces": {
+      "supported": true
+    }
+  },
+  "activationEvents": [
+  ],
+  "contributes": {
+    "configuration": [
+      {
+        "order": 22,
+        "id": "cicero-vscode-extension",
+        "title": "cicero-vscode-extension",
+        "properties": {
+          "cicero-vscode-extension.trace.server": {
+            "type": "string",
+            "scope": "window",
+            "enum": [
+              "off",
+              "messages",
+              "verbose"
+            ],
+            "default": "off",
+            "description": "Traces the communication between VS Code and the cicero-vscode-extension language server."
+          },
+          "cicero-vscode-extension.apiKey": {
+            "type": "string",
+            "default": "",
+            "description": "API Key for the LLM service"
+          },
+          "cicero-vscode-extension.provider": {
+            "type": "string",
+            "default": "openai",
+            "description": "AI Provider for the LLM service"
+          },
+          "cicero-vscode-extension.llmModel": {
+            "type": "string",
+            "default": "",
+            "description": "LLM Model for the LLM service"
+          },
+          "cicero-vscode-extension.additionalParams": {
+            "type": "object",
+            "default": {},
+            "description": "Additional parameters for the LLM service"
+          },
+          "cicero-vscode-extension.enableInlineSuggestions": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable inline suggestions"
+          },
+          "cicero-vscode-extension.enableCodeActions": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable code actions"
+          }
+        }
+      }
+    ],
+    "languages": [
+      {
+        "id": "concerto",
+        "aliases": [
+          "Concerto model",
+          "concerto"
+        ],
+        "extensions": [
+          ".cto"
+        ],
+        "configuration": "./client/concerto.language-configuration.json"
+      },
+      {
+        "id": "concerto-vocabulary",
+        "aliases": [
+          "Concerto vocabulary",
+          "vocabulary"
+        ],
+        "extensions": [
+          ".voc"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "concerto",
+        "scopeName": "source.concerto",
+        "path": "./client/syntaxes/concerto.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "concerto",
+        "path": "./client/snippets/concerto.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "cicero-vscode-extension.loadProjectFiles",
+        "title": "Load All Project Files",
+        "category": "Accord Project"
+      },
+      {
+        "command": "cicero-vscode-extension.compileToTarget",
+        "title": "Compile Model To Target",
+        "category": "Accord Project"
+      },
+      {
+        "command": "cicero-vscode-extension.startPromptProviderUI",
+        "title": "Start in Editor"
+      },
+      {
+        "command": "cicero-vscode-extension.configureSettings",
+        "title": "Configure Settings"
+      },
+      {
+        "command": "cicero-vscode-extension.showQuickPick",
+        "title": "Show Quick Pick"
+      },
+      {
+        "command": "cicero-vscode-extension.toggleInlineSuggestions",
+        "title": "Toggle Inline Suggestions"
+      },
+      {
+        "command": "cicero-vscode-extension.toggleCodeActions",
+        "title": "Toggle Code Actions"
+      },
+      {
+        "command": "cicero-vscode-extension.openChat",
+        "title": "Open Chat Agent"
+      },
+      {
+        "command": "cicero-vscode-extension.chatPanelWithErrorMessage",
+        "title": "Fix error with Accord Copilot"
+      },
+      {
+        "command": "cicero-vscode-extension.openFileGenerator",
+        "title": "Open File Generator"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "chat",
+          "title": "Chat",
+          "icon": "comments-view-icon"
+        },
+        {
+          "id": "fileGenerator",
+          "title": "File Generator",
+          "icon": "file-generator-view-icon"
+        }
+      ]
+    },
+    "views": {
+      "chat": [
+        {
+          "id": "chatPanel",
+          "name": "Accord Assistant"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "accordProjectSubmenu",
+        "label": "Accord Project"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "resourceLangId == concerto",
+          "command": "cicero-vscode-extension.loadProjectFiles",
+          "group": "AccordProject@2"
+        },
+        {
+          "when": "resourceLangId == concerto",
+          "command": "cicero-vscode-extension.compileToTarget",
+          "group": "AccordProject@8"
+        },
+        {
+          "command": "cicero-vscode-extension.configureSettings",
+          "group": "AccordProject@10"
+        }
+      ],
+      "editor/title": [],
+      "commandPalette": [
+        {
+          "command": "cicero-vscode-extension.loadProjectFiles",
+          "when": "false"
+        },
+        {
+          "command": "cicero-vscode-extension.compileToTarget",
+          "when": "false"
+        },
+        {
+          "command": "cicero-vscode-extension.configureSettings",
+          "when": "false"
+        }
+      ],
+      "editor/context": [
+        {
+          "submenu": "accordProjectSubmenu",
+          "group": "navigation"
+        }
+      ],
+      "accordProjectSubmenu": [
+        {
+          "command": "cicero-vscode-extension.startPromptProviderUI"
+        },
+        {
+          "command": "cicero-vscode-extension.configureSettings"
+        },
+        {
+          "command": "cicero-vscode-extension.openFileGenerator"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=client/dist/test/suite/index.js",
+    "package:vsix": "vsce package",
+    "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+    "pretest": "npm run compile-web",
+    "vscode:prepublish": "npm run package-web",
+    "compile-web": "webpack",
+    "watch-web": "webpack --watch",
+    "package-web": "webpack --mode production --devtool hidden-source-map",
+    "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.94.0",
+    "@types/mocha": "^10.0.8",
+    "@types/assert": "^1.5.10",
+    "eslint": "^9.11.1",
+    "@typescript-eslint/eslint-plugin": "^8.7.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "mocha": "^10.7.3",
+    "typescript": "^5.6.2",
+    "@vscode/test-web": "^0.0.61",
+    "ts-loader": "^9.5.1",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "@types/webpack-env": "^1.18.5",
+    "assert": "^2.1.0",
+    "process": "^0.11.10",
+    "@types/path-browserify": "^1.0.0",
+    "html-webpack-plugin": "^5.5.0",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "path-browserify": "^1.0.1",
+    "vsce": "^2.15.0"
+  },
+  "dependencies": {
+    "browserify-zlib": "^0.2.0",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "tty-browserify": "^0.0.1",
+    "typescript": "^4.9.3",
+    "url": "^0.11.0",
+    "vm-browserify": "^1.1.2"
+  }
 }
