@@ -33,6 +33,7 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
                         <option value="gemini" ${configValues.provider === 'gemini' ? 'selected' : ''}>Gemini</option>
                         <option value="openai" ${configValues.provider === 'openai' ? 'selected' : ''}>OpenAI</option>
                         <option value="mistral" ${configValues.provider === 'mistral' ? 'selected' : ''}>MistralAI</option>
+                        <option value="ollama" ${configValues.provider === 'ollama' ? 'selected' : ''}>Ollama (Local)</option>
                     </select>
                     <i class="codicon codicon-chevron-down"></i>
                 </div> 
@@ -67,5 +68,4 @@ export const htmlTemplate = (css: string, script: string, configValues: { [key: 
             ${script}
         </script>
     </body>
-    </html>
-`;
+    </html> `;
