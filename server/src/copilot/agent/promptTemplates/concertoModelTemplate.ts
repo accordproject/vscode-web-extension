@@ -34,7 +34,7 @@ export function getConcertoModelTemplate(documents: Documents, promptEmbedding: 
     for (const example of relevantTemplates) {
         prompt += `Example:\n\`\`\`\n${example}\n\`\`\`\n\n`;
     }
-    
+
     prompt += DOCUMENTATION.NAMESPACE_INFORMATION;
     prompt += DOCUMENTATION.TRANSACTIONS;
     prompt += DOCUMENTATION.PACKAGE_JSON_INFO;
@@ -56,7 +56,7 @@ export function getConcertoModelTemplate(documents: Documents, promptEmbedding: 
             role: "system"
         },
         {
-            content: prompt,
+            content: `Q: ${prompt}\nA:`,
             role: "user"
         }
     ];

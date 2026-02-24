@@ -1,6 +1,6 @@
 import { LargeLanguageModel } from './largeLanguageModel';
 import { Embedding, ModelConfig } from '../../utils/types';
-import  { robustFetch as fetch } from '../../utils/robustFetch';
+import { robustFetch as fetch } from '../../utils/robustFetch';
 import { log } from '../../../state';
 import { DocumentationType } from '../../utils/constants';
 
@@ -99,7 +99,7 @@ class Gemini implements LargeLanguageModel {
         }
 
         return [];
-    } 
+    }
 
     private createGenerateContentRequest(promptArray: { content: string; role: string }[], config: ModelConfig) {
         const { additionalParams } = config;
@@ -111,9 +111,9 @@ class Gemini implements LargeLanguageModel {
             topK?: number;
         } = {};
 
-        if (additionalParams?.temperature !== undefined) generationConfig.temperature = additionalParams.temperature;
+        generationConfig.temperature = additionalParams?.temperature ?? 0;
+        generationConfig.topP = additionalParams?.topP ?? 0.9;
         if (additionalParams?.maxTokens !== undefined) generationConfig.maxOutputTokens = additionalParams.maxTokens;
-        if (additionalParams?.topP !== undefined) generationConfig.topP = additionalParams.topP;
         if (additionalParams?.topK !== undefined) generationConfig.topK = additionalParams.topK;
 
         const contents = promptArray.map(item => ({
