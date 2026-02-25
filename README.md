@@ -10,7 +10,7 @@
 
 The Accord Project Concerto extension helps developers to create, test and debug [Accord Project](https://accordproject.org) Concerto files.
 
-For a step-by-step guide on getting started with the extension's features, access our [VS Code Extension documentation](https://concerto.accordproject.org/docs/vscode). For more comprehensive Concerto documentation, [follow this link.](https://concerto.accordproject.org)
+For a step-by-step guide on getting started with the extension's features, access our [VS Code Extension documentation](https://concerto.accordproject.org/docs/tools/vscode). For more comprehensive Concerto documentation, [follow this link.](https://concerto.accordproject.org)
 
 ![Accord Project Extension Homepage](assets/VSCodeImage.png)
 
