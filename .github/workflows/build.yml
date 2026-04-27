@@ -17,10 +17,9 @@ jobs:
         node-version:
           - 20.x
         os:
-          # macOS and Windows temporarily disabled — VS Code extension tests
-          # require a display session; those runners hang and get cancelled.
-          # See https://github.com/accordproject/vscode-web-extension/issues/95
           - ubuntu-latest
+          - macos-latest
+          - windows-latest
 
     runs-on: ${{ matrix.os }}
 
@@ -37,6 +36,12 @@ jobs:
       - run: npm run package:vsix
       - run: npm install -g vsce
 
-      - name: Test
+      - name: Test (Linux)
+        if: runner.os == 'Linux'
         run: xvfb-run -a npm test --silent
+        shell: bash
+
+      - name: Test (macOS / Windows)
+        if: runner.os != 'Linux'
+        run: npm test --silent
         shell: bash
