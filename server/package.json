@@ -48,7 +48,7 @@
 		"@types/semver": "^7.5.8",
 		"chai": "^4.3.6",
 		"dotenv": "^16.4.5",
-		"mocha": "^10.4.0",
+		"mocha": "^11.7.5",
 		"ts-node": "^10.9.2",
 		"tsconfig-paths": "^4.2.0"
 	}
