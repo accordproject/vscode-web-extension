@@ -33,7 +33,7 @@ if (typeof self !== 'undefined') {
  * Globals maintained by the language server
  */
 export const GLOBAL_STATE:LanguageServerState = {
-	modelManager: new ModelManager({strict: true, enableMapType: true, importAliasing: true}),
+	modelManager: new ModelManager(),
 	vocabularyManager: new VocabularyManager(),
 	diagnostics: new Diagnostics(),
 	connection: messageReader && messageWriter ? createConnection(messageReader, messageWriter) : null,

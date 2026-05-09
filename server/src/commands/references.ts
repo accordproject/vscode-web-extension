@@ -15,10 +15,9 @@
 
 import { log } from '../state';
 import { LanguageServerState } from '../types';
-import { Location, Range, ReferenceParams } from 'vscode-languageserver';
-import { ClassDeclaration, Introspector, MapDeclaration, ModelFile, ScalarDeclaration } from '@accordproject/concerto-core';
-import Declaration = require('@accordproject/concerto-core/types/lib/introspect/declaration');
-import { getLine, getMapValueType, getWordFromPosition, splitLines } from '../utils';
+import { Location, ReferenceParams } from 'vscode-languageserver';
+import { ClassDeclaration, Declaration, MapDeclaration, ModelFile, Property } from '@accordproject/concerto-core';
+import { getLine, getMapValueType, getWordFromPosition } from '../utils';
 
 export function getReferences(state: LanguageServerState, params: ReferenceParams): Location[] {
 	const textDocument = state.documents.get(params.textDocument.uri);
@@ -42,11 +41,11 @@ export function getReferences(state: LanguageServerState, params: ReferenceParam
 							// it is the type itself
 							d.getFullyQualifiedName() === declFqn
 							// is a scalar
-							|| (d.isScalarDeclaration() && (d as ScalarDeclaration).getType() === declFqn)
+							|| (d.isScalarDeclaration() && d.getType() === declFqn)
 							// it extends the type
 							|| (d.isClassDeclaration() && (d as ClassDeclaration).getSuperType() === declFqn)
 							// it has a property of the type
-							|| (d.isClassDeclaration() && !d.isEnum() && (d as ClassDeclaration).getOwnProperties().filter(p => p.getFullyQualifiedTypeName() === declFqn).length > 0)
+							|| (d.isClassDeclaration() && !d.isEnum() && (d as ClassDeclaration).getOwnProperties().some((p: Property) => p.getFullyQualifiedTypeName() === declFqn))
 							// is a map
 							|| (d.isMapDeclaration() && (d as unknown as MapDeclaration).getKey().getType() === declFqn)
 							|| (d.isMapDeclaration() && getMapValueType(d as any as MapDeclaration) === declFqn)
