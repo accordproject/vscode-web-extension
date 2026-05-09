@@ -16,7 +16,7 @@
 import { log } from '../state';
 import { LanguageServerState } from '../types';
 import { Location, ReferenceParams } from 'vscode-languageserver';
-import { ClassDeclaration, Declaration, MapDeclaration, ModelFile } from '@accordproject/concerto-core';
+import { ClassDeclaration, Declaration, MapDeclaration, ModelFile, Property } from '@accordproject/concerto-core';
 import { getLine, getMapValueType, getWordFromPosition } from '../utils';
 
 export function getReferences(state: LanguageServerState, params: ReferenceParams): Location[] {
@@ -45,7 +45,7 @@ export function getReferences(state: LanguageServerState, params: ReferenceParam
 							// it extends the type
 							|| (d.isClassDeclaration() && (d as ClassDeclaration).getSuperType() === declFqn)
 							// it has a property of the type
-							|| (d.isClassDeclaration() && !d.isEnum() && (d as ClassDeclaration).getOwnProperties().filter((p: any) => p.getFullyQualifiedTypeName() === declFqn).length > 0)
+							|| (d.isClassDeclaration() && !d.isEnum() && (d as ClassDeclaration).getOwnProperties().some((p: Property) => p.getFullyQualifiedTypeName() === declFqn))
 							// is a map
 							|| (d.isMapDeclaration() && (d as unknown as MapDeclaration).getKey().getType() === declFqn)
 							|| (d.isMapDeclaration() && getMapValueType(d as any as MapDeclaration) === declFqn)
