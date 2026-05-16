@@ -1,6 +1,6 @@
 import { LargeLanguageModel } from './largeLanguageModel';
 import { Embedding, ModelConfig } from '../../utils/types';
-import  { robustFetch as fetch } from '../../utils/robustFetch';
+import { robustFetch as fetch } from '../../utils/robustFetch';
 import { log } from '../../../state';
 import { DocumentationType } from '../../utils/constants';
 
@@ -52,7 +52,7 @@ class OpenAI implements LargeLanguageModel {
     async generateEmbeddings(config: any, text: string): Promise<Embedding[]> {
         const { embeddingModel, accessToken } = config
         let apiUrl = OPENAI_ENDPOINTS.EMBEDDINGS;
-        
+
         let model = embeddingModel || OPENAI_ENDPOINTS.EMBEDDING_MODEL;
         const request = this.createGenerateEmbeddingsRequest(text, model);
 
@@ -98,7 +98,7 @@ class OpenAI implements LargeLanguageModel {
         }
 
         return [];
-    } 
+    }
 
     private createGenerateContentRequest(promptArray: { content: string; role: string }[], config: ModelConfig) {
         const { llmModel, additionalParams } = config;
@@ -116,12 +116,12 @@ class OpenAI implements LargeLanguageModel {
             messages: promptArray,
         };
 
-        if (additionalParams?.temperature !== undefined) request.temperature = additionalParams.temperature;
+        request.temperature = additionalParams?.temperature ?? 0;
+        request.top_p = additionalParams?.topP ?? 0.9;
         if (additionalParams?.maxTokens !== undefined) request.max_tokens = additionalParams.maxTokens;
-        if (additionalParams?.topP !== undefined) request.top_p = additionalParams.topP;
         if (additionalParams?.frequencyPenalty !== undefined) request.frequency_penalty = additionalParams.frequencyPenalty;
         if (additionalParams?.presencePenalty !== undefined) request.presence_penalty = additionalParams.presencePenalty;
-        
+
         return request;
     }
 

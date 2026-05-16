@@ -2,7 +2,7 @@ export function getGeneralTemplate(promptConfig: any): Array<{ content: string, 
     const { instruction } = promptConfig;
     return [
         {
-            content: `${instruction}`,
+            content: `Q: ${instruction}\nA:`,
             role: "user"
         }
     ];

@@ -3,7 +3,7 @@ export function getFixTemplate(content: string, promptConfig: any): Array<{ cont
 
     return [
         {
-            content: `${content} // The above code have this error: ${instruction}. Provide the analysis and fixed code. Remove this comment in the fixed code of the analysis.`,
+            content: `Q: ${content} // The above code have this error: ${instruction}. Provide the analysis and fixed code. Remove this comment in the fixed code of the analysis.\nA:`,
             role: "user"
         }
     ];

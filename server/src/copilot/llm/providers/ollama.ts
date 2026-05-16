@@ -26,7 +26,7 @@ class Ollama implements LargeLanguageModel {
 
         try {
             log(`Sending request to Ollama: ${apiUrl} with model: ${config.llmModel}`);
-            
+
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
@@ -59,13 +59,13 @@ class Ollama implements LargeLanguageModel {
     // Embeddings support (Optional, but good to have)
     async generateEmbeddings(config: any, text: string): Promise<Embedding[]> {
         let { apiUrl, embeddingModel } = config;
-        
+
         if (!apiUrl) {
             apiUrl = OLLAMA_ENDPOINTS.EMBEDDINGS;
         }
-        
+
         // Default embedding model for Ollama
-        let model = embeddingModel || 'nomic-embed-text'; 
+        let model = embeddingModel || 'nomic-embed-text';
         const request = this.createGenerateEmbeddingsRequest(text, model);
 
         try {
@@ -102,7 +102,7 @@ class Ollama implements LargeLanguageModel {
                 return data.grammar?.embeddings?.ollama;
         }
         return [];
-    } 
+    }
 
     private createGenerateContentRequest(promptArray: { content: string; role: string }[], config: ModelConfig) {
         const { llmModel, additionalParams } = config;
@@ -114,9 +114,8 @@ class Ollama implements LargeLanguageModel {
             stream: false // Important for Ollama to return JSON at once
         };
 
-        // Add optional params if they exist
-        if (additionalParams?.temperature !== undefined) request.temperature = additionalParams.temperature;
-        
+        request.temperature = additionalParams?.temperature ?? 0;
+        request.top_p = additionalParams?.topP ?? 0.9;
         return request;
     }
 
