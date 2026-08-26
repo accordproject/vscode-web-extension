@@ -83,7 +83,7 @@
 		},
 		"concerto-field-qualifier": {
 			"name": "storage.type.property.concerto",
-			"match": "\\b(default|optional|regex|range)\\b",
+			"match": "\\b(default|optional|regex|range|length|size)\\b",
 			"patterns": []
 		},
 		"var-expr": {
