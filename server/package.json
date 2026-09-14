@@ -12,10 +12,11 @@
 		"url": "https://github.com/accordproject/vscode-web-extension.git"
 	},
 	"dependencies": {
-		"@accordproject/concerto-codegen": "^5.1.0",
-		"@accordproject/concerto-core": "^4.2.0",
-		"@accordproject/concerto-cto": "^4.2.0",
-		"@accordproject/concerto-util": "^4.2.0",
+		"@accordproject/concerto-codegen": "^6.3.0",
+		"@accordproject/concerto-core": "^5.0.0",
+		"@accordproject/concerto-cto": "^5.0.0",
+		"@accordproject/concerto-util": "^5.0.0",
+		"@accordproject/concerto-vocabulary": "^5.0.0",
 		"@ts-morph/bootstrap": "^0.18.0",
 		"@typescript/vfs": "^1.4.0",
 		"browserify-zlib": "^0.2.0",
